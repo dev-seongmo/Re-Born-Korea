@@ -1,4 +1,5 @@
 import type { EventCard } from "../core/gameTypes";
+import { buildChoiceImpactPreview } from "../systems/balanceSystem";
 import type { CardTheme, CardViewModel } from "../viewModels/cardViewModel";
 
 const categoryLabels: Record<EventCard["category"], string> = {
@@ -29,6 +30,8 @@ export function mapEventToCardViewModel(event: EventCard): CardViewModel {
     portraitLabel: "2D Character Asset",
     leftPreviewText: event.choices[1].label,
     rightPreviewText: event.choices[0].label,
+    leftImpactPreview: buildChoiceImpactPreview(event.choices[1]),
+    rightImpactPreview: buildChoiceImpactPreview(event.choices[0]),
     theme: categoryThemes[event.category],
   };
 }

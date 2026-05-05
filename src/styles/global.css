@@ -332,6 +332,89 @@ button {
   opacity: calc(0.2 + (var(--choice-intensity, 0) * 0.8));
 }
 
+.swipe-card__impact {
+  position: absolute;
+  top: 78px;
+  max-width: 48%;
+  display: grid;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.swipe-card__impact--left {
+  left: 14px;
+}
+
+.swipe-card__impact--right {
+  right: 14px;
+  justify-items: end;
+}
+
+.swipe-card__impact--visible {
+  opacity: calc(0.28 + (var(--choice-intensity, 0) * 0.72));
+  transform: translateY(0);
+}
+
+.swipe-card__impact-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.swipe-card__impact--right .swipe-card__impact-primary {
+  justify-content: flex-end;
+}
+
+.impact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(10, 12, 18, 0.68);
+  border: 1px solid rgba(245, 239, 229, 0.1);
+  backdrop-filter: blur(6px);
+  font-size: 0.7rem;
+}
+
+.impact-chip--trust {
+  background: rgba(64, 88, 62, 0.56);
+}
+
+.impact-chip__label {
+  color: #d8d0c2;
+}
+
+.impact-chip__value--up {
+  color: #c9e39f;
+}
+
+.impact-chip__value--down {
+  color: #f0a981;
+}
+
+.swipe-card__impact-possible {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.swipe-card__impact--right .swipe-card__impact-possible {
+  justify-content: flex-end;
+}
+
+.impact-possible {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cfc8bb;
+  font-size: 0.64rem;
+}
+
 .swipe-card__body {
   position: relative;
   z-index: 1;

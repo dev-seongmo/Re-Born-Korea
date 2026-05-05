@@ -59,11 +59,13 @@ export function buildGameScreenViewModel(
   session: GameSession,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
-  const turnLabel = `Turn ${Math.min(session.turn + 1, session.maxTurns)} / ${session.maxTurns}`;
+  const turnLabel = Number.isFinite(session.maxTurns)
+    ? `Turn ${Math.min(session.turn + 1, session.maxTurns)} / ${session.maxTurns}`
+    : `Turn ${session.turn + 1}`;
   const currentLabel = getCurrentLabel(session);
   const statusItems = buildStatusItems(session);
 
-  if (session.turn >= session.maxTurns) {
+  if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);
 
     return {

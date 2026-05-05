@@ -4,6 +4,7 @@ import type { EventCard, EventChoice } from "../../game/core/gameTypes";
 import { mapEventToCardViewModel } from "../../game/presenters/mapEventToCardViewModel";
 import { CardAnswerBadge } from "./CardAnswerBadge";
 import { CardBody } from "./CardBody";
+import { CardImpactPreview } from "./CardImpactPreview";
 
 type SwipeDirection = "left" | "right" | null;
 
@@ -192,10 +193,20 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
           isVisible={showLeftBadge}
           text={card.leftPreviewText}
         />
+        <CardImpactPreview
+          align="left"
+          isVisible={showLeftBadge}
+          preview={card.leftImpactPreview}
+        />
         <CardAnswerBadge
           align="right"
           isVisible={showRightBadge}
           text={card.rightPreviewText}
+        />
+        <CardImpactPreview
+          align="right"
+          isVisible={showRightBadge}
+          preview={card.rightImpactPreview}
         />
         <CardBody card={card} />
       </div>

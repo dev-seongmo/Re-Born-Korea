@@ -1,3 +1,5 @@
+import type { ChoiceImpactPreview } from "../systems/balanceSystem";
+
 export type CardTheme = "neutral" | "warm" | "stress" | "comparison";
 
 export type CardViewModel = {
@@ -9,5 +11,7 @@ export type CardViewModel = {
   backgroundAssetId?: string;
   leftPreviewText: string;
   rightPreviewText: string;
+  leftImpactPreview: ChoiceImpactPreview;
+  rightImpactPreview: ChoiceImpactPreview;
   theme: CardTheme;
 };

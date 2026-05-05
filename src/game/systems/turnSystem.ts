@@ -7,6 +7,10 @@ import type {
   TendencyScores,
   VisibleMetrics,
 } from "../core/gameTypes";
+import {
+  amplifyMetricDelta,
+  amplifySelfTrustDelta,
+} from "./balanceSystem";
 import { calculateIdentityStage } from "./identitySystem";
 import { clampMetric } from "./metricSystem";
 import { resolveRoll } from "./rollSystem";
@@ -16,11 +20,13 @@ function applyMetricDelta(
   metrics: VisibleMetrics,
   delta: MetricDelta,
 ): VisibleMetrics {
+  const amplified = amplifyMetricDelta(delta);
+
   return {
-    spec: clampMetric(metrics.spec + (delta.spec ?? 0)),
-    money: clampMetric(metrics.money + (delta.money ?? 0)),
-    reputation: clampMetric(metrics.reputation + (delta.reputation ?? 0)),
-    mental: clampMetric(metrics.mental + (delta.mental ?? 0)),
+    spec: clampMetric(metrics.spec + (amplified.spec ?? 0)),
+    money: clampMetric(metrics.money + (amplified.money ?? 0)),
+    reputation: clampMetric(metrics.reputation + (amplified.reputation ?? 0)),
+    mental: clampMetric(metrics.mental + (amplified.mental ?? 0)),
   };
 }
 
@@ -35,7 +41,11 @@ function bumpTendencies(
     next[tag] += 1;
   });
 
-  if (choice.selfTrustDelta + rollSelfTrustDelta < 0) {
+  if (
+    amplifySelfTrustDelta(choice.selfTrustDelta) +
+      amplifySelfTrustDelta(rollSelfTrustDelta) <
+    0
+  ) {
     next.comparison += 1;
   }
 
@@ -43,6 +53,10 @@ function bumpTendencies(
 }
 
 function getNextScene(session: GameSession): SceneId {
+  if (!Number.isFinite(session.maxTurns)) {
+    return "result";
+  }
+
   return session.turn + 1 >= session.maxTurns ? "ending" : "result";
 }
 
@@ -58,8 +72,8 @@ export function resolveTurn(params: {
   const rolledOutcome = choice.results[roll.band];
   const nextMetrics = applyMetricDelta(afterImmediate, rolledOutcome.delta ?? {});
   const nextSelfTrust = applySelfTrust(
-    applySelfTrust(session.selfTrust, choice.selfTrustDelta),
-    rolledOutcome.selfTrustDelta ?? 0,
+    applySelfTrust(session.selfTrust, amplifySelfTrustDelta(choice.selfTrustDelta)),
+    amplifySelfTrustDelta(rolledOutcome.selfTrustDelta ?? 0),
   );
   const nextTendencies = bumpTendencies(
     session.tendencyScores,

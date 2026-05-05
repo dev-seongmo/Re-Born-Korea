@@ -1,5 +1,10 @@
 import { archetypes } from "../content/archetypes";
-import type { GameSession, PlayerProfile, TendencyScores, VisibleMetrics } from "./gameTypes";
+import type {
+  GameSession,
+  PlayerProfile,
+  TendencyScores,
+  VisibleMetrics,
+} from "./gameTypes";
 
 const defaultProfile: PlayerProfile = {
   name: "성모",
@@ -30,7 +35,7 @@ export function createInitialGameSession(): GameSession {
   return {
     scene: "setup",
     turn: 0,
-    maxTurns: 12,
+    maxTurns: Number.POSITIVE_INFINITY,
     profile: defaultProfile,
     archetype: null,
     metrics: defaultMetrics,
