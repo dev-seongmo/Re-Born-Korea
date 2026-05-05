@@ -133,6 +133,7 @@ export type GameAction =
       type: "game/started";
       payload: {
         archetype: StartArchetype;
+        initialEventId: string;
       };
     }
   | {
@@ -152,4 +153,10 @@ export type GameAction =
   | {
       type: "scene/set";
       payload: SceneId;
+    }
+  | {
+      type: "event/queued";
+      payload: {
+        eventId: string;
+      };
     };

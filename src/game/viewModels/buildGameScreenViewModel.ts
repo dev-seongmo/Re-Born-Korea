@@ -1,6 +1,9 @@
 import type { Dispatch } from "react";
 import { audioManager } from "../../audio/audioManager";
-import { getNextPrototypeEvent } from "../content/eventCards";
+import {
+  drawNextPrototypeEventId,
+  getPrototypeEventById,
+} from "../content/eventCards";
 import type { GameAction, GameSession } from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
 import { getCurrentLabel } from "../selectors/getCurrentLabel";
@@ -34,7 +37,14 @@ function buildEventPanel(
   session: GameSession,
   dispatch: Dispatch<GameAction>,
 ): EventPanelViewModel {
-  const event = getNextPrototypeEvent(session.eventHistory);
+  const event =
+    (session.currentEventId
+      ? getPrototypeEventById(session.currentEventId)
+      : null) ?? getPrototypeEventById(drawNextPrototypeEventId(session.eventHistory));
+
+  if (!event) {
+    throw new Error("No event available for current game state.");
+  }
 
   return {
     categoryLabel: event.category,
@@ -87,11 +97,18 @@ export function buildGameScreenViewModel(
       resultPanel: {
         text: session.latestResult.text,
         nextLabel: "Next Event",
-        onContinue: () =>
+        onContinue: () => {
+          dispatch({
+            type: "event/queued",
+            payload: {
+              eventId: drawNextPrototypeEventId(session.eventHistory),
+            },
+          });
           dispatch({
             type: "scene/set",
             payload: "event",
-          }),
+          });
+        },
       },
     };
   }

@@ -21,7 +21,7 @@ export function gameReducer(
         scene: "event",
         archetype: action.payload.archetype,
         metrics: action.payload.archetype.metrics,
-        currentEventId: null,
+        currentEventId: action.payload.initialEventId,
       };
 
     case "turn/resolved":
@@ -48,6 +48,12 @@ export function gameReducer(
       return {
         ...session,
         scene: action.payload,
+      };
+
+    case "event/queued":
+      return {
+        ...session,
+        currentEventId: action.payload.eventId,
       };
 
     default:

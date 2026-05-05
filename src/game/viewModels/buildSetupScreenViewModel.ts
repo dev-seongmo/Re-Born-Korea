@@ -1,4 +1,5 @@
 import type { Dispatch } from "react";
+import { drawNextPrototypeEventId } from "../content/eventCards";
 import { pickPrototypeArchetype } from "../core/gameState";
 import type { GameAction, GameSession, PlayerProfile } from "../core/gameTypes";
 import type {
@@ -68,6 +69,7 @@ export function buildSetupScreenViewModel(
         type: "game/started",
         payload: {
           archetype: pickPrototypeArchetype(),
+          initialEventId: drawNextPrototypeEventId(session.eventHistory),
         },
       }),
   };
