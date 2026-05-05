@@ -1,0 +1,34 @@
+import type { EventCard, EventChoice } from "../core/gameTypes";
+
+export type StatusItemViewModel = {
+  label: string;
+  icon: string;
+  value: number;
+};
+
+export type EndingPanelViewModel = {
+  title: string;
+  summary: string;
+};
+
+export type ResultPanelViewModel = {
+  text: string;
+  nextLabel: string;
+  onContinue: () => void;
+};
+
+export type EventPanelViewModel = {
+  categoryLabel: string;
+  title: string;
+  event: EventCard;
+  onResolveChoice: (choice: EventChoice) => void;
+};
+
+export type GameScreenViewModel = {
+  turnLabel: string;
+  currentLabel: string;
+  statusItems: StatusItemViewModel[];
+  endingPanel?: EndingPanelViewModel;
+  resultPanel?: ResultPanelViewModel;
+  eventPanel?: EventPanelViewModel;
+};
