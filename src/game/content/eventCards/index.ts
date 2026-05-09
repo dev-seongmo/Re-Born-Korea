@@ -34,6 +34,9 @@ export function getPrototypeEventById(eventId: string) {
   return eventRegistry.get(eventId) ?? null;
 }
 
+const FIRST_EVENT_ID = "friend-major-company";
+
 export function drawNextPrototypeEventId(usedEventIds: string[]) {
+  if (usedEventIds.length === 0) return FIRST_EVENT_ID;
   return getNextPrototypeEvent(usedEventIds).id;
 }
