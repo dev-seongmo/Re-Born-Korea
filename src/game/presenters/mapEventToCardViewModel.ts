@@ -22,12 +22,17 @@ const categoryThemes: Record<EventCard["category"], CardTheme> = {
   recovery: "warm",
 };
 
+const portraitAssets: Partial<Record<string, string>> = {
+  "friend-major-company": "friend-major-company",
+};
+
 export function mapEventToCardViewModel(event: EventCard): CardViewModel {
   return {
     id: event.id,
     categoryLabel: categoryLabels[event.category],
     bodyText: event.text,
     portraitLabel: "2D Character Asset",
+    portraitAssetId: portraitAssets[event.id],
     leftPreviewText: event.choices[1].label,
     rightPreviewText: event.choices[0].label,
     leftImpactPreview: buildChoiceImpactPreview(event.choices[1]),

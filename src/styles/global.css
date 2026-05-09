@@ -449,6 +449,119 @@ button {
   color: #d2c6b7;
   text-align: center;
   padding: 20px;
+  overflow: hidden;
+}
+
+.swipe-card__portrait-frame--filled {
+  border-color: transparent;
+  padding: 0;
+  background: none;
+}
+
+.swipe-card__portrait-frame--filled svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════
+   PORTRAIT ANIMATIONS
+   ══════════════════════════════════════ */
+
+.portrait-float {
+  animation: portraitFloat 3.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.portrait-head {
+  animation: portraitHeadSway 4.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.portrait-blink {
+  animation: portraitBlink 5.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.portrait-phone {
+  animation: portraitPhoneFloat 2.9s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.portrait-screen-pulse {
+  animation: portraitScreenPulse 2.3s ease-in-out infinite;
+}
+
+/* Sparkle shapes */
+.portrait-sparkle-a { animation: portraitSparkle 2.3s ease-in-out infinite; }
+.portrait-sparkle-b { animation: portraitSparkle 2.7s ease-in-out infinite 0.55s; }
+.portrait-sparkle-c { animation: portraitSparkle 2.1s ease-in-out infinite 1.05s; }
+.portrait-sparkle-d { animation: portraitSparkle 1.9s ease-in-out infinite 0.35s; }
+
+/* Dot sparkles */
+.portrait-dot-a { animation: portraitSparkleDot 2.5s ease-in-out infinite 0.75s; }
+.portrait-dot-b { animation: portraitSparkleDot 2.2s ease-in-out infinite 1.5s; }
+.portrait-dot-c { animation: portraitSparkleDot 2s ease-in-out infinite 0.95s; }
+.portrait-dot-d { animation: portraitSparkleDot 1.8s ease-in-out infinite 0.2s; }
+
+@keyframes portraitFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-7px); }
+}
+
+@keyframes portraitHeadSway {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-1.8deg); }
+  75%      { transform: rotate(1.8deg); }
+}
+
+@keyframes portraitBlink {
+  0%, 86%, 100% { transform: scaleY(1); }
+  91%           { transform: scaleY(0.07); }
+  96%           { transform: scaleY(1); }
+}
+
+@keyframes portraitPhoneFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-5px) rotate(2.5deg); }
+}
+
+@keyframes portraitScreenPulse {
+  0%, 100% { opacity: 0.13; }
+  50%      { opacity: 0.45; }
+}
+
+@keyframes portraitSparkle {
+  0%, 100% { opacity: 0;    transform: scale(0.35) rotate(0deg); }
+  25%      { opacity: 1;    transform: scale(1)    rotate(18deg); }
+  75%      { opacity: 0.75; transform: scale(0.85) rotate(30deg); }
+}
+
+@keyframes portraitSparkleDot {
+  0%, 100% { opacity: 0;    transform: scale(0.3); }
+  50%      { opacity: 1;    transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-float,
+  .portrait-head,
+  .portrait-blink,
+  .portrait-phone,
+  .portrait-screen-pulse,
+  .portrait-sparkle-a,
+  .portrait-sparkle-b,
+  .portrait-sparkle-c,
+  .portrait-sparkle-d,
+  .portrait-dot-a,
+  .portrait-dot-b,
+  .portrait-dot-c,
+  .portrait-dot-d {
+    animation: none;
+  }
 }
 
 .swipe-card__text {
