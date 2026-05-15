@@ -3,6 +3,7 @@ import { buildChoiceImpactPreview } from "../systems/balanceSystem";
 import type { CardTheme, CardViewModel } from "../viewModels/cardViewModel";
 
 const categoryLabels: Record<EventCard["category"], string> = {
+  tutorial: "Tutorial",
   comparison: "Comparison",
   family: "Family",
   money: "Money",
@@ -13,6 +14,7 @@ const categoryLabels: Record<EventCard["category"], string> = {
 };
 
 const categoryThemes: Record<EventCard["category"], CardTheme> = {
+  tutorial: "neutral",
   comparison: "comparison",
   family: "stress",
   money: "stress",

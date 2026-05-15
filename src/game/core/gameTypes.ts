@@ -80,6 +80,7 @@ export type EventChoice = {
 export type EventCard = {
   id: string;
   category:
+    | "tutorial"
     | "comparison"
     | "family"
     | "money"
@@ -105,6 +106,8 @@ export type EndingDefinition = {
   id: EndingId;
   title: string;
   summary: string;
+  reveal: string;
+  coda: string;
 };
 
 export type GameSession = {
@@ -134,6 +137,7 @@ export type GameAction =
       payload: {
         archetype: StartArchetype;
         initialEventId: string;
+        maxTurns: number;
       };
     }
   | {

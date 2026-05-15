@@ -22,6 +22,7 @@ export function gameReducer(
         archetype: action.payload.archetype,
         metrics: action.payload.archetype.metrics,
         currentEventId: action.payload.initialEventId,
+        maxTurns: action.payload.maxTurns,
       };
 
     case "turn/resolved":

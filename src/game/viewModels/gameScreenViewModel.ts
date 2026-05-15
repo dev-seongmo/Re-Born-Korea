@@ -9,6 +9,8 @@ export type StatusItemViewModel = {
 export type EndingPanelViewModel = {
   title: string;
   summary: string;
+  reveal: string;
+  coda: string;
 };
 
 export type ResultPanelViewModel = {

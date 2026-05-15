@@ -26,6 +26,8 @@ const fieldLabels: Record<SetupFieldKey, string> = {
   comfortingWords: "Words You Need",
 };
 
+const PROTOTYPE_MAX_TURNS = 8;
+
 function buildFieldViewModel(params: {
   field: SetupFieldKey;
   profile: PlayerProfile;
@@ -70,6 +72,7 @@ export function buildSetupScreenViewModel(
         payload: {
           archetype: pickPrototypeArchetype(),
           initialEventId: drawNextPrototypeEventId(session.eventHistory),
+          maxTurns: PROTOTYPE_MAX_TURNS,
         },
       }),
   };

@@ -32,6 +32,8 @@ export function GameScreen({ viewModel }: Props) {
             <p className="eyebrow">Ending</p>
             <h3>{viewModel.endingPanel.title}</h3>
             <p>{viewModel.endingPanel.summary}</p>
+            <p>{viewModel.endingPanel.reveal}</p>
+            <p>{viewModel.endingPanel.coda}</p>
           </div>
         ) : viewModel.resultPanel ? (
           <div className="result-card">

@@ -85,6 +85,8 @@ export function buildGameScreenViewModel(
       endingPanel: {
         title: ending.title,
         summary: ending.summary,
+        reveal: ending.reveal,
+        coda: ending.coda,
       },
     };
   }
