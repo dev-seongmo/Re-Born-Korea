@@ -7,12 +7,12 @@ import type {
 } from "./gameTypes";
 
 const defaultProfile: PlayerProfile = {
-  name: "성모",
-  friendName: "민수",
-  favoriteFood: "김치찌개",
-  favoritePlace: "한강",
-  cherishedThing: "게임 만들기",
-  comfortingWords: "너는 지금도 충분히 잘 버티고 있어",
+  name: "이름 없는 영혼",
+  friendName: "남겨 둔 사람",
+  favoriteFood: "따뜻한 국",
+  favoritePlace: "집 앞 골목",
+  cherishedThing: "아직 끝내지 못한 약속",
+  comfortingWords: "천천히 가도 된다",
 };
 
 const defaultMetrics: VisibleMetrics = {
@@ -58,5 +58,7 @@ export function createInitialGameSession(): GameSession {
 }
 
 export function pickPrototypeArchetype() {
-  return archetypes[Math.floor(Math.random() * archetypes.length)];
+  return (
+    archetypes.find((archetype) => archetype.id === "average") ?? archetypes[0]
+  );
 }

@@ -2,6 +2,7 @@ import type { EventCard } from "../../core/gameTypes";
 import { comparisonEvents } from "./comparison";
 import { familyEvents } from "./family";
 import { friendshipEvents } from "./friendship";
+import { interviewEvent } from "./interview";
 import { mentalEvents } from "./mental";
 import { moneyEvents } from "./money";
 import { recoveryEvents } from "./recovery";
@@ -10,6 +11,7 @@ import { tutorialEvents } from "./tutorial";
 
 export const prototypeEvents: EventCard[] = [
   ...tutorialEvents,
+  interviewEvent,
   ...comparisonEvents,
   ...familyEvents,
   ...friendshipEvents,
@@ -23,7 +25,16 @@ const eventRegistry = new Map(
   prototypeEvents.map((event) => [event.id, event] as const),
 );
 
-const tutorialEventIds = tutorialEvents.map((event) => event.id);
+export const tutorialEventIds = tutorialEvents.map((event) => event.id);
+export const finalInterviewEventId = interviewEvent.id;
+
+export function isTutorialEventId(eventId: string) {
+  return tutorialEventIds.includes(eventId);
+}
+
+export function hasRemainingTutorialEvents(usedEventIds: string[]) {
+  return tutorialEventIds.some((eventId) => !usedEventIds.includes(eventId));
+}
 
 export function getNextPrototypeEvent(usedEventIds: string[]): EventCard {
   const nextTutorialEventId = tutorialEventIds.find(
@@ -36,11 +47,14 @@ export function getNextPrototypeEvent(usedEventIds: string[]): EventCard {
 
   const unusedEvents = prototypeEvents.filter(
     (event) =>
-      event.category !== "tutorial" && !usedEventIds.includes(event.id),
+      event.category !== "tutorial" &&
+      event.category !== "interview" &&
+      !usedEventIds.includes(event.id),
   );
 
   const nonTutorialEvents = prototypeEvents.filter(
-    (event) => event.category !== "tutorial",
+    (event) =>
+      event.category !== "tutorial" && event.category !== "interview",
   );
   const pool = unusedEvents.length > 0 ? unusedEvents : nonTutorialEvents;
   return pool[Math.floor(Math.random() * pool.length)];

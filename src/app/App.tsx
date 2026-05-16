@@ -18,7 +18,7 @@ export function App() {
       <header className="topbar">
         <div>
           <p className="eyebrow">Re:Born Korea</p>
-          <h1>Prototype Foundation</h1>
+          <h1>저승 입구 프로토타입</h1>
         </div>
       </header>
 

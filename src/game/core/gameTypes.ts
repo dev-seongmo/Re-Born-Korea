@@ -81,6 +81,7 @@ export type EventCard = {
   id: string;
   category:
     | "tutorial"
+    | "interview"
     | "comparison"
     | "family"
     | "money"

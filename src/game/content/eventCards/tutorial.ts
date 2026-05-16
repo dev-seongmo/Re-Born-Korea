@@ -2,167 +2,169 @@ import type { EventCard } from "../../core/gameTypes";
 
 export const tutorialEvents: EventCard[] = [
   {
-    id: "tutorial-dark-news",
+    id: "afterlife-gate",
     category: "tutorial",
     phase: "early20s",
     text:
-      "새벽 뉴스 속보가 휴대폰 화면을 가득 메운다. 청년 실업, 고독사, 사라진 미래. 화면이 꺼지는 순간 방 안의 공기가 식고, 검은 갓을 눌러쓴 저승사자가 침대 곁에 걸터앉는다. 그는 네가 지금부터 한 청년의 마지막 하루들을 다시 건너며 선택을 바꿔볼 거라고 말한다.",
+      "검은 문 앞에 안개가 낮게 깔린다. 갓을 눌러쓴 차사가 너를 바라본다. \"멈추지 마라. 이곳에서 멈춘 영혼은 길을 잃는다.\"",
     choices: [
       {
-        id: "hear-him-out",
-        label: "숨을 고르고, 저승사자의 말을 끝까지 듣는다.",
-        immediate: { mental: 1 },
-        selfTrustDelta: 2,
+        id: "follow-quietly",
+        label: "말없이 앞으로 간다",
+        immediate: { reputation: 2, mental: 1 },
+        selfTrustDelta: 1,
         primaryStat: "mental",
         modifier: 0,
-        memoryTags: ["tutorial_reaper"],
-        tendencyTags: ["selfTrust", "mental"],
+        memoryTags: ["first_step"],
+        tendencyTags: ["mental", "selfTrust"],
         results: {
           bad: {
-            text: "믿기 어렵지만, 적어도 도망치지 않기로 한 순간 공포가 조금 정리된다.",
+            text: "\"겁먹는 건 이상한 일이 아니다. 다만 멈춰 서 있지는 마라.\" 차사의 목소리는 차갑지만, 조급하지는 않다.",
           },
           mixed: {
-            text: "상황은 여전히 기이하지만, 설명을 들을 준비는 되었다.",
-            selfTrustDelta: 1,
+            text: "\"좋다. 네 발로 걷는 편이 낫다.\" 문턱을 넘자 발밑의 안개가 조금 옅어진다.",
+            delta: { mental: 1 },
           },
           good: {
-            text: "두려움 속에서도 정신을 붙든 채, 누군가의 삶을 끝까지 보겠다고 마음먹는다.",
-            delta: { mental: 1 },
+            text: "\"그래. 앞으로 와라.\" 차사는 한 걸음 비켜서며 길을 내준다.",
+            delta: { reputation: 1, mental: 1 },
             selfTrustDelta: 1,
           },
         },
       },
       {
-        id: "deny-and-freeze",
-        label: "악몽이라 여기고 눈을 감은 채 버틴다.",
-        immediate: { mental: -1 },
+        id: "hesitate-at-gate",
+        label: "문 앞에서 머뭇거린다",
+        immediate: { mental: -1, reputation: -1 },
         selfTrustDelta: -1,
         primaryStat: "mental",
         modifier: -1,
+        memoryTags: ["hesitation"],
         tendencyTags: ["comparison"],
         results: {
           bad: {
-            text: "현실을 부정할수록 숨이 더 가빠진다. 저승사자의 목소리만 또렷해진다.",
+            text: "\"망설이는군.\" 차사의 소매 끝이 흔들린다. \"도망쳐도 끝은 바뀌지 않는다.\"",
             delta: { mental: -1 },
             selfTrustDelta: -1,
           },
           mixed: {
-            text: "눈을 감아도 사라지지 않는다. 결국 듣게 될 이야기라면 지금이 낫다.",
+            text: "\"두려우면 걷는 속도만 늦춰라. 발을 멈추지는 마라.\" 차사는 등을 돌리지 않은 채 기다린다.",
           },
           good: {
-            text: "끝내 눈을 뜬다. 떨리는 손끝으로도 상황을 마주하려는 의지가 남아 있다.",
-            selfTrustDelta: 1,
+            text: "\"...그래도 오긴 오는군.\" 꾸짖는 말보다 낮은 한숨이 먼저 닿는다.",
+            delta: { mental: 1 },
           },
         },
       },
     ],
   },
   {
-    id: "tutorial-reaper-briefing",
+    id: "rule-of-the-road",
     category: "tutorial",
     phase: "early20s",
     text:
-      "저승사자는 손가락으로 허공에 네 개의 금을 그린다. 스펙, 돈, 평판, 멘탈. 그리고 아무에게도 보이지 않는 마지막 축, 자기신뢰. 카드를 넘길 때마다 청년은 한쪽으로 기울고, 네 선택은 그가 스스로를 버릴지 붙들지 정한다. 살아남는 것만이 목표는 아니라고, 그는 낮은 목소리로 덧붙인다.",
+      "차사는 허리춤의 두루마리를 한 번 눌러 쥔다. \"질문은 걸으면서 해라. 이 길에서는 멈춘 자보다, 뒤를 돌아본 자가 더 오래 운다.\"",
     choices: [
       {
-        id: "accept-the-rules",
-        label: "규칙을 받아들이고, 이 삶을 끝까지 조정해보기로 한다.",
-        immediate: { spec: 1, mental: 1 },
-        selfTrustDelta: 2,
+        id: "ask-about-the-rule",
+        label: "왜 뒤를 돌아보면 안 되는지 묻는다",
+        immediate: { mental: 1 },
+        selfTrustDelta: 1,
         primaryStat: "mental",
         modifier: 0,
-        memoryTags: ["tutorial_rules"],
-        tendencyTags: ["selfTrust"],
-        results: {
-          bad: {
-            text: "무게감은 크지만, 적어도 이제 무엇을 지켜야 하는지는 알게 된다.",
-          },
-          mixed: {
-            text: "완전히 이해한 것은 아니어도, 선택의 책임을 피하지 않기로 한다.",
-            delta: { mental: 1 },
-          },
-          good: {
-            text: "그의 삶을 점수표가 아니라 사람으로 보겠다는 다짐이 생긴다.",
-            delta: { mental: 1 },
-            selfTrustDelta: 1,
-          },
-        },
-      },
-      {
-        id: "treat-it-like-a-game",
-        label: "일단은 게임처럼 생각하고 결과만 챙기기로 한다.",
-        immediate: { spec: 1, reputation: 1, mental: -1 },
-        selfTrustDelta: -2,
-        primaryStat: "spec",
-        modifier: 1,
-        tendencyTags: ["spec", "reputation", "comparison"],
-        results: {
-          bad: {
-            text: "수치는 보이지만 사람은 흐려진다. 저승사자의 표정이 한층 어두워진다.",
-            delta: { mental: -1 },
-          },
-          mixed: {
-            text: "당장 효율은 보이지만, 무엇을 잃는지는 아직 체감되지 않는다.",
-          },
-          good: {
-            text: "짧게는 진전이 있어 보인다. 그러나 그 속도감이 늘 정답은 아니다.",
-            delta: { spec: 1 },
-          },
-        },
-      },
-    ],
-  },
-  {
-    id: "tutorial-last-day-bed",
-    category: "tutorial",
-    phase: "early20s",
-    text:
-      "눈을 뜬 청년은 눅눅한 원룸 천장을 바라본다. 면접 일정, 밀린 월세, 읽지 않은 연락, 그리고 어젯밤 검색창에 남은 '편하게 사라지는 법'. 저승사자는 오늘이 마지막 하루가 될 수도 있다고 말하며, 이제부터는 네가 그의 하루를 한 장씩 넘기게 된다고 속삭인다.",
-    choices: [
-      {
-        id: "get-him-up-gently",
-        label: "급한 일보다 먼저 몸을 일으키고 물을 마시게 한다.",
-        immediate: { mental: 2 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["survival", "warm_meal"],
+        memoryTags: ["asked_rule"],
         tendencyTags: ["mental", "selfTrust"],
         results: {
           bad: {
-            text: "당장 해결된 것은 없지만, 오늘 하루를 버틸 최소한의 감각은 되찾는다.",
+            text: "\"남은 것을 찾기 시작하기 때문이다.\" 짧은 대답 뒤에 긴 침묵이 따라온다.",
           },
           mixed: {
-            text: "조금 늦어지더라도 무너지지 않는 쪽이 낫다는 판단이 선다.",
+            text: "\"잃은 얼굴을 세기 시작하면, 발이 앞으로 나가지 않는다.\" 그의 시선은 잠시 허공에 머문다.",
             delta: { mental: 1 },
           },
           good: {
-            text: "살아 있는 몸을 먼저 돌본 선택이, 하루 전체의 무게를 아주 조금 바꿔 놓는다.",
+            text: "\"아는 얼굴이 하나도 남지 않았을 때, 사람은 이상한 선택을 한다.\" 그 말은 설명이라기보다 흘러나온 기억에 가깝다.",
             delta: { mental: 1, reputation: 1 },
             selfTrustDelta: 1,
           },
         },
       },
       {
-        id: "push-straight-to-work",
-        label: "불안을 밀어붙여 바로 채용 공고와 일정부터 확인하게 한다.",
-        immediate: { spec: 2, mental: -2 },
-        selfTrustDelta: -2,
-        primaryStat: "spec",
+        id: "just-obey",
+        label: "묻지 않고 계속 걷는다",
+        immediate: { reputation: 2 },
+        selfTrustDelta: 0,
+        primaryStat: "reputation",
         modifier: 1,
-        tendencyTags: ["spec", "comparison"],
+        memoryTags: ["silent_obedience"],
+        tendencyTags: ["reputation"],
         results: {
           bad: {
-            text: "몸은 침대에서 일어났지만 마음은 더 깊이 가라앉는다. 오늘이 길게 느껴진다.",
-            delta: { mental: -2 },
+            text: "\"순한 영혼이군. 그런 자들도 종종 길을 잃는다.\" 차사는 칭찬처럼 들리지 않는 말을 남긴다.",
           },
           mixed: {
-            text: "일정은 정리되지만, 그 모든 항목이 목을 조르는 목록처럼 보인다.",
-            delta: { spec: 1 },
+            text: "\"지금은 그걸로 됐다.\" 그의 걸음이 조금 빨라진다.",
+            delta: { reputation: 1 },
           },
           good: {
-            text: "짧게는 추진력이 생긴다. 다만 너무 오래 이 방식에 기대면 부서지기 쉽다.",
-            delta: { spec: 1 },
+            text: "\"묻지 않는 것도 재능은 아니다.\" 그럼에도 차사는 너를 재촉하지 않는다.",
+            delta: { reputation: 1, mental: 1 },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "lantern-crossroad",
+    category: "tutorial",
+    phase: "early20s",
+    text:
+      "갈림길 앞, 작은 등불 하나가 바닥 가까이 흔들린다. 차사가 먼저 손을 뻗었다가 멈춘다. \"나도 한때는 도망치려 했다.\"",
+    choices: [
+      {
+        id: "step-toward-him",
+        label: "차사 곁으로 다가간다",
+        immediate: { mental: 2, reputation: 1 },
+        selfTrustDelta: 2,
+        primaryStat: "mental",
+        modifier: 0,
+        memoryTags: ["shared_grief"],
+        tendencyTags: ["mental", "selfTrust"],
+        results: {
+          bad: {
+            text: "\"동정하지 마라.\" 말은 단단하지만, 끝이 조금 흐려진다.",
+          },
+          mixed: {
+            text: "\"...그래도 잘 들었군.\" 등불의 불씨가 잠깐 흔들리다 다시 선다.",
+            delta: { mental: 1 },
+          },
+          good: {
+            text: "\"좋다. 이제 네가 어디로 가야 하는지는 내가 안다.\" 처음으로 그의 목소리에 미세한 온기가 돈다.",
+            delta: { mental: 1, reputation: 1 },
+            selfTrustDelta: 1,
+          },
+        },
+      },
+      {
+        id: "look-away",
+        label: "아무 말 없이 시선을 피한다",
+        immediate: { mental: -1 },
+        selfTrustDelta: -1,
+        primaryStat: "reputation",
+        modifier: -1,
+        memoryTags: ["looked_away"],
+        tendencyTags: ["comparison"],
+        results: {
+          bad: {
+            text: "\"그래. 그런 눈도 익숙하다.\" 차사는 더 말하지 않고 앞장선다.",
+            delta: { mental: -1, reputation: -1 },
+          },
+          mixed: {
+            text: "\"듣지 못한 것으로 하겠다. 대신 발은 떼어라.\" 등불이 갈림길을 비춘다.",
+          },
+          good: {
+            text: "\"무서운 건 숨겨도 된다. 멈추지만 마라.\" 차사의 말은 명령 같지만 위로에 더 가깝다.",
+            delta: { mental: 1 },
           },
         },
       },

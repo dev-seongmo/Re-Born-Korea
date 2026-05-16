@@ -10,23 +10,18 @@ import type {
 
 const fieldOrder: SetupFieldKey[] = [
   "name",
-  "friendName",
-  "favoriteFood",
-  "favoritePlace",
-  "cherishedThing",
-  "comfortingWords",
 ];
 
 const fieldLabels: Record<SetupFieldKey, string> = {
-  name: "Name",
-  friendName: "Close Friend",
-  favoriteFood: "Favorite Food",
-  favoritePlace: "Favorite Place",
-  cherishedThing: "Long-loved Thing",
-  comfortingWords: "Words You Need",
+  name: "영혼의 이름",
+  friendName: "남겨 둔 사람",
+  favoriteFood: "가장 따뜻한 음식",
+  favoritePlace: "되돌아가고 싶은 곳",
+  cherishedThing: "끝내지 못한 것",
+  comfortingWords: "듣고 싶은 말",
 };
 
-const PROTOTYPE_MAX_TURNS = 8;
+const PROTOTYPE_MAX_TURNS = 30;
 
 function buildFieldViewModel(params: {
   field: SetupFieldKey;
@@ -60,10 +55,10 @@ export function buildSetupScreenViewModel(
   );
 
   return {
-    title: "Memory Inputs",
+    title: "저승 입구",
     description:
-      "These details feel ordinary at first, but they become the most human part of the ending.",
-    startLabel: "Start Run",
+      "이름 하나만 적어도 튜토리얼을 시작할 수 있습니다. 나머지 기억은 아직 안개 속에 남아 있습니다.",
+    startLabel: "길을 연다",
     canStart: fields.every((field) => field.value.trim().length > 0),
     fields,
     onStart: () =>

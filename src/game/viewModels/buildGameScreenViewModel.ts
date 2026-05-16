@@ -2,7 +2,10 @@ import type { Dispatch } from "react";
 import { audioManager } from "../../audio/audioManager";
 import {
   drawNextPrototypeEventId,
+  finalInterviewEventId,
   getPrototypeEventById,
+  hasRemainingTutorialEvents,
+  isTutorialEventId,
 } from "../content/eventCards";
 import type { GameAction, GameSession } from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
@@ -48,7 +51,7 @@ function buildEventPanel(
 
   return {
     categoryLabel: event.category,
-    title: "Swipe to Choose",
+    title: event.category === "interview" ? "Final Interview" : "Swipe to Choose",
     event,
     onResolveChoice: (choice) => {
       audioManager.play("choice.confirm", session.settings.sfxVolume);
@@ -69,8 +72,14 @@ export function buildGameScreenViewModel(
   session: GameSession,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
+  const remainingDays = Number.isFinite(session.maxTurns)
+    ? Math.max(session.maxTurns - session.turn - 1, 0)
+    : 0;
+  const isInterviewDay = remainingDays === 0;
   const turnLabel = Number.isFinite(session.maxTurns)
-    ? `Turn ${Math.min(session.turn + 1, session.maxTurns)} / ${session.maxTurns}`
+    ? isInterviewDay
+      ? "면접 D-Day"
+      : `면접 D-${remainingDays}`
     : `Turn ${session.turn + 1}`;
   const currentLabel = getCurrentLabel(session);
   const statusItems = buildStatusItems(session);
@@ -92,18 +101,32 @@ export function buildGameScreenViewModel(
   }
 
   if (session.latestResult && session.scene === "result") {
+    const tutorialJustEnded =
+      isTutorialEventId(session.latestResult.eventId) &&
+      !hasRemainingTutorialEvents(session.eventHistory);
+
     return {
       turnLabel,
       currentLabel,
       statusItems,
       resultPanel: {
         text: session.latestResult.text,
-        nextLabel: "Next Event",
+        nextLabel:
+          session.turn + 1 >= session.maxTurns
+            ? "Finish"
+            : tutorialJustEnded
+              ? "메인 사건 시작"
+              : session.turn + 1 >= session.maxTurns - 1
+                ? "면접장으로 간다"
+                : "Next Event",
         onContinue: () => {
           dispatch({
             type: "event/queued",
             payload: {
-              eventId: drawNextPrototypeEventId(session.eventHistory),
+              eventId:
+                session.turn + 1 >= session.maxTurns - 1
+                  ? finalInterviewEventId
+                  : drawNextPrototypeEventId(session.eventHistory),
             },
           });
           dispatch({

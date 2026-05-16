@@ -18,6 +18,7 @@ export function SetupScreen({ viewModel }: Props) {
           <label className="field" key={field.key}>
             <span>{field.label}</span>
             <input
+              placeholder="이름을 입력하세요"
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
             />

@@ -1,5 +1,5 @@
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { EventCard, EventChoice } from "../../game/core/gameTypes";
 import { mapEventToCardViewModel } from "../../game/presenters/mapEventToCardViewModel";
 import { CardAnswerBadge } from "./CardAnswerBadge";
@@ -46,15 +46,8 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
   const rightChoice = event.choices[1];
   const card = mapEventToCardViewModel(event);
 
-  const direction: SwipeDirection = useMemo(() => {
-    if (dragX > 18) {
-      return "right";
-    }
-    if (dragX < -18) {
-      return "left";
-    }
-    return null;
-  }, [dragX]);
+  const direction: SwipeDirection =
+    dragX > 18 ? "right" : dragX < -18 ? "left" : null;
 
   const intensity = Math.min(Math.abs(dragX) / COMMIT_DISTANCE, 1);
   const rotation = dragX * 0.045;

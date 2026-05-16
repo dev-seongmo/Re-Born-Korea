@@ -1,3 +1,4 @@
+import { ResultContinueCard } from "./ResultContinueCard";
 import { SwipeChoiceCard } from "./SwipeChoiceCard";
 import type {
   GameScreenViewModel,
@@ -29,7 +30,7 @@ export function GameScreen({ viewModel }: Props) {
 
         {viewModel.endingPanel ? (
           <div className="ending-card">
-            <p className="eyebrow">Ending</p>
+            <p className="eyebrow">튜토리얼 종료</p>
             <h3>{viewModel.endingPanel.title}</h3>
             <p>{viewModel.endingPanel.summary}</p>
             <p>{viewModel.endingPanel.reveal}</p>
@@ -37,14 +38,12 @@ export function GameScreen({ viewModel }: Props) {
           </div>
         ) : viewModel.resultPanel ? (
           <div className="result-card">
-            <p className="eyebrow">Last Result</p>
-            <p>{viewModel.resultPanel.text}</p>
-            <button
-              className="primary-button"
-              onClick={viewModel.resultPanel.onContinue}
-            >
-              {viewModel.resultPanel.nextLabel}
-            </button>
+            <p className="eyebrow">차사의 말</p>
+            <ResultContinueCard
+              nextLabel={viewModel.resultPanel.nextLabel}
+              onContinue={viewModel.resultPanel.onContinue}
+              text={viewModel.resultPanel.text}
+            />
           </div>
         ) : viewModel.eventPanel ? (
           <div className="event-card">

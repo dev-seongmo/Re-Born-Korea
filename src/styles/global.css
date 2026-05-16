@@ -171,7 +171,9 @@ button {
 
 .choice-button {
   text-align: left;
-  background: rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    rgba(255, 255, 255, 0.04);
   color: inherit;
   border: 1px solid rgba(245, 239, 229, 0.14);
 }
@@ -186,6 +188,66 @@ button {
 .ending-card {
   display: grid;
   gap: 14px;
+}
+
+.dialogue-line,
+.result-card p,
+.ending-card p {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.06rem;
+  line-height: 1.75;
+}
+
+.chasa-stage {
+  position: relative;
+  margin-bottom: 18px;
+  padding: 18px 18px 12px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(245, 239, 229, 0.1);
+  background:
+    radial-gradient(circle at top center, rgba(97, 123, 171, 0.18), transparent 28%),
+    radial-gradient(circle at bottom center, rgba(154, 53, 70, 0.14), transparent 24%),
+    linear-gradient(180deg, rgba(17, 23, 35, 0.94), rgba(10, 13, 21, 0.98));
+}
+
+.chasa-stage__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 32%),
+    radial-gradient(circle at 50% 78%, rgba(237, 225, 200, 0.08), transparent 22%);
+  pointer-events: none;
+}
+
+.chasa-stage__guide,
+.chasa-stage__caption {
+  position: relative;
+  z-index: 1;
+}
+
+.chasa-stage__guide {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+}
+
+.chasa-guide {
+  width: min(100%, 240px);
+  height: auto;
+  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.42));
+}
+
+.chasa-stage__caption {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+  color: #d4c9ba;
+}
+
+.chasa-stage__caption p {
+  margin: 0;
 }
 
 .status-bar {
@@ -296,6 +358,19 @@ button {
 
 .swipe-card--flying {
   transition: transform 260ms cubic-bezier(0.18, 0.88, 0.32, 1.04);
+}
+
+.swipe-card--result {
+  transform: none;
+  width: 80%;
+  max-width: 340px;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+}
+
+.swipe-card__continue {
+  align-self: end;
+  width: 100%;
 }
 
 .swipe-card__answer {
@@ -451,6 +526,12 @@ button {
   padding: 20px;
 }
 
+.poly-chasa {
+  width: min(100%, 188px);
+  height: auto;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.34));
+}
+
 .swipe-card__text {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
@@ -492,6 +573,10 @@ button {
 
   .status-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chasa-stage__guide {
+    min-height: 280px;
   }
 
   .swipe-card {
