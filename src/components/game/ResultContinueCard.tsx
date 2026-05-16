@@ -13,15 +13,20 @@ export function ResultContinueCard({ text, nextLabel, onContinue }: Props) {
         <p className="swipe-card__text">{text}</p>
       </div>
 
-      <div className="swipe-card swipe-card--result">
+      <button
+        className="swipe-card swipe-card--result"
+        onClick={onContinue}
+        type="button"
+      >
         <div className="swipe-card__body">
           <div className="swipe-card__category">Result</div>
           <CardPortrait />
-          <button className="primary-button swipe-card__continue" onClick={onContinue}>
+          <span className="swipe-card__hint">카드를 눌러 계속</span>
+          <span className="primary-button swipe-card__continue">
             {nextLabel}
-          </button>
+          </span>
         </div>
-      </div>
+      </button>
     </div>
   );
 }

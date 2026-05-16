@@ -18,20 +18,20 @@ import type {
 } from "./gameScreenViewModel";
 
 const statusItemsConfig: Array<{
+  id: string;
   label: string;
-  icon: string;
   key: keyof GameSession["metrics"];
 }> = [
-  { label: "Spec", icon: "S", key: "spec" },
-  { label: "Money", icon: "$", key: "money" },
-  { label: "Reputation", icon: "R", key: "reputation" },
-  { label: "Mental", icon: "M", key: "mental" },
+  { id: "spec", label: "Spec", key: "spec" },
+  { id: "money", label: "Money", key: "money" },
+  { id: "reputation", label: "Reputation", key: "reputation" },
+  { id: "mental", label: "Mental", key: "mental" },
 ];
 
 function buildStatusItems(session: GameSession): StatusItemViewModel[] {
   return statusItemsConfig.map((item) => ({
+    key: item.id,
     label: item.label,
-    icon: item.icon,
     value: session.metrics[item.key],
   }));
 }

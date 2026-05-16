@@ -1,8 +1,8 @@
 import type { EventCard, EventChoice } from "../core/gameTypes";
 
 export type StatusItemViewModel = {
+  key: string;
   label: string;
-  icon: string;
   value: number;
 };
 
