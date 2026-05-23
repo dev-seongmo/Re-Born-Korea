@@ -5,10 +5,9 @@ type Props = {
   card: CardViewModel;
 };
 
-export function CardBody({ card }: Props) {
+export function CardBody({ card: _card }: Props) {
   return (
     <div className="swipe-card__body">
-      <div className="swipe-card__category">{card.categoryLabel}</div>
       <CardPortrait />
     </div>
   );

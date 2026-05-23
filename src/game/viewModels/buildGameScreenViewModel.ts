@@ -7,10 +7,15 @@ import {
   hasRemainingTutorialEvents,
   isTutorialEventId,
 } from "../content/eventCards";
-import type { GameAction, GameSession } from "../core/gameTypes";
+import type {
+  GameAction,
+  RunState,
+  VisibleMetricKey,
+} from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
 import { getCurrentLabel } from "../selectors/getCurrentLabel";
 import { resolveTurn } from "../systems/turnSystem";
+import { evaluateInterviewOutcome } from "../systems/interviewSystem";
 import type {
   EventPanelViewModel,
   GameScreenViewModel,
@@ -18,123 +23,147 @@ import type {
 } from "./gameScreenViewModel";
 
 const statusItemsConfig: Array<{
-  id: string;
+  key: VisibleMetricKey;
   label: string;
-  key: keyof GameSession["metrics"];
 }> = [
-  { id: "spec", label: "Spec", key: "spec" },
-  { id: "money", label: "Money", key: "money" },
-  { id: "reputation", label: "Reputation", key: "reputation" },
-  { id: "mental", label: "Mental", key: "mental" },
+  { key: "spec", label: "Spec" },
+  { key: "money", label: "Money" },
+  { key: "reputation", label: "Reputation" },
+  { key: "mental", label: "Mental" },
 ];
 
-function buildStatusItems(session: GameSession): StatusItemViewModel[] {
+function buildStatusItems(session: RunState): StatusItemViewModel[] {
   return statusItemsConfig.map((item) => ({
-    key: item.id,
+    key: item.key,
     label: item.label,
     value: session.metrics[item.key],
   }));
 }
 
+function getCurrentEvent(session: RunState) {
+  const eventId =
+    session.currentEventId ?? drawNextPrototypeEventId(session.eventHistory);
+
+  return getPrototypeEventById(eventId);
+}
+
+function getNextEventId(session: RunState) {
+  return session.turn + 1 >= session.maxTurns - 1
+    ? finalInterviewEventId
+    : drawNextPrototypeEventId(session.eventHistory);
+}
+
+function buildResolveChoice(
+  session: RunState,
+  dispatch: Dispatch<GameAction>,
+  eventPanel: EventPanelViewModel,
+) {
+  return (choice: Parameters<EventPanelViewModel["onResolveChoice"]>[0]) => {
+    const event = eventPanel.event;
+
+    audioManager.play("choice.confirm", session.settings.sfxVolume);
+
+    dispatch({
+      type: "turn/resolved",
+      payload: resolveTurn({
+        session,
+        event,
+        choice,
+      }),
+    });
+  };
+}
+
 function buildEventPanel(
-  session: GameSession,
+  session: RunState,
   dispatch: Dispatch<GameAction>,
 ): EventPanelViewModel {
-  const event =
-    (session.currentEventId
-      ? getPrototypeEventById(session.currentEventId)
-      : null) ?? getPrototypeEventById(drawNextPrototypeEventId(session.eventHistory));
+  const event = getCurrentEvent(session);
 
   if (!event) {
     throw new Error("No event available for current game state.");
   }
 
-  return {
-    categoryLabel: event.category,
-    title: event.category === "interview" ? "Final Interview" : "Swipe to Choose",
+  const basePanel: EventPanelViewModel = {
+    narrativeText: event.text,
     event,
-    onResolveChoice: (choice) => {
-      audioManager.play("choice.confirm", session.settings.sfxVolume);
-
-      dispatch({
-        type: "turn/resolved",
-        payload: resolveTurn({
-          session,
-          event,
-          choice,
-        }),
-      });
-    },
+    onResolveChoice: () => undefined,
   };
+
+  basePanel.onResolveChoice = buildResolveChoice(session, dispatch, basePanel);
+
+  if (session.scene === "result" && session.latestResult) {
+    const tutorialJustEnded =
+      isTutorialEventId(session.latestResult.eventId) &&
+      !hasRemainingTutorialEvents(session.eventHistory);
+
+    return {
+      ...basePanel,
+      narrativeText: session.latestResult.text,
+      disabled: true,
+      continueLabel:
+        session.turn + 1 >= session.maxTurns
+          ? "Finish"
+          : tutorialJustEnded
+            ? "Start Main Run"
+            : session.turn + 1 >= session.maxTurns - 1
+              ? "Go to Interview"
+              : "Next Event",
+      onContinue: () =>
+        dispatch({
+          type: "run/continued",
+          payload: {
+            nextEventId: getNextEventId(session),
+          },
+        }),
+    };
+  }
+
+  return basePanel;
 }
 
 export function buildGameScreenViewModel(
-  session: GameSession,
+  session: RunState,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
   const remainingDays = Number.isFinite(session.maxTurns)
     ? Math.max(session.maxTurns - session.turn - 1, 0)
     : 0;
-  const isInterviewDay = remainingDays === 0;
   const turnLabel = Number.isFinite(session.maxTurns)
-    ? isInterviewDay
-      ? "면접 D-Day"
-      : `면접 D-${remainingDays}`
+    ? remainingDays === 0
+      ? "Interview Day"
+      : `Interview D-${remainingDays}`
     : `Turn ${session.turn + 1}`;
   const currentLabel = getCurrentLabel(session);
   const statusItems = buildStatusItems(session);
 
   if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);
+    const interview = evaluateInterviewOutcome(session);
+    const outcome = interview.passed ? "employed" : "failed";
 
     return {
       turnLabel,
       currentLabel,
       statusItems,
       endingPanel: {
+        eyebrow: outcome === "employed" ? "Run Complete" : "Run Failed",
         title: ending.title,
         summary: ending.summary,
         reveal: ending.reveal,
         coda: ending.coda,
-      },
-    };
-  }
-
-  if (session.latestResult && session.scene === "result") {
-    const tutorialJustEnded =
-      isTutorialEventId(session.latestResult.eventId) &&
-      !hasRemainingTutorialEvents(session.eventHistory);
-
-    return {
-      turnLabel,
-      currentLabel,
-      statusItems,
-      resultPanel: {
-        text: session.latestResult.text,
-        nextLabel:
-          session.turn + 1 >= session.maxTurns
-            ? "Finish"
-            : tutorialJustEnded
-              ? "메인 사건 시작"
-              : session.turn + 1 >= session.maxTurns - 1
-                ? "면접장으로 간다"
-                : "Next Event",
-        onContinue: () => {
+        nextLabel: outcome === "employed" ? "Open Memory Hub" : "Return to Title",
+        onContinue: () =>
           dispatch({
-            type: "event/queued",
+            type: "run/completed",
             payload: {
-              eventId:
-                session.turn + 1 >= session.maxTurns - 1
-                  ? finalInterviewEventId
-                  : drawNextPrototypeEventId(session.eventHistory),
+              endingId: ending.id,
+              outcome,
+              discoveredMemoryShardIds: session.memoryTags,
             },
-          });
-          dispatch({
-            type: "scene/set",
-            payload: "event",
-          });
-        },
+          }),
       },
+      eventPanel: buildEventPanel(session, dispatch),
     };
   }
 

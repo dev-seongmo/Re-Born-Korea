@@ -17,6 +17,7 @@ const categoryLabels: Record<EventCard["category"], string> = {
 export function mapEventToCardViewModel(event: EventCard): CardViewModel {
   return {
     categoryLabel: categoryLabels[event.category],
+    characterName: event.characterName ?? "청령차사",
     bodyText: event.text,
     leftPreviewText: event.choices[1].label,
     rightPreviewText: event.choices[0].label,

@@ -3,13 +3,11 @@ import chasaPortraitImage from "../../assets/images/characters/npc/ChatGPT Image
 export function CardPortrait() {
   return (
     <div className="swipe-card__portrait">
-      <div className="swipe-card__portrait-frame">
-        <img
-          alt="저승사자 초상화"
-          className="swipe-card__portrait-image"
-          src={chasaPortraitImage}
-        />
-      </div>
+      <img
+        alt="Character portrait"
+        className="swipe-card__portrait-image"
+        src={chasaPortraitImage}
+      />
     </div>
   );
 }

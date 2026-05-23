@@ -1,10 +1,4 @@
-export type SetupFieldKey =
-  | "name"
-  | "friendName"
-  | "favoriteFood"
-  | "favoritePlace"
-  | "cherishedThing"
-  | "comfortingWords";
+export type SetupFieldKey = "name";
 
 export type SetupFieldViewModel = {
   key: SetupFieldKey;

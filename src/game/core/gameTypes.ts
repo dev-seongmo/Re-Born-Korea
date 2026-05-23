@@ -1,11 +1,13 @@
-export type SceneId =
-  | "setup"
-  | "archetypeIntro"
-  | "event"
-  | "roll"
-  | "result"
-  | "collapse"
-  | "ending";
+export type RunScene = "setup" | "event" | "result" | "ending";
+
+export type AppScene =
+  | "title"
+  | "run-setup"
+  | "run-event"
+  | "run-result"
+  | "run-ending"
+  | "memory-hub"
+  | "true-ending";
 
 export type VisibleMetricKey = "spec" | "money" | "reputation" | "mental";
 
@@ -13,11 +15,6 @@ export type VisibleMetrics = Record<VisibleMetricKey, number>;
 
 export type PlayerProfile = {
   name: string;
-  friendName: string;
-  favoriteFood: string;
-  favoritePlace: string;
-  cherishedThing: string;
-  comfortingWords: string;
 };
 
 export type StartArchetypeId =
@@ -79,6 +76,7 @@ export type EventChoice = {
 
 export type EventCard = {
   id: string;
+  characterName?: string;
   category:
     | "tutorial"
     | "interview"
@@ -111,8 +109,10 @@ export type EndingDefinition = {
   coda: string;
 };
 
-export type GameSession = {
-  scene: SceneId;
+export type RunOutcome = "failed" | "employed";
+
+export type RunState = {
+  scene: RunScene;
   turn: number;
   maxTurns: number;
   profile: PlayerProfile;
@@ -126,15 +126,39 @@ export type GameSession = {
   eventHistory: string[];
   latestResult: EventResult | null;
   settings: GameSettings;
+  runOutcome: RunOutcome | null;
+};
+
+export type GameSession = RunState;
+
+export type MetaState = {
+  runCount: number;
+  successCount: number;
+  unlockedMemoryShardIds: string[];
+  seenEndingIds: EndingId[];
+  trueEndingUnlocked: boolean;
+  trueEndingSeen: boolean;
+};
+
+export type GameState = {
+  appScene: AppScene;
+  run: RunState | null;
+  meta: MetaState;
 };
 
 export type GameAction =
+  | {
+      type: "app/newRunRequested";
+    }
+  | {
+      type: "app/returnedToTitle";
+    }
   | {
       type: "profile/updated";
       payload: Partial<PlayerProfile>;
     }
   | {
-      type: "game/started";
+      type: "run/started";
       payload: {
         archetype: StartArchetype;
         initialEventId: string;
@@ -152,16 +176,29 @@ export type GameAction =
         identityStage: number;
         memoryTags: string[];
         tendencyScores: TendencyScores;
-        nextScene: SceneId;
+        nextScene: RunScene;
       };
     }
   | {
-      type: "scene/set";
-      payload: SceneId;
-    }
-  | {
-      type: "event/queued";
+      type: "run/continued";
       payload: {
-        eventId: string;
+        nextEventId: string;
       };
+    }
+  | {
+      type: "run/completed";
+      payload: {
+        endingId: EndingId;
+        outcome: RunOutcome;
+        discoveredMemoryShardIds: string[];
+      };
+    }
+  | {
+      type: "hub/continueRequested";
+    }
+  | {
+      type: "hub/trueEndingRequested";
+    }
+  | {
+      type: "trueEnding/completed";
     };

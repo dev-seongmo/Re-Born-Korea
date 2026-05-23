@@ -7,22 +7,21 @@ export type StatusItemViewModel = {
 };
 
 export type EndingPanelViewModel = {
+  eyebrow: string;
   title: string;
   summary: string;
   reveal: string;
   coda: string;
-};
-
-export type ResultPanelViewModel = {
-  text: string;
   nextLabel: string;
   onContinue: () => void;
 };
 
 export type EventPanelViewModel = {
-  categoryLabel: string;
-  title: string;
+  narrativeText: string;
   event: EventCard;
+  disabled?: boolean;
+  continueLabel?: string;
+  onContinue?: () => void;
   onResolveChoice: (choice: EventChoice) => void;
 };
 
@@ -31,6 +30,5 @@ export type GameScreenViewModel = {
   currentLabel: string;
   statusItems: StatusItemViewModel[];
   endingPanel?: EndingPanelViewModel;
-  resultPanel?: ResultPanelViewModel;
   eventPanel?: EventPanelViewModel;
 };

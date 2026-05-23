@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { ResultContinueCard } from "./ResultContinueCard";
 import { SwipeChoiceCard } from "./SwipeChoiceCard";
 import type {
   GameScreenViewModel,
@@ -22,36 +21,29 @@ export function GameScreen({ viewModel }: Props) {
       </section>
 
       <section className="panel panel--event">
-        <div className="panel__header panel__header--compact">
-          <div>
-            <p className="eyebrow">{viewModel.turnLabel}</p>
-            <h2>{viewModel.currentLabel}</h2>
-          </div>
-        </div>
-
         {viewModel.endingPanel ? (
           <div className="ending-card">
-            <p className="eyebrow">튜토리얼 종료</p>
+            <p className="eyebrow">{viewModel.endingPanel.eyebrow}</p>
             <h3>{viewModel.endingPanel.title}</h3>
             <p>{viewModel.endingPanel.summary}</p>
             <p>{viewModel.endingPanel.reveal}</p>
             <p>{viewModel.endingPanel.coda}</p>
-          </div>
-        ) : viewModel.resultPanel ? (
-          <div className="result-card">
-            <p className="eyebrow">차사의 말</p>
-            <ResultContinueCard
-              nextLabel={viewModel.resultPanel.nextLabel}
-              onContinue={viewModel.resultPanel.onContinue}
-              text={viewModel.resultPanel.text}
-            />
+            <button
+              className="primary-button"
+              onClick={viewModel.endingPanel.onContinue}
+              type="button"
+            >
+              {viewModel.endingPanel.nextLabel}
+            </button>
           </div>
         ) : viewModel.eventPanel ? (
           <div className="event-card">
-            <p className="eyebrow">{viewModel.eventPanel.categoryLabel}</p>
-            <h3>{viewModel.eventPanel.title}</h3>
             <SwipeChoiceCard
+              continueLabel={viewModel.eventPanel.continueLabel}
+              disabled={viewModel.eventPanel.disabled}
               event={viewModel.eventPanel.event}
+              narrativeText={viewModel.eventPanel.narrativeText}
+              onContinue={viewModel.eventPanel.onContinue}
               onResolve={viewModel.eventPanel.onResolveChoice}
             />
           </div>

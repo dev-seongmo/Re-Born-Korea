@@ -1,18 +1,17 @@
 import { archetypes } from "../content/archetypes";
 import type {
   GameSession,
+  GameState,
+  GameSettings,
+  MetaState,
   PlayerProfile,
+  RunState,
   TendencyScores,
   VisibleMetrics,
 } from "./gameTypes";
 
 const defaultProfile: PlayerProfile = {
-  name: "이름 없는 영혼",
-  friendName: "남겨 둔 사람",
-  favoriteFood: "따뜻한 국",
-  favoritePlace: "집 앞 골목",
-  cherishedThing: "아직 끝내지 못한 약속",
-  comfortingWords: "천천히 가도 된다",
+  name: "Unnamed",
 };
 
 const defaultMetrics: VisibleMetrics = {
@@ -31,7 +30,18 @@ const defaultTendencies: TendencyScores = {
   comparison: 0,
 };
 
-export function createInitialGameSession(): GameSession {
+const defaultSettings: GameSettings = {
+  reducedMotion: false,
+  particleLevel: "medium",
+  screenShake: true,
+  masterVolume: 0.8,
+  musicVolume: 0.5,
+  sfxVolume: 0.7,
+};
+
+export function createInitialRunState(
+  overrides: Partial<RunState> = {},
+): RunState {
   return {
     scene: "setup",
     turn: 0,
@@ -46,15 +56,33 @@ export function createInitialGameSession(): GameSession {
     tendencyScores: defaultTendencies,
     eventHistory: [],
     latestResult: null,
-    settings: {
-      reducedMotion: false,
-      particleLevel: "medium",
-      screenShake: true,
-      masterVolume: 0.8,
-      musicVolume: 0.5,
-      sfxVolume: 0.7,
-    },
+    settings: defaultSettings,
+    runOutcome: null,
+    ...overrides,
   };
+}
+
+export function createInitialMetaState(): MetaState {
+  return {
+    runCount: 0,
+    successCount: 0,
+    unlockedMemoryShardIds: [],
+    seenEndingIds: [],
+    trueEndingUnlocked: false,
+    trueEndingSeen: false,
+  };
+}
+
+export function createInitialGameState(): GameState {
+  return {
+    appScene: "title",
+    run: null,
+    meta: createInitialMetaState(),
+  };
+}
+
+export function createInitialGameSession(): GameSession {
+  return createInitialRunState();
 }
 
 export function pickPrototypeArchetype() {

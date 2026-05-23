@@ -10,7 +10,10 @@ type SwipeDirection = "left" | "right" | null;
 
 type Props = {
   event: EventCard;
+  narrativeText: string;
+  continueLabel?: string;
   disabled?: boolean;
+  onContinue?: () => void;
   onResolve: (choice: EventChoice) => void;
 };
 
@@ -31,7 +34,14 @@ function applyElasticDrag(value: number) {
   return direction * (MAX_DRAG_DISTANCE + resistedOvershoot);
 }
 
-export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
+export function SwipeChoiceCard({
+  event,
+  narrativeText,
+  continueLabel,
+  disabled = false,
+  onContinue,
+  onResolve,
+}: Props) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const pointerIdRef = useRef<number | null>(null);
   const startXRef = useRef(0);
@@ -51,8 +61,8 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
 
   const intensity = Math.min(Math.abs(dragX) / COMMIT_DISTANCE, 1);
   const rotation = dragX * 0.045;
-  const showLeftBadge = direction === "right";
-  const showRightBadge = direction === "left";
+  const showLeftBadge = !disabled && direction === "right";
+  const showRightBadge = !disabled && direction === "left";
 
   function setPointerCapture(pointerId: number) {
     if (cardRef.current && cardRef.current.hasPointerCapture(pointerId) === false) {
@@ -95,8 +105,29 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
     }, 260);
   }
 
+  function flyOutAndContinue(targetDirection: "left" | "right") {
+    if (resolveLockRef.current || !onContinue) {
+      return;
+    }
+
+    resolveLockRef.current = true;
+    setIsDragging(false);
+    setIsFlyingOut(true);
+
+    const targetX = targetDirection === "right" ? FLYOUT_DISTANCE : -FLYOUT_DISTANCE;
+    dragXRef.current = targetX;
+    setDragX(targetX);
+
+    window.setTimeout(() => {
+      onContinue();
+      resolveLockRef.current = false;
+      setIsFlyingOut(false);
+      setDragX(0);
+    }, 260);
+  }
+
   function handlePointerDown(eventObject: ReactPointerEvent<HTMLDivElement>) {
-    if (disabled || resolveLockRef.current) {
+    if (resolveLockRef.current) {
       return;
     }
 
@@ -109,7 +140,6 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
 
   function handlePointerMove(eventObject: ReactPointerEvent<HTMLDivElement>) {
     if (
-      disabled ||
       resolveLockRef.current ||
       pointerIdRef.current !== eventObject.pointerId ||
       !draggingRef.current
@@ -130,6 +160,21 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
     releasePointerCapture(eventObject.pointerId);
 
     const finalX = dragXRef.current;
+
+    if (disabled) {
+      if (finalX >= COMMIT_DISTANCE) {
+        flyOutAndContinue("right");
+        return;
+      }
+
+      if (finalX <= -COMMIT_DISTANCE) {
+        flyOutAndContinue("left");
+        return;
+      }
+
+      resetCard();
+      return;
+    }
 
     if (finalX >= COMMIT_DISTANCE) {
       flyOutAndResolve(rightChoice, "right");
@@ -156,7 +201,7 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
   return (
     <div className="swipe-stage">
       <div className="swipe-card__narrative">
-        <p className="swipe-card__text">{card.bodyText}</p>
+        <p className="swipe-card__text">{narrativeText}</p>
       </div>
 
       <div
@@ -164,15 +209,17 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
           "swipe-card",
           isDragging ? "swipe-card--dragging" : "",
           isFlyingOut ? "swipe-card--flying" : "",
+          disabled ? "swipe-card--disabled" : "",
         ]
           .filter(Boolean)
           .join(" ")}
         data-direction={direction ?? "neutral"}
+        onPointerCancel={handlePointerCancel}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerCancel}
         ref={cardRef}
+        role={disabled ? "button" : undefined}
         style={
           {
             "--drag-x": `${dragX}px`,
@@ -180,6 +227,7 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
             "--choice-intensity": intensity.toFixed(3),
           } as CSSProperties
         }
+        tabIndex={disabled ? 0 : undefined}
       >
         <CardAnswerBadge
           align="left"
@@ -202,6 +250,14 @@ export function SwipeChoiceCard({ event, disabled = false, onResolve }: Props) {
           preview={card.rightImpactPreview}
         />
         <CardBody card={card} />
+      </div>
+
+      <div className="swipe-card__name-slot" aria-live="polite">
+        {continueLabel ? (
+          <p className="swipe-card__name swipe-card__name--muted">{continueLabel}</p>
+        ) : card.characterName ? (
+          <p className="swipe-card__name">{card.characterName}</p>
+        ) : null}
       </div>
     </div>
   );

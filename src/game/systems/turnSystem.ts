@@ -3,7 +3,7 @@ import type {
   EventChoice,
   GameSession,
   MetricDelta,
-  SceneId,
+  RunScene,
   TendencyScores,
   VisibleMetrics,
 } from "../core/gameTypes";
@@ -52,7 +52,7 @@ function bumpTendencies(
   return next;
 }
 
-function getNextScene(session: GameSession): SceneId {
+function getNextScene(session: GameSession): RunScene {
   if (!Number.isFinite(session.maxTurns)) {
     return "result";
   }
