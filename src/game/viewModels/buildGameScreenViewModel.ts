@@ -40,17 +40,18 @@ function buildStatusItems(session: RunState): StatusItemViewModel[] {
   }));
 }
 
-function getCurrentEvent(session: RunState) {
+function getCurrentEvent(session: RunState, completedRunCount: number) {
   const eventId =
-    session.currentEventId ?? drawNextPrototypeEventId(session.eventHistory);
+    session.currentEventId ??
+    drawNextPrototypeEventId(session.eventHistory, completedRunCount);
 
   return getPrototypeEventById(eventId);
 }
 
-function getNextEventId(session: RunState) {
+function getNextEventId(session: RunState, completedRunCount: number) {
   return session.turn + 1 >= session.maxTurns - 1
     ? finalInterviewEventId
-    : drawNextPrototypeEventId(session.eventHistory);
+    : drawNextPrototypeEventId(session.eventHistory, completedRunCount);
 }
 
 function buildResolveChoice(
@@ -76,9 +77,10 @@ function buildResolveChoice(
 
 function buildEventPanel(
   session: RunState,
+  completedRunCount: number,
   dispatch: Dispatch<GameAction>,
 ): EventPanelViewModel {
-  const event = getCurrentEvent(session);
+  const event = getCurrentEvent(session, completedRunCount);
 
   if (!event) {
     throw new Error("No event available for current game state.");
@@ -95,7 +97,7 @@ function buildEventPanel(
   if (session.scene === "result" && session.latestResult) {
     const tutorialJustEnded =
       isTutorialEventId(session.latestResult.eventId) &&
-      !hasRemainingTutorialEvents(session.eventHistory);
+      !hasRemainingTutorialEvents(session.eventHistory, completedRunCount);
 
     return {
       ...basePanel,
@@ -113,7 +115,7 @@ function buildEventPanel(
         dispatch({
           type: "run/continued",
           payload: {
-            nextEventId: getNextEventId(session),
+            nextEventId: getNextEventId(session, completedRunCount),
           },
         }),
     };
@@ -124,6 +126,7 @@ function buildEventPanel(
 
 export function buildGameScreenViewModel(
   session: RunState,
+  completedRunCount: number,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
   const remainingDays = Number.isFinite(session.maxTurns)
@@ -163,7 +166,7 @@ export function buildGameScreenViewModel(
             },
           }),
       },
-      eventPanel: buildEventPanel(session, dispatch),
+      eventPanel: buildEventPanel(session, completedRunCount, dispatch),
     };
   }
 
@@ -171,6 +174,6 @@ export function buildGameScreenViewModel(
     turnLabel,
     currentLabel,
     statusItems,
-    eventPanel: buildEventPanel(session, dispatch),
+    eventPanel: buildEventPanel(session, completedRunCount, dispatch),
   };
 }

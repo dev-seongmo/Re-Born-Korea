@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { GameScreen } from "../components/game/GameScreen";
 import { SetupScreen } from "../components/setup/SetupScreen";
+import { prototypeEvents } from "../game/content/eventCards";
 import { memoryShards } from "../game/content/memoryShards";
 import {
   loadPersistedGameState,
@@ -10,6 +11,18 @@ import { gameReducer } from "../game/core/gameReducer";
 import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenViewModel";
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
+const firstLifeTutorialIds = [
+  "afterlife-gate",
+  "rule-of-the-road",
+  "lantern-crossroad",
+];
+
+const secondLifeTutorialIds = [
+  "second-life-wakeup",
+  "second-life-warning",
+  "second-life-oath",
+];
+
 export function App() {
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -17,6 +30,9 @@ export function App() {
     loadPersistedGameState,
   );
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isNewGameConfirmOpen, setIsNewGameConfirmOpen] = useState(false);
+
   const footerName = state.run?.profile.name ?? "";
   const footerDday =
     state.run && Number.isFinite(state.run.maxTurns)
@@ -26,10 +42,59 @@ export function App() {
     state.run || state.meta.runCount > 0
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
+  const canContinue = Boolean(state.run);
+
+  const eventGroups = [
+    {
+      label: "첫 번째 인생 튜토리얼",
+      events: prototypeEvents.filter((event) => firstLifeTutorialIds.includes(event.id)),
+    },
+    {
+      label: "두 번째 인생 튜토리얼",
+      events: prototypeEvents.filter((event) => secondLifeTutorialIds.includes(event.id)),
+    },
+    {
+      label: "일반 이벤트",
+      events: prototypeEvents.filter(
+        (event) =>
+          !firstLifeTutorialIds.includes(event.id) &&
+          !secondLifeTutorialIds.includes(event.id) &&
+          event.id !== "final-interview",
+      ),
+    },
+    {
+      label: "최종 면접",
+      events: prototypeEvents.filter((event) => event.id === "final-interview"),
+    },
+  ];
 
   useEffect(() => {
     persistGameState(state);
   }, [state]);
+
+  function handleOpenNewGameConfirm() {
+    if (!canContinue) {
+      dispatch({ type: "app/newRunRequested" });
+      return;
+    }
+
+    setIsNewGameConfirmOpen(true);
+  }
+
+  function handleConfirmNewGame() {
+    dispatch({ type: "app/newGameResetRequested" });
+    setIsNewGameConfirmOpen(false);
+  }
+
+  function handleReturnToTitle() {
+    setIsSettingsModalOpen(false);
+    dispatch({ type: "app/returnedToTitle" });
+  }
+
+  function handleOpenEncyclopedia() {
+    setIsSettingsModalOpen(false);
+    dispatch({ type: "app/encyclopediaRequested" });
+  }
 
   return (
     <div className="app-shell">
@@ -37,6 +102,35 @@ export function App() {
         <div>
           <p className="eyebrow">Re:Born Korea</p>
         </div>
+        <button
+          aria-label="설정"
+          className="topbar__settings-button"
+          onClick={() => setIsSettingsModalOpen(true)}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="topbar__settings-icon"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              fill="none"
+              r="3.2"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+          </svg>
+        </button>
       </header>
 
       <main className="layout">
@@ -62,21 +156,102 @@ export function App() {
                   </p>
                 </div>
               </div>
+              <div className="title-actions">
+                <button
+                  className="primary-button"
+                  onClick={handleOpenNewGameConfirm}
+                  type="button"
+                >
+                  새 게임
+                </button>
+                <button
+                  className="secondary-button"
+                  disabled={!canContinue}
+                  onClick={() => dispatch({ type: "app/continueRequested" })}
+                  type="button"
+                >
+                  이어하기
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={handleOpenEncyclopedia}
+                  type="button"
+                >
+                  이벤트 도감
+                </button>
+              </div>
+            </section>
+          ) : state.appScene === "encyclopedia" ? (
+            <section className="panel">
+              <div className="panel__header">
+                <p className="eyebrow">Encyclopedia</p>
+                <h2>이벤트 도감</h2>
+                <p className="muted">
+                  현재 등록된 모든 이벤트와 좌우 선택지를 한 번에 확인할 수 있습니다.
+                </p>
+              </div>
+
+              <div className="encyclopedia-list">
+                {eventGroups.map((group) => (
+                  <section className="encyclopedia-group" key={group.label}>
+                    <div className="encyclopedia-group__header">
+                      <strong>{group.label}</strong>
+                      <span className="muted">{group.events.length}개</span>
+                    </div>
+
+                    <div className="encyclopedia-group__items">
+                      {group.events.map((event) => (
+                        <article className="encyclopedia-card" key={event.id}>
+                          <div className="encyclopedia-card__meta">
+                            <span>{event.category}</span>
+                            <span>{event.phase}</span>
+                            <span>{event.id}</span>
+                          </div>
+                          <p className="encyclopedia-card__text">{event.text}</p>
+                          <div className="encyclopedia-card__choices">
+                            <div className="encyclopedia-choice">
+                              <strong>오른쪽 선택</strong>
+                              <p>{event.choices[0].label}</p>
+                            </div>
+                            <div className="encyclopedia-choice">
+                              <strong>왼쪽 선택</strong>
+                              <p>{event.choices[1].label}</p>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+
               <button
-                className="primary-button"
-                onClick={() => dispatch({ type: "app/newRunRequested" })}
+                className="secondary-button"
+                onClick={() => dispatch({ type: "app/returnedToTitle" })}
                 type="button"
               >
-                Start New Life
+                메인화면으로 돌아가기
               </button>
             </section>
           ) : state.appScene === "run-setup" && state.run ? (
-            <SetupScreen viewModel={buildSetupScreenViewModel(state.run, dispatch)} />
+            <SetupScreen
+              viewModel={buildSetupScreenViewModel(
+                state.run,
+                state.meta.runCount,
+                dispatch,
+              )}
+            />
           ) : state.appScene === "run-event" ||
             state.appScene === "run-result" ||
             state.appScene === "run-ending" ? (
             state.run ? (
-              <GameScreen viewModel={buildGameScreenViewModel(state.run, dispatch)} />
+              <GameScreen
+                viewModel={buildGameScreenViewModel(
+                  state.run,
+                  state.meta.runCount,
+                  dispatch,
+                )}
+              />
             ) : null
           ) : state.appScene === "memory-hub" ? (
             <section className="panel">
@@ -116,7 +291,7 @@ export function App() {
               ) : null}
 
               <button
-                className="primary-button"
+                className="secondary-button"
                 onClick={() => dispatch({ type: "hub/continueRequested" })}
                 type="button"
               >
@@ -183,7 +358,9 @@ export function App() {
             <div className="memory-modal__header">
               <div>
                 <p className="eyebrow">Memory Shards</p>
-                <h2>{state.meta.unlockedMemoryShardIds.length} / {memoryShards.length}</h2>
+                <h2>
+                  {state.meta.unlockedMemoryShardIds.length} / {memoryShards.length}
+                </h2>
               </div>
               <button
                 aria-label="닫기"
@@ -205,11 +382,97 @@ export function App() {
                     <p className="muted">
                       {unlocked
                         ? shard.description
-                        : "아직 이 기억 조각은 회수되지 않았습니다."}
+                        : "아직 이 기억 조각은 회수하지 못했습니다."}
                     </p>
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isSettingsModalOpen ? (
+        <div
+          aria-hidden="true"
+          className="memory-modal-backdrop"
+          onClick={() => setIsSettingsModalOpen(false)}
+        >
+          <div
+            aria-modal="true"
+            className="memory-modal panel settings-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="memory-modal__header">
+              <div>
+                <p className="eyebrow">Settings</p>
+                <h2>설정</h2>
+              </div>
+              <button
+                aria-label="닫기"
+                className="memory-modal__close"
+                onClick={() => setIsSettingsModalOpen(false)}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+
+            <button
+              className="secondary-button settings-modal__action"
+              onClick={handleOpenEncyclopedia}
+              type="button"
+            >
+              이벤트 도감
+            </button>
+
+            <button
+              className="secondary-button settings-modal__action"
+              onClick={handleReturnToTitle}
+              type="button"
+            >
+              메인화면으로 나가기
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {isNewGameConfirmOpen ? (
+        <div
+          aria-hidden="true"
+          className="memory-modal-backdrop"
+          onClick={() => setIsNewGameConfirmOpen(false)}
+        >
+          <div
+            aria-modal="true"
+            className="memory-modal panel confirm-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="panel__header">
+              <p className="eyebrow">Warning</p>
+              <h2>새 게임을 시작할까요?</h2>
+              <p className="muted">
+                현재 이어하기 가능한 진행이 있다면 새 게임으로 덮어쓰게 됩니다.
+              </p>
+            </div>
+
+            <div className="confirm-modal__actions">
+              <button
+                className="secondary-button"
+                onClick={() => setIsNewGameConfirmOpen(false)}
+                type="button"
+              >
+                취소
+              </button>
+              <button
+                className="primary-button"
+                onClick={handleConfirmNewGame}
+                type="button"
+              >
+                새 게임 시작
+              </button>
             </div>
           </div>
         </div>

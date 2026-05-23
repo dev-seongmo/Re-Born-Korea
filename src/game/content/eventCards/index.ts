@@ -7,10 +7,12 @@ import { mentalEvents } from "./mental";
 import { moneyEvents } from "./money";
 import { recoveryEvents } from "./recovery";
 import { specEvents } from "./spec";
+import { secondLifeTutorialEvents } from "./tutorial_second";
 import { tutorialEvents } from "./tutorial";
 
 export const prototypeEvents: EventCard[] = [
   ...tutorialEvents,
+  ...secondLifeTutorialEvents,
   interviewEvent,
   ...comparisonEvents,
   ...familyEvents,
@@ -26,18 +28,45 @@ const eventRegistry = new Map(
 );
 
 export const tutorialEventIds = tutorialEvents.map((event) => event.id);
+export const secondLifeTutorialEventIds = secondLifeTutorialEvents.map(
+  (event) => event.id,
+);
 export const finalInterviewEventId = interviewEvent.id;
 
+export function getTutorialEventIdsForRun(completedRunCount: number) {
+  if (completedRunCount === 0) {
+    return tutorialEventIds;
+  }
+
+  if (completedRunCount === 1) {
+    return secondLifeTutorialEventIds;
+  }
+
+  return [];
+}
+
 export function isTutorialEventId(eventId: string) {
-  return tutorialEventIds.includes(eventId);
+  return (
+    tutorialEventIds.includes(eventId) ||
+    secondLifeTutorialEventIds.includes(eventId)
+  );
 }
 
-export function hasRemainingTutorialEvents(usedEventIds: string[]) {
-  return tutorialEventIds.some((eventId) => !usedEventIds.includes(eventId));
+export function hasRemainingTutorialEvents(
+  usedEventIds: string[],
+  completedRunCount: number,
+) {
+  return getTutorialEventIdsForRun(completedRunCount).some(
+    (eventId) => !usedEventIds.includes(eventId),
+  );
 }
 
-export function getNextPrototypeEvent(usedEventIds: string[]): EventCard {
-  const nextTutorialEventId = tutorialEventIds.find(
+export function getNextPrototypeEvent(
+  usedEventIds: string[],
+  completedRunCount: number,
+): EventCard {
+  const activeTutorialEventIds = getTutorialEventIdsForRun(completedRunCount);
+  const nextTutorialEventId = activeTutorialEventIds.find(
     (eventId) => !usedEventIds.includes(eventId),
   );
 
@@ -64,6 +93,9 @@ export function getPrototypeEventById(eventId: string) {
   return eventRegistry.get(eventId) ?? null;
 }
 
-export function drawNextPrototypeEventId(usedEventIds: string[]) {
-  return getNextPrototypeEvent(usedEventIds).id;
+export function drawNextPrototypeEventId(
+  usedEventIds: string[],
+  completedRunCount: number,
+) {
+  return getNextPrototypeEvent(usedEventIds, completedRunCount).id;
 }

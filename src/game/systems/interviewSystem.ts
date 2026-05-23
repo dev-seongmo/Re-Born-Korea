@@ -18,7 +18,7 @@ export function calculateInterviewScore(session: GameSession) {
 export function evaluateInterviewOutcome(session: GameSession): InterviewOutcome {
   const score = calculateInterviewScore(session);
   const passed =
-    score >= 56 && session.metrics.spec >= 45 && session.metrics.mental >= 35;
+    score >= 61 && session.metrics.spec >= 50 && session.metrics.mental >= 40;
 
   return {
     passed,

@@ -2,6 +2,7 @@ export type RunScene = "setup" | "event" | "result" | "ending";
 
 export type AppScene =
   | "title"
+  | "encyclopedia"
   | "run-setup"
   | "run-event"
   | "run-result"
@@ -109,6 +110,35 @@ export type EndingDefinition = {
   coda: string;
 };
 
+export type UnlockCardId =
+  | "hidden_card_1"
+  | "hidden_card_2"
+  | "hidden_card_3"
+  | "hidden_card_4";
+
+export type UnlockCardDefinition = {
+  id: UnlockCardId;
+  title: string;
+  description: string;
+  flavor: string;
+  imageId?: string;
+};
+
+export type UnlockSource =
+  | {
+      type: "choice";
+      eventId: string;
+      choiceId: string;
+    }
+  | {
+      type: "ending";
+      endingId: EndingId;
+    }
+  | {
+      type: "memory";
+      memoryShardId: string;
+    };
+
 export type RunOutcome = "failed" | "employed";
 
 export type RunState = {
@@ -135,6 +165,7 @@ export type MetaState = {
   runCount: number;
   successCount: number;
   unlockedMemoryShardIds: string[];
+  unlockedCardIds: UnlockCardId[];
   seenEndingIds: EndingId[];
   trueEndingUnlocked: boolean;
   trueEndingSeen: boolean;
@@ -149,6 +180,15 @@ export type GameState = {
 export type GameAction =
   | {
       type: "app/newRunRequested";
+    }
+  | {
+      type: "app/newGameResetRequested";
+    }
+  | {
+      type: "app/continueRequested";
+    }
+  | {
+      type: "app/encyclopediaRequested";
     }
   | {
       type: "app/returnedToTitle";

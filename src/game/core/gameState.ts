@@ -15,10 +15,10 @@ const defaultProfile: PlayerProfile = {
 };
 
 const defaultMetrics: VisibleMetrics = {
-  spec: 50,
-  money: 50,
-  reputation: 50,
-  mental: 50,
+  spec: 46,
+  money: 46,
+  reputation: 46,
+  mental: 46,
 };
 
 const defaultTendencies: TendencyScores = {
@@ -67,6 +67,7 @@ export function createInitialMetaState(): MetaState {
     runCount: 0,
     successCount: 0,
     unlockedMemoryShardIds: [],
+    unlockedCardIds: [],
     seenEndingIds: [],
     trueEndingUnlocked: false,
     trueEndingSeen: false,

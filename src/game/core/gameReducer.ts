@@ -1,6 +1,6 @@
 import { memoryShards } from "../content/memoryShards";
 import { clampMetric } from "../systems/metricSystem";
-import { createInitialRunState } from "./gameState";
+import { createInitialGameState, createInitialRunState } from "./gameState";
 import type {
   EndingId,
   GameAction,
@@ -47,11 +47,33 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case "app/newGameResetRequested": {
+      const nextState = createInitialGameState();
+      return {
+        ...nextState,
+        appScene: "run-setup",
+        run: createInitialRunState(),
+      };
+    }
+
+    case "app/continueRequested":
+      return state.run
+        ? {
+            ...state,
+            appScene: toAppScene(state.run.scene),
+          }
+        : state;
+
+    case "app/encyclopediaRequested":
+      return {
+        ...state,
+        appScene: "encyclopedia",
+      };
+
     case "app/returnedToTitle":
       return {
         ...state,
         appScene: "title",
-        run: null,
       };
 
     case "profile/updated":
@@ -133,6 +155,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             state.meta.successCount +
             (action.payload.outcome === "employed" ? 1 : 0),
           unlockedMemoryShardIds,
+          unlockedCardIds: state.meta.unlockedCardIds,
           seenEndingIds: mergeEndingIds(
             state.meta.seenEndingIds,
             action.payload.endingId,

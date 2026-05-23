@@ -8,6 +8,7 @@ const PROTOTYPE_MAX_TURNS = 30;
 
 export function buildSetupScreenViewModel(
   session: RunState,
+  completedRunCount: number,
   dispatch: Dispatch<GameAction>,
 ): SetupScreenViewModel {
   const name = session.profile.name;
@@ -34,7 +35,10 @@ export function buildSetupScreenViewModel(
         type: "run/started",
         payload: {
           archetype: pickPrototypeArchetype(),
-          initialEventId: drawNextPrototypeEventId(session.eventHistory),
+          initialEventId: drawNextPrototypeEventId(
+            session.eventHistory,
+            completedRunCount,
+          ),
           maxTurns: PROTOTYPE_MAX_TURNS,
         },
       }),

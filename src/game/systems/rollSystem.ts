@@ -6,10 +6,10 @@ import type {
 } from "../core/gameTypes";
 
 function getStatBonus(metric: number) {
-  if (metric <= 24) {
+  if (metric <= 34) {
     return -1;
   }
-  if (metric >= 60) {
+  if (metric >= 68) {
     return 1;
   }
   return 0;
@@ -29,9 +29,9 @@ export function resolveRoll(
 
   let band: RollOutcomeBand = "mixed";
 
-  if (total <= 2) {
+  if (total <= 3) {
     band = "bad";
-  } else if (total >= 5) {
+  } else if (total >= 6) {
     band = "good";
   }
 

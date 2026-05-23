@@ -1,12 +1,27 @@
-import chasaPortraitImage from "../../assets/images/characters/npc/ChatGPT Image 2026년 5월 16일 오후 07_42_03.png";
+import { useEffect, useState } from "react";
+import { fallbackPortrait } from "../../game/content/eventPortraits";
 
-export function CardPortrait() {
+type Props = {
+  alt: string;
+  src: string;
+};
+
+export function CardPortrait({ alt, src }: Props) {
+  const [resolvedSrc, setResolvedSrc] = useState(src || fallbackPortrait.src);
+
+  useEffect(() => {
+    setResolvedSrc(src || fallbackPortrait.src);
+  }, [src]);
+
   return (
     <div className="swipe-card__portrait">
       <img
-        alt="Character portrait"
+        alt={alt || fallbackPortrait.alt}
         className="swipe-card__portrait-image"
-        src={chasaPortraitImage}
+        onError={() => {
+          setResolvedSrc(fallbackPortrait.src);
+        }}
+        src={resolvedSrc}
       />
     </div>
   );
