@@ -12,9 +12,15 @@ import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenView
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
 const firstLifeTutorialIds = [
-  "afterlife-gate",
-  "rule-of-the-road",
-  "lantern-crossroad",
+  "tutorial-afterlife-question",
+  "tutorial-chasa-request",
+  "tutorial-employment-grudge",
+  "tutorial-choice-state",
+  "tutorial-stat-threshold",
+  "tutorial-thirty-days",
+  "tutorial-chasa-name",
+  "tutorial-first-soul-arrives",
+  "tutorial-fog-clears",
 ];
 
 const secondLifeTutorialIds = [

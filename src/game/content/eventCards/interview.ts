@@ -2,54 +2,63 @@ import type { EventCard } from "../../core/gameTypes";
 
 export const interviewEvent: EventCard = {
   id: "final-interview",
+  characterName: "면접관",
   category: "interview",
   phase: "late20s",
   text:
-    "문이 열리고 면접관들의 시선이 한 번에 꽂힌다. 차사의 목소리가 아주 낮게 스친다. \"여기서부터는 네가 걷는다.\"",
+    "면접실 문이 닫히자 바깥 소음이 끊겼다.\n\n세 명의 면접관이 서류를 넘긴다. 가운데 앉은 사람이 고개를 들었다.\n\n\"마지막으로 묻겠습니다. 이 일을 왜 당신에게 맡겨야 합니까?\"",
   choices: [
     {
-      id: "answer-steadily",
-      label: "숨을 고르고 차분하게 답한다",
-      immediate: { mental: 1, reputation: 1 },
+      id: "answer-with-proof",
+      label: "준비한 근거로 차분히 답한다",
+      immediate: { spec: 1, reputation: 1 },
       selfTrustDelta: 2,
-      primaryStat: "mental",
+      primaryStat: "spec",
       modifier: 0,
       memoryTags: ["interview_day", "steady_answer"],
-      tendencyTags: ["mental", "selfTrust"],
+      tendencyTags: ["spec", "selfTrust"],
       results: {
         bad: {
-          text: "목소리가 조금 떨렸지만 끝내 무너지지는 않았다. 오늘의 결과는, 네가 쌓아 온 것들이 대신 말해 줄 것이다.",
+          text:
+            "말끝이 조금 흔들렸지만, 답은 무너지지 않았다.\n\n당신은 경험과 준비한 내용을 하나씩 꺼내 놓았다. 면접관의 펜이 멈추지 않는다.",
         },
         mixed: {
-          text: "완벽하진 않았지만, 너는 질문을 피하지 않았다. 마지막 대답 뒤에 짧은 정적이 남는다.",
+          text:
+            "완벽한 답은 아니었다. 그래도 빈칸은 없었다.\n\n당신은 할 수 있는 말과 해온 일을 구분해서 설명했다.",
           delta: { reputation: 1 },
         },
         good: {
-          text: "시선이 흔들리지 않는다. 준비한 것과 버텨 온 시간이 한 문장씩 제자리를 찾는다.",
-          delta: { reputation: 1, mental: 1 },
+          text:
+            "답변의 순서가 또렷하게 맞물렸다.\n\n준비한 시간, 버틴 마음, 사람들 앞에서의 태도가 한 문장 안에 들어왔다.",
+          delta: { spec: 1, reputation: 1 },
+          selfTrustDelta: 1,
         },
       },
     },
     {
-      id: "push-aggressively",
-      label: "강하게 밀어붙이며 자신감을 과시한다",
-      immediate: { reputation: 2, mental: -1 },
-      selfTrustDelta: -1,
-      primaryStat: "reputation",
-      modifier: 1,
+      id: "answer-with-desperation",
+      label: "절박함을 숨기지 않고 말한다",
+      immediate: { mental: 1, reputation: -1 },
+      selfTrustDelta: 1,
+      primaryStat: "mental",
+      modifier: -1,
       memoryTags: ["interview_day"],
-      tendencyTags: ["reputation", "comparison"],
+      tendencyTags: ["mental"],
       results: {
         bad: {
-          text: "힘으로 버티려던 문장이 중간에서 갈라진다. 남은 평가는 이제 수치와 인상 사이에서 갈릴 것이다.",
-          delta: { mental: -1 },
+          text:
+            "목소리에 절박함이 먼저 새어 나왔다.\n\n면접관은 잠시 침묵했다. 진심은 닿았지만, 그들이 찾는 확신까지는 조금 모자랐다.",
+          delta: { reputation: -1 },
         },
         mixed: {
-          text: "강한 인상은 남겼지만, 모든 답이 네 것이었는지는 애매하다. 면접관들은 조용히 메모를 남긴다.",
+          text:
+            "당신은 솔직했다. 그리고 겨우 중심을 되찾았다.\n\n\"그래도 이 일을 해내고 싶습니다.\" 마지막 문장은 작지만 분명했다.",
         },
         good: {
-          text: "짧고 날카롭게 치고 나간다. 다만 마지막 결과는, 결국 지금까지의 축적이 정할 것이다.",
-          delta: { reputation: 1 },
+          text:
+            "절박함은 변명이 아니라 이유가 되었다.\n\n면접관 한 명이 처음으로 서류에서 눈을 떼고 당신을 바라보았다.",
+          delta: { mental: 1, reputation: 1 },
+          selfTrustDelta: 1,
         },
       },
     },

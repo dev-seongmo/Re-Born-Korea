@@ -23,14 +23,41 @@ export const fallbackPortrait: PortraitAsset = {
 };
 
 const portraitByEventId: Record<string, PortraitAsset> = {
-  "afterlife-gate": { src: sajaPortraitImage, alt: "Cheongryeong chasa portrait" },
-  "rule-of-the-road": {
+  "tutorial-afterlife-question": {
     src: sajaPortraitImage,
     alt: "Cheongryeong chasa portrait",
   },
-  "lantern-crossroad": {
+  "tutorial-chasa-request": {
     src: sajaPortraitImage,
     alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-employment-grudge": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-choice-state": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-stat-threshold": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-thirty-days": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-chasa-name": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-first-soul-arrives": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "tutorial-fog-clears": {
+    src: suitGuyPortraitImage,
+    alt: "First soul portrait",
   },
   "final-interview": { src: suitGuyPortraitImage, alt: "Interview portrait" },
   "parents-question": { src: dadPortraitImage, alt: "Parent portrait" },

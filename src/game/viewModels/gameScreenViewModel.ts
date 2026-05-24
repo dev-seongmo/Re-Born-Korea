@@ -6,12 +6,20 @@ export type StatusItemViewModel = {
   value: number;
 };
 
+export type DDayPulseViewModel = {
+  milestone: number;
+  label: string;
+  statusItems: StatusItemViewModel[];
+};
+
 export type EndingPanelViewModel = {
   eyebrow: string;
   title: string;
-  summary: string;
-  reveal: string;
-  coda: string;
+  outcome: "employed" | "failed";
+  sender: string;
+  receivedAt: string;
+  messageLines: string[];
+  metricLines: string[];
   nextLabel: string;
   onContinue: () => void;
 };
@@ -29,6 +37,7 @@ export type GameScreenViewModel = {
   turnLabel: string;
   currentLabel: string;
   statusItems: StatusItemViewModel[];
+  dDayPulse?: DDayPulseViewModel;
   endingPanel?: EndingPanelViewModel;
   eventPanel?: EventPanelViewModel;
 };

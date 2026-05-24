@@ -319,6 +319,7 @@ button {
 
 .game-grid {
   grid-template-columns: 1fr;
+  position: relative;
 }
 
 .panel {
@@ -421,6 +422,209 @@ button {
 .ending-card {
   display: grid;
   gap: 14px;
+}
+
+.message-result {
+  min-height: 520px;
+  padding: 16px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(21, 27, 38, 0.96), rgba(8, 11, 18, 0.98)),
+    #0b0f18;
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 239, 229, 0.1),
+    0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.message-result__phone-bar,
+.message-result__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.message-result__phone-bar {
+  color: #d8d0c2;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.message-result__header {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(245, 239, 229, 0.1);
+}
+
+.message-result__header h3 {
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.message-result__header p,
+.message-result__header span {
+  margin: 0;
+  color: #aeb7ad;
+  font-size: 0.76rem;
+}
+
+.message-result__bubble {
+  display: grid;
+  gap: 10px;
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 239, 229, 0.1);
+}
+
+.message-result--employed .message-result__bubble {
+  background: rgba(70, 99, 74, 0.34);
+  border-color: rgba(169, 219, 154, 0.2);
+}
+
+.message-result--failed .message-result__bubble {
+  background: rgba(88, 62, 70, 0.34);
+  border-color: rgba(232, 151, 151, 0.18);
+}
+
+.message-result__bubble p {
+  margin: 0;
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.message-result__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.message-result__metrics span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #d8d0c2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(245, 239, 229, 0.09);
+  font-size: 0.72rem;
+}
+
+.dday-pulse {
+  position: absolute;
+  inset: -8px;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at center, rgba(245, 239, 229, 0.13), transparent 36%),
+    rgba(3, 5, 10, 0.34);
+  animation: dday-pulse-backdrop 2400ms ease-out both;
+}
+
+.dday-pulse__content {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(92%, 380px);
+  padding: 26px 22px;
+  text-align: center;
+  transform-origin: center;
+  animation: dday-pulse-content 2400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dday-pulse__eyebrow {
+  margin: 0;
+  color: #e7d6bd;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.dday-pulse__label {
+  color: #fff8eb;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 4.8rem;
+  line-height: 0.92;
+  text-shadow:
+    0 0 24px rgba(227, 196, 141, 0.28),
+    0 18px 38px rgba(0, 0, 0, 0.42);
+}
+
+.dday-pulse__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+.dday-pulse__metric {
+  display: grid;
+  gap: 2px;
+  padding: 10px 6px;
+  border-radius: 14px;
+  background: rgba(9, 12, 19, 0.72);
+  border: 1px solid rgba(245, 239, 229, 0.14);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26);
+}
+
+.dday-pulse__metric span {
+  color: #cfc7b8;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dday-pulse__metric strong {
+  color: #f5efe5;
+  font-size: 1.15rem;
+}
+
+@keyframes dday-pulse-backdrop {
+  0% {
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  68% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dday-pulse-content {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(0, 18px, 0) scale(1.22);
+  }
+
+  16% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  68% {
+    opacity: 0.92;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translate3d(0, -8px, 0) scale(0.96);
+  }
 }
 
 .dialogue-line,
@@ -549,13 +753,34 @@ button {
   display: grid;
   place-items: center;
   gap: 14px;
-  grid-template-rows: minmax(104px, 104px) minmax(340px, 340px) minmax(24px, 24px);
+  grid-template-rows: minmax(132px, 132px) minmax(340px, 340px) minmax(24px, 24px);
+  animation: first-card-approach 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: center 58%;
+}
+
+@keyframes first-card-approach {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translate3d(0, 34px, 0) scale(0.78);
+  }
+
+  58% {
+    opacity: 1;
+    filter: blur(1.5px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 .swipe-card__narrative {
   width: min(100%, 340px);
-  min-height: 104px;
-  max-height: 104px;
+  min-height: 132px;
+  max-height: 132px;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -793,7 +1018,7 @@ button {
   font-size: 1.15rem;
   line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -871,12 +1096,12 @@ button {
   }
 
   .swipe-stage {
-    grid-template-rows: minmax(96px, 96px) minmax(320px, 320px) minmax(22px, 22px);
+    grid-template-rows: minmax(124px, 124px) minmax(320px, 320px) minmax(22px, 22px);
   }
 
   .swipe-card__narrative {
-    min-height: 96px;
-    max-height: 96px;
+    min-height: 124px;
+    max-height: 124px;
   }
 
   .swipe-card__name-slot {
@@ -886,5 +1111,33 @@ button {
 
   .swipe-card__text {
     font-size: 1.05rem;
+  }
+
+  .dday-pulse__label {
+    font-size: 3.9rem;
+  }
+
+  .dday-pulse__metrics {
+    gap: 6px;
+  }
+
+  .dday-pulse__metric {
+    padding: 8px 4px;
+  }
+
+  .dday-pulse__metric strong {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe-stage,
+  .dday-pulse,
+  .dday-pulse__content {
+    animation: none;
+  }
+
+  .dday-pulse {
+    opacity: 0;
   }
 }
