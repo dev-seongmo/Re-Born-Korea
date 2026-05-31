@@ -1,8 +1,6 @@
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
 import { SwipeChoiceCard } from "./SwipeChoiceCard";
 import type {
-  DDayPulseViewModel,
   GameScreenViewModel,
   StatusItemViewModel,
 } from "../../game/viewModels/gameScreenViewModel";
@@ -12,29 +10,6 @@ type Props = {
 };
 
 export function GameScreen({ viewModel }: Props) {
-  const [activePulse, setActivePulse] = useState<DDayPulseViewModel | null>(null);
-  const shownPulseMilestonesRef = useRef(new Set<number>());
-  const pulseMilestone = viewModel.dDayPulse?.milestone;
-
-  useEffect(() => {
-    const pulse = viewModel.dDayPulse;
-
-    if (!pulse || shownPulseMilestonesRef.current.has(pulse.milestone)) {
-      return;
-    }
-
-    shownPulseMilestonesRef.current.add(pulse.milestone);
-    setActivePulse(pulse);
-
-    const timeoutId = window.setTimeout(() => {
-      setActivePulse((current) =>
-        current?.milestone === pulse.milestone ? null : current,
-      );
-    }, 2400);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [pulseMilestone]);
-
   return (
     <div className="game-grid">
       <section className="panel panel--hud">
@@ -96,32 +71,6 @@ export function GameScreen({ viewModel }: Props) {
         ) : null}
       </section>
 
-      {activePulse ? (
-        <DDayPulseOverlay key={activePulse.milestone} pulse={activePulse} />
-      ) : null}
-    </div>
-  );
-}
-
-type DDayPulseOverlayProps = {
-  pulse: DDayPulseViewModel;
-};
-
-function DDayPulseOverlay({ pulse }: DDayPulseOverlayProps) {
-  return (
-    <div className="dday-pulse" aria-hidden="true">
-      <div className="dday-pulse__content">
-        <p className="dday-pulse__eyebrow">Deadline</p>
-        <strong className="dday-pulse__label">{pulse.label}</strong>
-        <div className="dday-pulse__metrics">
-          {pulse.statusItems.map((item) => (
-            <span className="dday-pulse__metric" key={item.key}>
-              <span>{item.label}</span>
-              <strong>{item.value}</strong>
-            </span>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

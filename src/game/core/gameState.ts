@@ -11,7 +11,7 @@ import type {
 } from "./gameTypes";
 
 const defaultProfile: PlayerProfile = {
-  name: "Unnamed",
+  name: "이름없는 영혼",
 };
 
 const defaultMetrics: VisibleMetrics = {

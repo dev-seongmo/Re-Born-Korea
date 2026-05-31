@@ -14,14 +14,14 @@ export function buildSetupScreenViewModel(
   const name = session.profile.name;
 
   return {
-    title: "Setup",
-    description: "Enter a name to start the prototype run.",
-    startLabel: "Start",
+    title: "영혼 등록",
+    description: "면접일까지 데려갈 영혼의 이름을 정하세요.",
+    startLabel: "시작하기",
     canStart: name.trim().length > 0,
     fields: [
       {
         key: "name",
-        label: "Name",
+        label: "이름",
         value: name,
         onChange: (value) =>
           dispatch({

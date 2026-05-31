@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import { useEffect, useReducer, useState } from "react";
+import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import { GameScreen } from "../components/game/GameScreen";
 import { SetupScreen } from "../components/setup/SetupScreen";
 import { prototypeEvents } from "../game/content/eventCards";
@@ -38,6 +40,7 @@ export function App() {
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isNewGameConfirmOpen, setIsNewGameConfirmOpen] = useState(false);
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
 
   const footerName = state.run?.profile.name ?? "";
   const footerDday =
@@ -48,7 +51,10 @@ export function App() {
     state.run || state.meta.runCount > 0
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
-  const canContinue = Boolean(state.run);
+  const canContinue = Boolean(state.run && state.run.scene !== "setup");
+  const shouldShowTopbar = state.appScene !== "title";
+  const shouldShowFooter =
+    state.appScene !== "title" && state.appScene !== "run-setup";
 
   const eventGroups = [
     {
@@ -102,76 +108,89 @@ export function App() {
     dispatch({ type: "app/encyclopediaRequested" });
   }
 
+  async function handleShareGame() {
+    const shareData = {
+      title: "Re:Born Korea",
+      text: "면접일까지 다시 태어나 버티는 선택형 생존 게임",
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareData.url);
+      setShareStatus("copied");
+      window.setTimeout(() => setShareStatus("idle"), 1800);
+    } catch {
+      setShareStatus("failed");
+      window.setTimeout(() => setShareStatus("idle"), 1800);
+    }
+  }
+
   return (
     <div className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">Re:Born Korea</p>
-        </div>
-        <button
-          aria-label="설정"
-          className="topbar__settings-button"
-          onClick={() => setIsSettingsModalOpen(true)}
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            className="topbar__settings-icon"
-            viewBox="0 0 24 24"
+      {shouldShowTopbar ? (
+        <header className="topbar">
+          <div>
+            <p className="eyebrow">Re:Born Korea</p>
+          </div>
+          <button
+            aria-label="설정"
+            className="topbar__settings-button"
+            onClick={() => setIsSettingsModalOpen(true)}
+            type="button"
           >
-            <path
-              d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-            />
-            <circle
-              cx="12"
-              cy="12"
-              fill="none"
-              r="3.2"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-          </svg>
-        </button>
-      </header>
+            <svg
+              aria-hidden="true"
+              className="topbar__settings-icon"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                fill="none"
+                r="3.2"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </button>
+        </header>
+      ) : null}
 
       <main className="layout">
         <section className="layout__primary layout__primary--mobile-frame">
           {state.appScene === "title" ? (
-            <section className="panel">
-              <div className="panel__header">
-                <p className="eyebrow">Title</p>
-                <h2>Live again until interview day</h2>
-                <p className="muted">
-                  Survive one life, get employed, collect memory shards, and unlock
-                  the final ending.
-                </p>
+            <section
+              className="title-screen"
+              style={{ "--title-bg": `url(${titleBackgroundImage})` } as CSSProperties}
+            >
+              <div className="title-screen__logo">
+                <span>Re:Born</span>
+                <strong>Korea</strong>
               </div>
-              <div className="setup-grid">
-                <div className="panel">
-                  <p className="eyebrow">Meta Progress</p>
-                  <p className="muted">Runs: {state.meta.runCount}</p>
-                  <p className="muted">Job clears: {state.meta.successCount}</p>
-                  <p className="muted">
-                    Memory shards: {state.meta.unlockedMemoryShardIds.length}/
-                    {memoryShards.length}
-                  </p>
-                </div>
-              </div>
-              <div className="title-actions">
+
+              <div className="title-screen__actions">
                 <button
-                  className="primary-button"
+                  className="title-screen__button title-screen__button--primary"
                   onClick={handleOpenNewGameConfirm}
                   type="button"
                 >
                   새 게임
                 </button>
                 <button
-                  className="secondary-button"
+                  className="title-screen__button"
                   disabled={!canContinue}
                   onClick={() => dispatch({ type: "app/continueRequested" })}
                   type="button"
@@ -179,11 +198,22 @@ export function App() {
                   이어하기
                 </button>
                 <button
-                  className="secondary-button"
-                  onClick={handleOpenEncyclopedia}
+                  className="title-screen__button"
+                  onClick={() => setIsSettingsModalOpen(true)}
                   type="button"
                 >
-                  이벤트 도감
+                  설정
+                </button>
+                <button
+                  className="title-screen__button"
+                  onClick={handleShareGame}
+                  type="button"
+                >
+                  {shareStatus === "copied"
+                    ? "링크 복사됨"
+                    : shareStatus === "failed"
+                      ? "공유 실패"
+                      : "공유하기"}
                 </button>
               </div>
             </section>
@@ -326,28 +356,30 @@ export function App() {
         </section>
       </main>
 
-      <footer className="footer-bar">
-        <div className="footer-bar__content">
-          <div className="footer-bar__identity-block">
-            <p className="footer-bar__life">{lifeCount}</p>
-            <div className="footer-bar__identity">
-              <p>{footerName}</p>
-              <p className="footer-bar__dday">{footerDday}</p>
+      {shouldShowFooter ? (
+        <footer className="footer-bar">
+          <div className="footer-bar__content">
+            <div className="footer-bar__identity-block">
+              <p className="footer-bar__life">{lifeCount}</p>
+              <div className="footer-bar__identity">
+                <p>{footerName}</p>
+                <p className="footer-bar__dday">{footerDday}</p>
+              </div>
             </div>
-          </div>
 
-          <button
-            aria-label="기억 조각 보기"
-            className="memory-dots-button"
-            onClick={() => setIsMemoryModalOpen(true)}
-            type="button"
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-      </footer>
+            <button
+              aria-label="기억 조각 보기"
+              className="memory-dots-button"
+              onClick={() => setIsMemoryModalOpen(true)}
+              type="button"
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+        </footer>
+      ) : null}
 
       {isMemoryModalOpen ? (
         <div

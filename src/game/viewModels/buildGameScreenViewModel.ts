@@ -13,7 +13,6 @@ import type {
   VisibleMetricKey,
 } from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
-import { getCurrentLabel } from "../selectors/getCurrentLabel";
 import { resolveTurn } from "../systems/turnSystem";
 import { evaluateInterviewOutcome } from "../systems/interviewSystem";
 import type {
@@ -56,21 +55,6 @@ function buildStatusItems(session: RunState): StatusItemViewModel[] {
     label: item.label,
     value: session.metrics[item.key],
   }));
-}
-
-function buildDDayPulse(
-  remainingDays: number,
-  statusItems: StatusItemViewModel[],
-): GameScreenViewModel["dDayPulse"] {
-  if (remainingDays < 0 || remainingDays % 10 !== 0) {
-    return undefined;
-  }
-
-  return {
-    milestone: remainingDays,
-    label: remainingDays === 0 ? "INTERVIEW DAY" : `D-${remainingDays}`,
-    statusItems,
-  };
 }
 
 function getCurrentEvent(session: RunState, completedRunCount: number) {
@@ -123,6 +107,7 @@ function buildResolveChoice(
 ) {
   return (choice: Parameters<EventPanelViewModel["onResolveChoice"]>[0]) => {
     const event = eventPanel.event;
+    const isTutorialEvent = isTutorialEventId(event.id);
     const resolvedTurn = resolveTurn({
       session,
       event,
@@ -133,15 +118,16 @@ function buildResolveChoice(
 
     dispatch({
       type: "turn/resolved",
-      payload: isTutorialEventId(event.id)
+      payload: isTutorialEvent
         ? {
             ...resolvedTurn,
+            consumesTurn: false,
             nextScene: "event",
           }
         : resolvedTurn,
     });
 
-    if (isTutorialEventId(event.id)) {
+    if (isTutorialEvent) {
       dispatch({
         type: "run/continued",
         payload: {
@@ -149,7 +135,6 @@ function buildResolveChoice(
             {
               ...session,
               eventHistory: [...session.eventHistory, event.id],
-              turn: session.turn + 1,
             },
             completedRunCount,
           ),
@@ -218,19 +203,7 @@ export function buildGameScreenViewModel(
   completedRunCount: number,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
-  const remainingDays = Number.isFinite(session.maxTurns)
-    ? Math.max(session.maxTurns - session.turn - 1, 0)
-    : 0;
-  const turnLabel = Number.isFinite(session.maxTurns)
-    ? remainingDays === 0
-      ? "Interview Day"
-      : `Interview D-${remainingDays}`
-    : `Turn ${session.turn + 1}`;
-  const currentLabel = getCurrentLabel(session);
   const statusItems = buildStatusItems(session);
-  const dDayPulse = Number.isFinite(session.maxTurns)
-    ? buildDDayPulse(Math.max(session.maxTurns - session.turn, 0), statusItems)
-    : undefined;
 
   if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);
@@ -241,10 +214,7 @@ export function buildGameScreenViewModel(
       .join(", ");
 
     return {
-      turnLabel,
-      currentLabel,
       statusItems,
-      dDayPulse: undefined,
       endingPanel: {
         eyebrow: "New Message",
         title:
@@ -291,10 +261,7 @@ export function buildGameScreenViewModel(
   }
 
   return {
-    turnLabel,
-    currentLabel,
     statusItems,
-    dDayPulse,
     eventPanel: buildEventPanel(session, completedRunCount, dispatch),
   };
 }

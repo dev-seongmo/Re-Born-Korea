@@ -4,11 +4,38 @@ type Props = {
   viewModel: SetupScreenViewModel;
 };
 
+type FullscreenRoot = HTMLElement & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+};
+
+function requestGameFullscreen() {
+  if (typeof document === "undefined" || document.fullscreenElement) {
+    return;
+  }
+
+  const root = document.documentElement as FullscreenRoot;
+  const requestFullscreen =
+    root.requestFullscreen?.bind(root) ?? root.webkitRequestFullscreen?.bind(root);
+
+  if (!requestFullscreen) {
+    return;
+  }
+
+  void Promise.resolve(requestFullscreen()).catch(() => {
+    // Some mobile browsers only allow fullscreen in installed/PWA mode.
+  });
+}
+
 export function SetupScreen({ viewModel }: Props) {
+  function handleStart() {
+    requestGameFullscreen();
+    viewModel.onStart();
+  }
+
   return (
     <section className="panel">
       <div className="panel__header">
-        <p className="eyebrow">Setup</p>
+        <p className="eyebrow">Soul Setup</p>
         <h2>{viewModel.title}</h2>
         <p className="muted">{viewModel.description}</p>
       </div>
@@ -18,7 +45,7 @@ export function SetupScreen({ viewModel }: Props) {
           <label className="field" key={field.key}>
             <span>{field.label}</span>
             <input
-              placeholder="Enter a name"
+              placeholder="이름없는 영혼"
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
             />
@@ -29,7 +56,7 @@ export function SetupScreen({ viewModel }: Props) {
       <button
         className="primary-button"
         disabled={!viewModel.canStart}
-        onClick={viewModel.onStart}
+        onClick={handleStart}
       >
         {viewModel.startLabel}
       </button>

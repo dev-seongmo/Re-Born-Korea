@@ -1,4 +1,7 @@
 :root {
+  --game-card-size: 340px;
+  --game-narrative-height: 132px;
+  --game-name-height: 24px;
   color-scheme: dark;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   background:
@@ -20,11 +23,18 @@ body,
   margin: 0;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
 body {
   min-height: 100vh;
   background:
     radial-gradient(circle at top center, rgba(141, 164, 111, 0.08), transparent 18%),
     linear-gradient(180deg, #05070b 0%, #090d14 100%);
+  touch-action: manipulation;
 }
 
 button,
@@ -84,7 +94,6 @@ button {
   text-transform: uppercase;
 }
 
-.topbar__status,
 .panel {
   border: 1px solid rgba(245, 239, 229, 0.12);
   background: rgba(12, 17, 27, 0.88);
@@ -92,7 +101,6 @@ button {
   border-radius: 24px;
 }
 
-.topbar__label,
 .muted {
   color: #c4c0b4;
 }
@@ -319,7 +327,6 @@ button {
 
 .game-grid {
   grid-template-columns: 1fr;
-  position: relative;
 }
 
 .panel {
@@ -338,10 +345,6 @@ button {
   margin-bottom: 20px;
 }
 
-.panel__header--compact {
-  margin-bottom: 12px;
-}
-
 .setup-grid,
 .choice-list {
   display: grid;
@@ -353,10 +356,93 @@ button {
   margin-bottom: 20px;
 }
 
-.title-actions,
 .confirm-modal__actions {
   display: grid;
   gap: 12px;
+}
+
+.title-screen {
+  position: relative;
+  min-height: min(860px, calc(100vh - 32px));
+  display: grid;
+  grid-template-rows: minmax(170px, 0.72fr) auto;
+  align-items: end;
+  overflow: hidden;
+  padding: 42px 22px 34px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(3, 7, 14, 0.05) 0%, rgba(3, 7, 14, 0.26) 44%, rgba(3, 7, 14, 0.84) 100%),
+    var(--title-bg) center / cover no-repeat,
+    #06080d;
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 239, 229, 0.1),
+    0 20px 56px rgba(0, 0, 0, 0.34);
+}
+
+.title-screen__logo {
+  align-self: start;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  color: #f5efe5;
+  text-align: center;
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.74),
+    0 0 28px rgba(156, 183, 220, 0.24);
+}
+
+.title-screen__logo span,
+.title-screen__logo strong {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 0.9;
+}
+
+.title-screen__logo span {
+  font-size: 4.2rem;
+  font-weight: 400;
+}
+
+.title-screen__logo strong {
+  font-size: 5rem;
+  font-weight: 700;
+}
+
+.title-screen__actions {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 340px);
+  justify-self: center;
+}
+
+.title-screen__button {
+  min-height: 54px;
+  border: 1px solid rgba(245, 239, 229, 0.22);
+  border-radius: 16px;
+  padding: 14px 18px;
+  background: rgba(8, 13, 23, 0.68);
+  color: #f5efe5;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.title-screen__button--primary {
+  background: rgba(213, 192, 165, 0.92);
+  color: #10141c;
+  border-color: rgba(255, 244, 225, 0.44);
+}
+
+.title-screen__button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.title-screen__button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
 }
 
 .field {
@@ -418,7 +504,6 @@ button {
 }
 
 .event-card,
-.result-card,
 .ending-card {
   display: grid;
   gap: 14px;
@@ -511,180 +596,11 @@ button {
   font-size: 0.72rem;
 }
 
-.dday-pulse {
-  position: absolute;
-  inset: -8px;
-  z-index: 8;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at center, rgba(245, 239, 229, 0.13), transparent 36%),
-    rgba(3, 5, 10, 0.34);
-  animation: dday-pulse-backdrop 2400ms ease-out both;
-}
-
-.dday-pulse__content {
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  width: min(92%, 380px);
-  padding: 26px 22px;
-  text-align: center;
-  transform-origin: center;
-  animation: dday-pulse-content 2400ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.dday-pulse__eyebrow {
-  margin: 0;
-  color: #e7d6bd;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.dday-pulse__label {
-  color: #fff8eb;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 4.8rem;
-  line-height: 0.92;
-  text-shadow:
-    0 0 24px rgba(227, 196, 141, 0.28),
-    0 18px 38px rgba(0, 0, 0, 0.42);
-}
-
-.dday-pulse__metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  width: 100%;
-}
-
-.dday-pulse__metric {
-  display: grid;
-  gap: 2px;
-  padding: 10px 6px;
-  border-radius: 14px;
-  background: rgba(9, 12, 19, 0.72);
-  border: 1px solid rgba(245, 239, 229, 0.14);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26);
-}
-
-.dday-pulse__metric span {
-  color: #cfc7b8;
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.dday-pulse__metric strong {
-  color: #f5efe5;
-  font-size: 1.15rem;
-}
-
-@keyframes dday-pulse-backdrop {
-  0% {
-    opacity: 0;
-  }
-
-  12% {
-    opacity: 1;
-  }
-
-  68% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes dday-pulse-content {
-  0% {
-    opacity: 0;
-    filter: blur(8px);
-    transform: translate3d(0, 18px, 0) scale(1.22);
-  }
-
-  16% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  68% {
-    opacity: 0.92;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    filter: blur(3px);
-    transform: translate3d(0, -8px, 0) scale(0.96);
-  }
-}
-
-.dialogue-line,
-.result-card p,
 .ending-card p {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.06rem;
   line-height: 1.75;
-}
-
-.chasa-stage {
-  position: relative;
-  margin-bottom: 18px;
-  padding: 18px 18px 12px;
-  border-radius: 24px;
-  overflow: hidden;
-  border: 1px solid rgba(245, 239, 229, 0.1);
-  background:
-    radial-gradient(circle at top center, rgba(97, 123, 171, 0.18), transparent 28%),
-    radial-gradient(circle at bottom center, rgba(154, 53, 70, 0.14), transparent 24%),
-    linear-gradient(180deg, rgba(17, 23, 35, 0.94), rgba(10, 13, 21, 0.98));
-}
-
-.chasa-stage__backdrop {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 32%),
-    radial-gradient(circle at 50% 78%, rgba(237, 225, 200, 0.08), transparent 22%);
-  pointer-events: none;
-}
-
-.chasa-stage__guide,
-.chasa-stage__caption {
-  position: relative;
-  z-index: 1;
-}
-
-.chasa-stage__guide {
-  display: grid;
-  place-items: center;
-  min-height: 320px;
-}
-
-.chasa-guide {
-  width: min(100%, 240px);
-  height: auto;
-  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.42));
-}
-
-.chasa-stage__caption {
-  display: grid;
-  gap: 4px;
-  text-align: center;
-  color: #d4c9ba;
-}
-
-.chasa-stage__caption p {
-  margin: 0;
 }
 
 .status-bar {
@@ -753,9 +669,14 @@ button {
   display: grid;
   place-items: center;
   gap: 14px;
-  grid-template-rows: minmax(132px, 132px) minmax(340px, 340px) minmax(24px, 24px);
+  grid-template-rows:
+    minmax(var(--game-narrative-height), var(--game-narrative-height))
+    minmax(var(--game-card-size), var(--game-card-size))
+    minmax(var(--game-name-height), var(--game-name-height));
   animation: first-card-approach 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
   transform-origin: center 58%;
+  overscroll-behavior: contain;
+  touch-action: none;
 }
 
 @keyframes first-card-approach {
@@ -778,9 +699,9 @@ button {
 }
 
 .swipe-card__narrative {
-  width: min(100%, 340px);
-  min-height: 132px;
-  max-height: 132px;
+  width: min(100%, var(--game-card-size));
+  min-height: var(--game-narrative-height);
+  max-height: var(--game-narrative-height);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -792,10 +713,10 @@ button {
 
 .swipe-card {
   position: relative;
-  width: min(100%, 340px);
-  max-width: 340px;
+  width: min(100%, var(--game-card-size));
+  max-width: var(--game-card-size);
   aspect-ratio: 1 / 1;
-  min-height: 340px;
+  min-height: var(--game-card-size);
   padding: 0;
   border-radius: 28px;
   overflow: clip;
@@ -811,7 +732,7 @@ button {
     transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 220ms ease,
     border-color 220ms ease;
-  touch-action: pan-y;
+  touch-action: none;
   user-select: none;
   will-change: transform;
   transform-origin: center center;
@@ -842,30 +763,6 @@ button {
 
 .swipe-card--disabled {
   cursor: pointer;
-}
-
-.swipe-card--result {
-  transform: none;
-  width: min(100%, 340px);
-  max-width: 340px;
-  min-height: 420px;
-  aspect-ratio: auto;
-  display: block;
-  text-align: inherit;
-  cursor: pointer;
-}
-
-.swipe-card__continue {
-  align-self: end;
-  width: 100%;
-  pointer-events: none;
-}
-
-.swipe-card__hint {
-  color: #c7beaf;
-  font-size: 0.8rem;
-  text-align: center;
-  letter-spacing: 0.04em;
 }
 
 .swipe-card__answer {
@@ -1024,9 +921,9 @@ button {
 }
 
 .swipe-card__name-slot {
-  width: min(100%, 340px);
-  min-height: 24px;
-  max-height: 24px;
+  width: min(100%, var(--game-card-size));
+  min-height: var(--game-name-height);
+  max-height: var(--game-name-height);
   display: grid;
   place-items: center;
 }
@@ -1066,9 +963,16 @@ button {
 }
 
 @media (max-width: 900px) {
+  :root {
+    --game-card-size: clamp(248px, min(82vw, calc((100dvh - 320px) * 0.72)), 320px);
+    --game-narrative-height: clamp(92px, calc(var(--game-card-size) * 0.39), 124px);
+    --game-name-height: 22px;
+  }
+
   .app-shell {
-    width: min(100vw - 16px, 520px);
-    padding-top: 12px;
+    width: min(calc(100vw - 16px), calc(var(--game-card-size) + 48px), 520px);
+    padding-top: 10px;
+    padding-bottom: 14px;
   }
 
   .panel {
@@ -1080,64 +984,14 @@ button {
     gap: 2px;
   }
 
-  .chasa-stage__guide {
-    min-height: 280px;
-  }
-
-  .swipe-card {
-    width: min(100%, 320px);
-    max-width: 320px;
-    min-height: 320px;
-  }
-
-  .swipe-card--result {
-    width: min(100%, 320px);
-    min-height: 396px;
-  }
-
-  .swipe-stage {
-    grid-template-rows: minmax(124px, 124px) minmax(320px, 320px) minmax(22px, 22px);
-  }
-
-  .swipe-card__narrative {
-    min-height: 124px;
-    max-height: 124px;
-  }
-
-  .swipe-card__name-slot {
-    min-height: 22px;
-    max-height: 22px;
-  }
-
   .swipe-card__text {
     font-size: 1.05rem;
   }
 
-  .dday-pulse__label {
-    font-size: 3.9rem;
-  }
-
-  .dday-pulse__metrics {
-    gap: 6px;
-  }
-
-  .dday-pulse__metric {
-    padding: 8px 4px;
-  }
-
-  .dday-pulse__metric strong {
-    font-size: 1rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swipe-stage,
-  .dday-pulse,
-  .dday-pulse__content {
+  .swipe-stage {
     animation: none;
-  }
-
-  .dday-pulse {
-    opacity: 0;
   }
 }

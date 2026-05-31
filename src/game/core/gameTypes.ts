@@ -217,6 +217,7 @@ export type GameAction =
         memoryTags: string[];
         tendencyScores: TendencyScores;
         nextScene: RunScene;
+        consumesTurn?: boolean;
       };
     }
   | {

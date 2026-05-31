@@ -109,7 +109,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         run: updateRun(state.run, (run) => ({
           ...run,
           scene: action.payload.nextScene,
-          turn: run.turn + 1,
+          turn: run.turn + (action.payload.consumesTurn === false ? 0 : 1),
           currentEventId: action.payload.eventId,
           eventHistory: [...run.eventHistory, action.payload.eventId],
           latestResult: action.payload.result,

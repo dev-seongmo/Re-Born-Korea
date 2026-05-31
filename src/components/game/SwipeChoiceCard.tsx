@@ -1,5 +1,5 @@
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EventCard, EventChoice } from "../../game/core/gameTypes";
 import { mapEventToCardViewModel } from "../../game/presenters/mapEventToCardViewModel";
 import { CardAnswerBadge } from "./CardAnswerBadge";
@@ -20,6 +20,7 @@ type Props = {
 const COMMIT_DISTANCE = 86;
 const MAX_DRAG_DISTANCE = 66;
 const FLYOUT_DISTANCE = 920;
+const FIRST_TUTORIAL_EVENT_ID = "tutorial-afterlife-question";
 
 function applyElasticDrag(value: number) {
   const direction = value < 0 ? -1 : 1;
@@ -48,21 +49,58 @@ export function SwipeChoiceCard({
   const dragXRef = useRef(0);
   const draggingRef = useRef(false);
   const resolveLockRef = useRef(false);
+  const autoDemoStoppedRef = useRef(false);
   const [dragX, setDragX] = useState(0);
+  const [demoDragX, setDemoDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isFlyingOut, setIsFlyingOut] = useState(false);
 
+  const shouldAutoDemo =
+    event.id === FIRST_TUTORIAL_EVENT_ID &&
+    !disabled &&
+    !isDragging &&
+    !isFlyingOut &&
+    !autoDemoStoppedRef.current;
+  const visualDragX = shouldAutoDemo ? demoDragX : dragX;
   const leftChoice = event.choices[0];
   const rightChoice = event.choices[1];
   const card = mapEventToCardViewModel(event);
 
   const direction: SwipeDirection =
-    dragX > 18 ? "right" : dragX < -18 ? "left" : null;
+    visualDragX > 18 ? "right" : visualDragX < -18 ? "left" : null;
 
-  const intensity = Math.min(Math.abs(dragX) / COMMIT_DISTANCE, 1);
-  const rotation = dragX * 0.045;
+  const intensity = Math.min(Math.abs(visualDragX) / COMMIT_DISTANCE, 1);
+  const rotation = visualDragX * 0.045;
   const showLeftBadge = !disabled && direction === "right";
   const showRightBadge = !disabled && direction === "left";
+
+  useEffect(() => {
+    autoDemoStoppedRef.current = false;
+    setDemoDragX(0);
+
+    if (event.id !== FIRST_TUTORIAL_EVENT_ID || disabled) {
+      return;
+    }
+
+    const steps = [0, 58, 0, -58, 0, 46, 0, -46, 0];
+    const timeouts = steps.map((value, index) =>
+      window.setTimeout(() => {
+        if (!autoDemoStoppedRef.current) {
+          setDemoDragX(value);
+        }
+      }, 420 + index * 520),
+    );
+
+    const stopTimeout = window.setTimeout(() => {
+      autoDemoStoppedRef.current = true;
+      setDemoDragX(0);
+    }, 420 + steps.length * 520);
+
+    return () => {
+      timeouts.forEach((timeoutId) => window.clearTimeout(timeoutId));
+      window.clearTimeout(stopTimeout);
+    };
+  }, [disabled, event.id]);
 
   function setPointerCapture(pointerId: number) {
     if (cardRef.current && cardRef.current.hasPointerCapture(pointerId) === false) {
@@ -131,6 +169,9 @@ export function SwipeChoiceCard({
       return;
     }
 
+    eventObject.preventDefault();
+    autoDemoStoppedRef.current = true;
+    setDemoDragX(0);
     pointerIdRef.current = eventObject.pointerId;
     startXRef.current = eventObject.clientX;
     draggingRef.current = true;
@@ -147,6 +188,7 @@ export function SwipeChoiceCard({
       return;
     }
 
+    eventObject.preventDefault();
     const nextX = applyElasticDrag(eventObject.clientX - startXRef.current);
     dragXRef.current = nextX;
     setDragX(nextX);
@@ -157,6 +199,7 @@ export function SwipeChoiceCard({
       return;
     }
 
+    eventObject.preventDefault();
     releasePointerCapture(eventObject.pointerId);
 
     const finalX = dragXRef.current;
@@ -194,6 +237,7 @@ export function SwipeChoiceCard({
       return;
     }
 
+    eventObject.preventDefault();
     releasePointerCapture(eventObject.pointerId);
     resetCard();
   }
@@ -222,7 +266,7 @@ export function SwipeChoiceCard({
         role={disabled ? "button" : undefined}
         style={
           {
-            "--drag-x": `${dragX}px`,
+            "--drag-x": `${visualDragX}px`,
             "--card-rotate": `${rotation}deg`,
             "--choice-intensity": intensity.toFixed(3),
           } as CSSProperties
