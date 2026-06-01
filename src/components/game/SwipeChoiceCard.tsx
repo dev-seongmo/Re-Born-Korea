@@ -21,6 +21,8 @@ const COMMIT_DISTANCE = 86;
 const MAX_DRAG_DISTANCE = 66;
 const FLYOUT_DISTANCE = 920;
 const FIRST_TUTORIAL_EVENT_ID = "tutorial-afterlife-question";
+const AUTO_DEMO_INITIAL_DELAY = 620;
+const AUTO_DEMO_STEP_DELAY = 760;
 
 function applyElasticDrag(value: number) {
   const direction = value < 0 ? -1 : 1;
@@ -82,19 +84,19 @@ export function SwipeChoiceCard({
       return;
     }
 
-    const steps = [0, 58, 0, -58, 0, 46, 0, -46, 0];
+    const steps = [0, 46, 0, -46, 0, 38, 0, -38, 0];
     const timeouts = steps.map((value, index) =>
       window.setTimeout(() => {
         if (!autoDemoStoppedRef.current) {
           setDemoDragX(value);
         }
-      }, 420 + index * 520),
+      }, AUTO_DEMO_INITIAL_DELAY + index * AUTO_DEMO_STEP_DELAY),
     );
 
     const stopTimeout = window.setTimeout(() => {
       autoDemoStoppedRef.current = true;
       setDemoDragX(0);
-    }, 420 + steps.length * 520);
+    }, AUTO_DEMO_INITIAL_DELAY + steps.length * AUTO_DEMO_STEP_DELAY);
 
     return () => {
       timeouts.forEach((timeoutId) => window.clearTimeout(timeoutId));
@@ -251,6 +253,7 @@ export function SwipeChoiceCard({
       <div
         className={[
           "swipe-card",
+          shouldAutoDemo ? "swipe-card--auto-demo" : "",
           isDragging ? "swipe-card--dragging" : "",
           isFlyingOut ? "swipe-card--flying" : "",
           disabled ? "swipe-card--disabled" : "",

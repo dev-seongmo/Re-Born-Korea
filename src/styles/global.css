@@ -891,6 +891,13 @@ button {
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
+.swipe-card--auto-demo {
+  transition:
+    transform 560ms cubic-bezier(0.2, 0.86, 0.18, 1.12),
+    box-shadow 360ms ease,
+    border-color 360ms ease;
+}
+
 .swipe-card--flying {
   transition: transform 260ms cubic-bezier(0.18, 0.88, 0.32, 1.04);
 }
