@@ -58,7 +58,16 @@ export function GameScreen({ viewModel }: Props) {
             </button>
           </div>
         ) : viewModel.eventPanel ? (
-          <div className="event-card">
+          <div
+            className={[
+              "event-card",
+              viewModel.eventPanel.atmosphere
+                ? `event-card--${viewModel.eventPanel.atmosphere}`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
             <SwipeChoiceCard
               continueLabel={viewModel.eventPanel.continueLabel}
               disabled={viewModel.eventPanel.disabled}

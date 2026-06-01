@@ -548,6 +548,92 @@ button {
   overflow: hidden;
 }
 
+.event-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.event-card::before,
+.event-card::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.event-card::before {
+  background:
+    radial-gradient(ellipse at 18% 18%, rgba(220, 228, 216, 0.2), transparent 34%),
+    radial-gradient(ellipse at 82% 26%, rgba(174, 194, 199, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(210, 220, 218, 0.1), transparent 30%, rgba(178, 196, 196, 0.16));
+  filter: blur(16px);
+  transform: translate3d(-2%, 1%, 0) scale(1.05);
+}
+
+.event-card::after {
+  background:
+    linear-gradient(94deg, transparent 0%, rgba(216, 225, 218, 0.16) 18%, transparent 36%),
+    linear-gradient(101deg, transparent 28%, rgba(166, 188, 194, 0.18) 50%, transparent 72%),
+    linear-gradient(88deg, transparent 54%, rgba(232, 232, 220, 0.11) 76%, transparent 100%);
+  filter: blur(22px);
+  transform: translate3d(-16%, 3%, 0);
+}
+
+.event-card--tutorial-fog::before {
+  opacity: 0.85;
+  animation: tutorial-fog-breathe 9s ease-in-out infinite alternate;
+}
+
+.event-card--tutorial-fog::after {
+  opacity: 0.72;
+  animation: tutorial-fog-drift 13s linear infinite alternate;
+}
+
+.event-card--fog-clearing::before {
+  opacity: 0.34;
+  animation: tutorial-fog-clear 1200ms ease-out both;
+}
+
+.event-card--fog-clearing::after {
+  opacity: 0.22;
+  animation: tutorial-fog-drift 15s linear infinite alternate, tutorial-fog-clear 1200ms ease-out both;
+}
+
+@keyframes tutorial-fog-breathe {
+  from {
+    filter: blur(18px);
+    transform: translate3d(-3%, 1%, 0) scale(1.04);
+  }
+
+  to {
+    filter: blur(24px);
+    transform: translate3d(3%, -1%, 0) scale(1.09);
+  }
+}
+
+@keyframes tutorial-fog-drift {
+  from {
+    transform: translate3d(-18%, 3%, 0);
+  }
+
+  to {
+    transform: translate3d(18%, -2%, 0);
+  }
+}
+
+@keyframes tutorial-fog-clear {
+  from {
+    opacity: 0.72;
+  }
+
+  to {
+    opacity: 0.14;
+    filter: blur(30px);
+  }
+}
+
 .message-result {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto auto;

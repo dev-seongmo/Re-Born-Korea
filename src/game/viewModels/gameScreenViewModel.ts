@@ -21,6 +21,7 @@ export type EndingPanelViewModel = {
 export type EventPanelViewModel = {
   narrativeText: string;
   event: EventCard;
+  atmosphere?: "tutorial-fog" | "fog-clearing";
   disabled?: boolean;
   continueLabel?: string;
   onContinue?: () => void;

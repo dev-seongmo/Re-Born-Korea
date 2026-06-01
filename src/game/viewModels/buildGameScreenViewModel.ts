@@ -6,6 +6,7 @@ import {
   getPrototypeEventById,
   hasRemainingTutorialEvents,
   isTutorialEventId,
+  tutorialEventIds,
 } from "../content/eventCards";
 import type {
   GameAction,
@@ -48,6 +49,18 @@ const interviewPressureQuestions: Record<VisibleMetricKey, string> = {
   mental:
     "\"많이 지쳐 보입니다. 압박이 오면 무너지지 않을 자신이 정말 있습니까?\"",
 };
+
+const FOG_CLEARING_TUTORIAL_EVENT_ID = "tutorial-fog-clears";
+
+function getEventAtmosphere(eventId: string): EventPanelViewModel["atmosphere"] {
+  if (!tutorialEventIds.includes(eventId)) {
+    return undefined;
+  }
+
+  return eventId === FOG_CLEARING_TUTORIAL_EVENT_ID
+    ? "fog-clearing"
+    : "tutorial-fog";
+}
 
 function buildStatusItems(session: RunState): StatusItemViewModel[] {
   return statusItemsConfig.map((item) => ({
@@ -158,6 +171,7 @@ function buildEventPanel(
   const basePanel: EventPanelViewModel = {
     narrativeText: buildNarrativeText(session, event.text),
     event,
+    atmosphere: getEventAtmosphere(event.id),
     onResolveChoice: () => undefined,
   };
 
