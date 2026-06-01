@@ -52,7 +52,11 @@ export function App() {
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
   const canContinue = Boolean(state.run && state.run.scene !== "setup");
-  const shouldShowTopbar = state.appScene !== "title";
+  const shouldShowTopbar =
+    state.appScene !== "title" &&
+    state.appScene !== "run-event" &&
+    state.appScene !== "run-result" &&
+    state.appScene !== "run-ending";
   const shouldShowFooter =
     state.appScene !== "title" && state.appScene !== "run-setup";
 
@@ -366,6 +370,36 @@ export function App() {
                 <p className="footer-bar__dday">{footerDday}</p>
               </div>
             </div>
+
+            <button
+              aria-label="설정"
+              className="footer-bar__settings-button"
+              onClick={() => setIsSettingsModalOpen(true)}
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                className="footer-bar__settings-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  fill="none"
+                  r="3.2"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+              </svg>
+            </button>
 
             <button
               aria-label="기억 조각 보기"
