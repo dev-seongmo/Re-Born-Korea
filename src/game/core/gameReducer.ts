@@ -19,6 +19,8 @@ function toAppScene(scene: RunScene): GameState["appScene"] {
       return "run-result";
     case "ending":
       return "run-ending";
+    case "game-over":
+      return "run-game-over";
     default:
       return "run-event";
   }
@@ -113,6 +115,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           currentEventId: action.payload.eventId,
           eventHistory: [...run.eventHistory, action.payload.eventId],
           latestResult: action.payload.result,
+          gameOverReason: action.payload.gameOverReason ?? null,
           metrics: {
             spec: clampMetric(action.payload.metrics.spec),
             money: clampMetric(action.payload.metrics.money),
@@ -134,6 +137,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...run,
           scene: "event",
           currentEventId: action.payload.nextEventId,
+          gameOverReason: null,
         })),
       };
 
@@ -162,6 +166,26 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ),
           trueEndingUnlocked,
           trueEndingSeen: state.meta.trueEndingSeen,
+        },
+      };
+    }
+
+    case "run/gameOverAcknowledged": {
+      const unlockedMemoryShardIds = mergeShardIds(
+        state.meta.unlockedMemoryShardIds,
+        action.payload.discoveredMemoryShardIds,
+      );
+      const trueEndingUnlocked =
+        unlockedMemoryShardIds.length >= memoryShards.length;
+
+      return {
+        appScene: "title",
+        run: null,
+        meta: {
+          ...state.meta,
+          runCount: state.meta.runCount + 1,
+          unlockedMemoryShardIds,
+          trueEndingUnlocked,
         },
       };
     }

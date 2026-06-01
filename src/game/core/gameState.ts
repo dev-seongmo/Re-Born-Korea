@@ -56,6 +56,7 @@ export function createInitialRunState(
     tendencyScores: defaultTendencies,
     eventHistory: [],
     latestResult: null,
+    gameOverReason: null,
     settings: defaultSettings,
     runOutcome: null,
     ...overrides,

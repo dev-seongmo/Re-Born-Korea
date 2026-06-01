@@ -15,6 +15,7 @@ import { calculateIdentityStage } from "./identitySystem";
 import { clampMetric } from "./metricSystem";
 import { resolveRoll } from "./rollSystem";
 import { applySelfTrust } from "./selfTrustSystem";
+import { getGameOverReason } from "./gameOverSystem";
 
 function applyMetricDelta(
   metrics: VisibleMetrics,
@@ -88,6 +89,7 @@ export function resolveTurn(params: {
     metrics: nextMetrics,
     tendencies: nextTendencies,
   });
+  const gameOverReason = getGameOverReason(nextMetrics);
 
   return {
     eventId: event.id,
@@ -103,6 +105,7 @@ export function resolveTurn(params: {
     identityStage: nextIdentityStage,
     memoryTags: nextMemoryTags,
     tendencyScores: nextTendencies,
-    nextScene: getNextScene(session),
+    nextScene: gameOverReason ? "game-over" : getNextScene(session),
+    gameOverReason,
   };
 }

@@ -21,7 +21,37 @@ export function GameScreen({ viewModel }: Props) {
       </section>
 
       <section className="panel panel--event">
-        {viewModel.endingPanel ? (
+        {viewModel.gameOverPanel ? (
+          <div className="ending-card message-result message-result--game-over">
+            <div className="message-result__phone-bar">
+              <span>00:00</span>
+              <span>END</span>
+            </div>
+            <div className="message-result__header">
+              <p className="eyebrow">{viewModel.gameOverPanel.eyebrow}</p>
+              <h3>{viewModel.gameOverPanel.title}</h3>
+              <p>{viewModel.gameOverPanel.summary}</p>
+            </div>
+            <div className="message-result__bubble">
+              {viewModel.gameOverPanel.description.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+            <div className="message-result__metrics" aria-label="game over metric">
+              <span>
+                {viewModel.gameOverPanel.metricLabel}{" "}
+                {viewModel.gameOverPanel.metricValue}
+              </span>
+            </div>
+            <button
+              className="primary-button"
+              onClick={viewModel.gameOverPanel.onContinue}
+              type="button"
+            >
+              {viewModel.gameOverPanel.nextLabel}
+            </button>
+          </div>
+        ) : viewModel.endingPanel ? (
           <div
             className={[
               "ending-card",

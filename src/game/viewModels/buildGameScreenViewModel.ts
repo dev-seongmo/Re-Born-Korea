@@ -1,5 +1,6 @@
 import type { Dispatch } from "react";
 import { audioManager } from "../../audio/audioManager";
+import { getGameOverContent } from "../content/gameOverResults";
 import {
   drawNextPrototypeEventId,
   finalInterviewEventId,
@@ -37,6 +38,13 @@ const metricMessageLabels: Record<VisibleMetricKey, string> = {
   money: "생활 안정",
   reputation: "관계",
   mental: "체력",
+};
+
+const metricDisplayLabels: Record<VisibleMetricKey, string> = {
+  spec: "Spec",
+  money: "Money",
+  reputation: "Reputation",
+  mental: "Mental",
 };
 
 const interviewPressureQuestions: Record<VisibleMetricKey, string> = {
@@ -135,12 +143,12 @@ function buildResolveChoice(
         ? {
             ...resolvedTurn,
             consumesTurn: false,
-            nextScene: "event",
+            nextScene: resolvedTurn.gameOverReason ? "game-over" : "event",
           }
         : resolvedTurn,
     });
 
-    if (isTutorialEvent) {
+    if (isTutorialEvent && !resolvedTurn.gameOverReason) {
       dispatch({
         type: "run/continued",
         payload: {
@@ -218,6 +226,30 @@ export function buildGameScreenViewModel(
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
   const statusItems = buildStatusItems(session);
+
+  if (session.scene === "game-over" && session.gameOverReason) {
+    const gameOver = getGameOverContent(session.gameOverReason);
+
+    return {
+      statusItems,
+      gameOverPanel: {
+        eyebrow: "Run Terminated",
+        title: gameOver.title,
+        summary: gameOver.summary,
+        description: gameOver.description,
+        metricLabel: metricDisplayLabels[gameOver.metric],
+        metricValue: session.metrics[gameOver.metric],
+        nextLabel: gameOver.restartLabel,
+        onContinue: () =>
+          dispatch({
+            type: "run/gameOverAcknowledged",
+            payload: {
+              discoveredMemoryShardIds: session.memoryTags,
+            },
+          }),
+      },
+    };
+  }
 
   if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);

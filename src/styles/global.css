@@ -706,6 +706,17 @@ button {
   border-color: rgba(232, 151, 151, 0.18);
 }
 
+.message-result--game-over {
+  background:
+    linear-gradient(180deg, rgba(37, 22, 28, 0.96), rgba(8, 9, 14, 0.98)),
+    #120b10;
+}
+
+.message-result--game-over .message-result__bubble {
+  background: rgba(94, 42, 50, 0.32);
+  border-color: rgba(241, 132, 132, 0.2);
+}
+
 .message-result__bubble p {
   margin: 0;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;

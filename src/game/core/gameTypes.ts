@@ -1,4 +1,4 @@
-export type RunScene = "setup" | "event" | "result" | "ending";
+export type RunScene = "setup" | "event" | "result" | "ending" | "game-over";
 
 export type AppScene =
   | "title"
@@ -7,6 +7,7 @@ export type AppScene =
   | "run-event"
   | "run-result"
   | "run-ending"
+  | "run-game-over"
   | "memory-hub"
   | "true-ending";
 
@@ -100,6 +101,16 @@ export type EventResult = {
   text: string;
 };
 
+export type GameOverReason =
+  | "mental_zero"
+  | "money_zero"
+  | "reputation_zero"
+  | "spec_zero"
+  | "mental_max"
+  | "money_max"
+  | "reputation_max"
+  | "spec_max";
+
 export type EndingId = "proofOfWorth" | "barelySurvived" | "nameReborn";
 
 export type EndingDefinition = {
@@ -155,6 +166,7 @@ export type RunState = {
   tendencyScores: TendencyScores;
   eventHistory: string[];
   latestResult: EventResult | null;
+  gameOverReason: GameOverReason | null;
   settings: GameSettings;
   runOutcome: RunOutcome | null;
 };
@@ -217,6 +229,7 @@ export type GameAction =
         memoryTags: string[];
         tendencyScores: TendencyScores;
         nextScene: RunScene;
+        gameOverReason?: GameOverReason | null;
         consumesTurn?: boolean;
       };
     }
@@ -231,6 +244,12 @@ export type GameAction =
       payload: {
         endingId: EndingId;
         outcome: RunOutcome;
+        discoveredMemoryShardIds: string[];
+      };
+    }
+  | {
+      type: "run/gameOverAcknowledged";
+      payload: {
         discoveredMemoryShardIds: string[];
       };
     }

@@ -56,7 +56,8 @@ export function App() {
     state.appScene !== "title" &&
     state.appScene !== "run-event" &&
     state.appScene !== "run-result" &&
-    state.appScene !== "run-ending";
+    state.appScene !== "run-ending" &&
+    state.appScene !== "run-game-over";
   const shouldShowFooter =
     state.appScene !== "title" && state.appScene !== "run-setup";
 
@@ -283,7 +284,8 @@ export function App() {
             />
           ) : state.appScene === "run-event" ||
             state.appScene === "run-result" ||
-            state.appScene === "run-ending" ? (
+            state.appScene === "run-ending" ||
+            state.appScene === "run-game-over" ? (
             state.run ? (
               <GameScreen
                 viewModel={buildGameScreenViewModel(

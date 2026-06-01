@@ -18,6 +18,17 @@ export type EndingPanelViewModel = {
   onContinue: () => void;
 };
 
+export type GameOverPanelViewModel = {
+  eyebrow: string;
+  title: string;
+  summary: string;
+  description: string[];
+  metricLabel: string;
+  metricValue: number;
+  nextLabel: string;
+  onContinue: () => void;
+};
+
 export type EventPanelViewModel = {
   narrativeText: string;
   event: EventCard;
@@ -31,5 +42,6 @@ export type EventPanelViewModel = {
 export type GameScreenViewModel = {
   statusItems: StatusItemViewModel[];
   endingPanel?: EndingPanelViewModel;
+  gameOverPanel?: GameOverPanelViewModel;
   eventPanel?: EventPanelViewModel;
 };
