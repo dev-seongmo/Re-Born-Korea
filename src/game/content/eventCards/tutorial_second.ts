@@ -1,174 +1,153 @@
 import type { EventCard } from "../../core/gameTypes";
 
+function makeSecondLifeChoice(params: {
+  id: string;
+  label: string;
+  resultText: string;
+}): EventCard["choices"][number] {
+  return {
+    id: params.id,
+    label: params.label,
+    immediate: {},
+    selfTrustDelta: 0,
+    primaryStat: "mental",
+    modifier: 0,
+    results: {
+      bad: { text: params.resultText },
+      mixed: { text: params.resultText },
+      good: { text: params.resultText },
+    },
+  };
+}
+
 export const secondLifeTutorialEvents: EventCard[] = [
   {
     id: "second-life-wakeup",
+    characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
     text:
-      "The same road returns, but this time it feels familiar. The chasa watches to see whether you notice first.",
+      "잘 다녀왔나?\n\n표정을 보니 첫 면접은 쉽지 않았던 모양이군.",
     choices: [
-      {
-        id: "admit-recognition",
-        label: "Say that you remember this road.",
-        immediate: { mental: 1, reputation: 1 },
-        selfTrustDelta: 2,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["second_life_awareness"],
-        tendencyTags: ["mental", "selfTrust"],
-        results: {
-          bad: {
-            text: "\"Then prove it with your steps.\" Recognition alone does not make the road lighter.",
-          },
-          mixed: {
-            text: "\"Good. At least you stopped pretending this is your first fall.\"",
-            delta: { mental: 1 },
-          },
-          good: {
-            text: "\"Memory is not a prize. It is responsibility.\" The chasa slows down just enough for you to keep pace.",
-            delta: { mental: 1, reputation: 1 },
-            selfTrustDelta: 1,
-          },
-        },
-      },
-      {
-        id: "hide-recognition",
-        label: "Pretend this is all still new.",
-        immediate: { reputation: 1, mental: -1 },
-        selfTrustDelta: -2,
-        primaryStat: "reputation",
-        modifier: -1,
-        memoryTags: ["second_life_denial"],
-        tendencyTags: ["comparison"],
-        results: {
-          bad: {
-            text: "\"You are late even to your own memory.\" The silence grows heavier around your feet.",
-            delta: { mental: -1 },
-            selfTrustDelta: -1,
-          },
-          mixed: {
-            text: "\"Then I will speak as if you know nothing.\" It keeps the shame hidden, not gone.",
-          },
-          good: {
-            text: "The lie buys a little composure, but not much peace.",
-            delta: { reputation: 1 },
-          },
-        },
-      },
+      makeSecondLifeChoice({
+        id: "admit-employment-is-hard",
+        label: "취업이 보통 힘든 게 아니네...",
+        resultText:
+          "이번 실패를 잘 봐라.\n\n스펙만 부족했는지, 멘탈이 무너졌는지, 돈 때문에 기회를 놓쳤는지.",
+      }),
+      makeSecondLifeChoice({
+        id: "ask-what-went-wrong",
+        label: "뭘 잘못한 거지?",
+        resultText:
+          "이번 실패를 잘 봐라.\n\n스펙만 부족했는지, 멘탈이 무너졌는지, 돈 때문에 기회를 놓쳤는지.",
+      }),
     ],
   },
   {
-    id: "second-life-warning",
+    id: "second-life-failure-review",
+    characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
     text:
-      "At the fork in the road, the lantern burns a little brighter. \"A repeated life is not a safer one,\" the chasa says.",
+      "이번 실패를 잘 봐라.\n\n스펙만 부족했는지, 멘탈이 무너졌는지, 돈 때문에 기회를 놓쳤는지.",
     choices: [
-      {
-        id: "ask-what-changed",
-        label: "Ask what changed this time.",
-        immediate: { mental: 1 },
-        selfTrustDelta: 1,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["second_life_question"],
-        tendencyTags: ["mental", "selfTrust"],
-        results: {
-          bad: {
-            text: "\"Enough to hurt again.\" The answer is colder than you hoped.",
-          },
-          mixed: {
-            text: "\"Only what you choose differently.\" The meaning settles in after the words do.",
-            delta: { mental: 1 },
-          },
-          good: {
-            text: "\"This time, your hesitation will also remember you.\" The warning lands like advice.",
-            delta: { mental: 1, reputation: 1 },
-          },
-        },
-      },
-      {
-        id: "say-nothing-again",
-        label: "Keep quiet and move first.",
-        immediate: { reputation: 2 },
-        selfTrustDelta: 0,
-        primaryStat: "reputation",
-        modifier: 1,
-        memoryTags: ["second_life_silence"],
-        tendencyTags: ["reputation"],
-        results: {
-          bad: {
-            text: "You move quickly, but your chest lags behind.",
-            delta: { mental: -1 },
-          },
-          mixed: {
-            text: "\"At least you learned motion.\" The chasa does not sound impressed, only certain.",
-            delta: { reputation: 1 },
-          },
-          good: {
-            text: "Silence becomes focus for one brief stretch of road.",
-            delta: { reputation: 1, mental: 1 },
-          },
-        },
-      },
+      makeSecondLifeChoice({
+        id: "not-one-thing",
+        label: "하나만 보면 안 되는구나.",
+        resultText:
+          "앞으로 네가 관리할 것은 네 가지다.\n\n스펙, 멘탈, 관계, 돈.",
+      }),
+      makeSecondLifeChoice({
+        id: "everything-connected",
+        label: "전부 연결돼 있네.",
+        resultText:
+          "앞으로 네가 관리할 것은 네 가지다.\n\n스펙, 멘탈, 관계, 돈.",
+      }),
+    ],
+  },
+  {
+    id: "second-life-four-metrics",
+    characterName: "청령차사",
+    category: "tutorial",
+    phase: "early20s",
+    text: "앞으로 네가 관리할 것은 네 가지다.\n\n스펙, 멘탈, 관계, 돈.",
+    choices: [
+      makeSecondLifeChoice({
+        id: "ask-each-meaning",
+        label: "각각 무슨 의미야?",
+        resultText:
+          "스펙은 합격 가능성,\n멘탈은 불합격과 압박을 버티는 힘,\n관계는 기회를 이어주는 신뢰,\n돈은 준비를 계속할 수 있는 기반이다.",
+      }),
+      makeSecondLifeChoice({
+        id: "watch-these-now",
+        label: "이제부터 그걸 보면 되는 거지?",
+        resultText:
+          "스펙은 합격 가능성,\n멘탈은 불합격과 압박을 버티는 힘,\n관계는 기회를 이어주는 신뢰,\n돈은 준비를 계속할 수 있는 기반이다.",
+      }),
+    ],
+  },
+  {
+    id: "second-life-metric-meanings",
+    characterName: "청령차사",
+    category: "tutorial",
+    phase: "early20s",
+    text:
+      "스펙은 합격 가능성,\n멘탈은 불합격과 압박을 버티는 힘,\n관계는 기회를 이어주는 신뢰,\n돈은 준비를 계속할 수 있는 기반이다.",
+    choices: [
+      makeSecondLifeChoice({
+        id: "none-disposable",
+        label: "어느 하나도 버릴 수 없네.",
+        resultText:
+          "하지만 수치가 높다고 늘 좋은 것은 아니다.\n\n수치는 네가 무엇을 얼마나 중요하게 여기고 있는지를 보여준다. 한쪽이 지나치게 커지면, 삶은 그쪽으로 끌려간다.",
+      }),
+      makeSecondLifeChoice({
+        id: "balance-important",
+        label: "그래서 균형이 중요하구나.",
+        resultText:
+          "하지만 수치가 높다고 늘 좋은 것은 아니다.\n\n수치는 네가 무엇을 얼마나 중요하게 여기고 있는지를 보여준다. 한쪽이 지나치게 커지면, 삶은 그쪽으로 끌려간다.",
+      }),
+    ],
+  },
+  {
+    id: "second-life-too-high",
+    characterName: "청령차사",
+    category: "tutorial",
+    phase: "early20s",
+    text:
+      "하지만 수치가 높다고 늘 좋은 것은 아니다.\n\n수치는 네가 무엇을 얼마나 중요하게 여기고 있는지를 보여준다. 한쪽이 지나치게 커지면, 삶은 그쪽으로 끌려간다.",
+    choices: [
+      makeSecondLifeChoice({
+        id: "too-much-money-too",
+        label: "돈이 많아도 위험해?",
+        resultText:
+          "그래. 선택은 늘 무언가를 올리고, 무언가를 깎는다.\n\n완벽한 선택은 없다. 다만 지금 가장 필요한 선택은 있다.",
+      }),
+      makeSecondLifeChoice({
+        id: "numbers-are-values",
+        label: "수치는 우선순위구나.",
+        resultText:
+          "그래. 선택은 늘 무언가를 올리고, 무언가를 깎는다.\n\n완벽한 선택은 없다. 다만 지금 가장 필요한 선택은 있다.",
+      }),
     ],
   },
   {
     id: "second-life-oath",
+    characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
     text:
-      "Before the city lights open ahead, the chasa stops. \"If you are going to repeat a life, decide what you refuse to abandon.\"",
+      "그래. 선택은 늘 무언가를 올리고, 무언가를 깎는다.\n\n완벽한 선택은 없다. 다만 지금 가장 필요한 선택은 있다.",
     choices: [
-      {
-        id: "protect-my-name",
-        label: "Say you will not abandon yourself again.",
-        immediate: { mental: 2, reputation: 1 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["second_life_oath"],
-        tendencyTags: ["selfTrust", "mental"],
-        results: {
-          bad: {
-            text: "The promise trembles, but it is spoken out loud.",
-          },
-          mixed: {
-            text: "\"Then keep choosing like you mean it.\" The lantern light steadies.",
-            delta: { mental: 1 },
-          },
-          good: {
-            text: "\"Good. A life cannot be saved by accident forever.\" For the first time, the road feels chosen.",
-            delta: { mental: 1, reputation: 1 },
-            selfTrustDelta: 1,
-          },
-        },
-      },
-      {
-        id: "protect-only-result",
-        label: "Say only the final result matters now.",
-        immediate: { spec: 2, mental: -1 },
-        selfTrustDelta: -1,
-        primaryStat: "spec",
-        modifier: 1,
-        memoryTags: ["second_life_pressure"],
-        tendencyTags: ["spec", "comparison"],
-        results: {
-          bad: {
-            text: "\"Then you may arrive with nothing left of yourself.\" The city suddenly feels farther away.",
-            delta: { mental: -1 },
-          },
-          mixed: {
-            text: "It sounds practical. It also sounds lonely.",
-            delta: { spec: 1 },
-          },
-          good: {
-            text: "Resolve sharpens, but so does the edge pressing back on you.",
-            delta: { spec: 1, reputation: 1 },
-          },
-        },
-      },
+      makeSecondLifeChoice({
+        id: "try-again",
+        label: "다시 해볼게.",
+        resultText: "좋다.\n\n이번 생은 네가 무엇을 붙잡는지 보게 될 것이다.",
+      }),
+      makeSecondLifeChoice({
+        id: "carry-to-end",
+        label: "이번엔 끝까지 데려갈게.",
+        resultText: "좋다.\n\n이번 생은 네가 무엇을 붙잡는지 보게 될 것이다.",
+      }),
     ],
   },
 ];

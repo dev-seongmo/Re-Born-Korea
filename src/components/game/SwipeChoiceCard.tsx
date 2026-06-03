@@ -1,6 +1,7 @@
 import type {
   AnimationEvent as ReactAnimationEvent,
   CSSProperties,
+  KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
   TransitionEvent as ReactTransitionEvent,
 } from "react";
@@ -30,6 +31,7 @@ const FIRST_TUTORIAL_EVENT_ID = "tutorial-afterlife-question";
 const AUTO_DEMO_INITIAL_DELAY = 620;
 const AUTO_DEMO_STEP_DELAY = 760;
 const CARD_HIDDEN_DELAY = 300;
+const KEY_PREVIEW_DISTANCE = 58;
 
 function applyElasticDrag(value: number) {
   const direction = value < 0 ? -1 : 1;
@@ -65,6 +67,8 @@ export function SwipeChoiceCard({
   const [demoDragX, setDemoDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [phase, setPhase] = useState<CardVisualPhase>("idle");
+  const [keyboardPreviewDirection, setKeyboardPreviewDirection] =
+    useState<SwipeDirection>(null);
 
   const shouldAutoDemo =
     phase === "idle" &&
@@ -139,6 +143,7 @@ export function SwipeChoiceCard({
     dragXRef.current = 0;
     setIsDragging(false);
     setDragX(0);
+    setKeyboardPreviewDirection(null);
   }
 
   function beginFlyOut(targetDirection: "left" | "right", afterExit: () => void) {
@@ -197,6 +202,7 @@ export function SwipeChoiceCard({
     eventObject.preventDefault();
     autoDemoStoppedRef.current = true;
     setDemoDragX(0);
+    setKeyboardPreviewDirection(null);
     pointerIdRef.current = eventObject.pointerId;
     startXRef.current = eventObject.clientX;
     draggingRef.current = true;
@@ -276,6 +282,49 @@ export function SwipeChoiceCard({
     resetCard();
   }
 
+  function commitKeyboardChoice(direction: Exclude<SwipeDirection, null>) {
+    if (disabled) {
+      flyOutAndContinue(direction);
+      return;
+    }
+
+    if (direction === "right") {
+      flyOutAndResolve(rightChoice, "right");
+      return;
+    }
+
+    flyOutAndResolve(leftChoice, "left");
+  }
+
+  function handleKeyDown(eventObject: ReactKeyboardEvent<HTMLDivElement>) {
+    if (
+      phase !== "idle" ||
+      isDragging ||
+      resolveLockRef.current ||
+      (eventObject.key !== "ArrowLeft" && eventObject.key !== "ArrowRight")
+    ) {
+      return;
+    }
+
+    eventObject.preventDefault();
+
+    const nextDirection = eventObject.key === "ArrowRight" ? "right" : "left";
+
+    autoDemoStoppedRef.current = true;
+    setDemoDragX(0);
+
+    if (keyboardPreviewDirection === nextDirection) {
+      commitKeyboardChoice(nextDirection);
+      return;
+    }
+
+    setKeyboardPreviewDirection(nextDirection);
+    const nextDragX =
+      nextDirection === "right" ? KEY_PREVIEW_DISTANCE : -KEY_PREVIEW_DISTANCE;
+    dragXRef.current = nextDragX;
+    setDragX(nextDragX);
+  }
+
   function handleTransitionEnd(eventObject: ReactTransitionEvent<HTMLDivElement>) {
     if (
       phase !== "exiting" ||
@@ -320,14 +369,16 @@ export function SwipeChoiceCard({
           .filter(Boolean)
           .join(" ")}
         data-direction={direction ?? "neutral"}
+        aria-label="왼쪽 또는 오른쪽 방향키로 선택"
         onAnimationEnd={handleAnimationEnd}
+        onKeyDown={handleKeyDown}
         onPointerCancel={handlePointerCancel}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onTransitionEnd={handleTransitionEnd}
         ref={cardRef}
-        role={disabled ? "button" : undefined}
+        role="button"
         style={
           {
             "--drag-x": `${visualDragX}px`,
@@ -335,7 +386,7 @@ export function SwipeChoiceCard({
             "--choice-intensity": intensity.toFixed(3),
           } as CSSProperties
         }
-        tabIndex={disabled ? 0 : undefined}
+        tabIndex={0}
       >
         <CardAnswerBadge
           align="left"

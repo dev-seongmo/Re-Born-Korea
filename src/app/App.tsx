@@ -27,7 +27,10 @@ const firstLifeTutorialIds = [
 
 const secondLifeTutorialIds = [
   "second-life-wakeup",
-  "second-life-warning",
+  "second-life-failure-review",
+  "second-life-four-metrics",
+  "second-life-metric-meanings",
+  "second-life-too-high",
   "second-life-oath",
 ];
 
