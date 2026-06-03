@@ -144,7 +144,7 @@ function buildResolveChoice(
         ? {
             ...resolvedTurn,
             consumesTurn: false,
-            nextScene: resolvedTurn.gameOverReason ? "game-over" : "event",
+            nextScene: resolvedTurn.gameOverReason ? "game-over-final" : "event",
           }
         : resolvedTurn,
     });

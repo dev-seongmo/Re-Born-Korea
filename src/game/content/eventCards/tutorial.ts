@@ -95,13 +95,13 @@ export const tutorialEvents: EventCard[] = [
         id: "ask-about-state",
         label: "상태?",
         resultText:
-          "자신감, 체력, 관계, 준비도.\n\n네 수치가 절반 이상이면 면접을 버틸 수 있다.",
+          "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
       }),
       makeTutorialChoice({
         id: "say-understood",
         label: "알겠어",
         resultText:
-          "자신감, 체력, 관계, 준비도.\n\n네 수치가 절반 이상이면 면접을 버틸 수 있다.",
+          "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
       }),
     ],
   },
@@ -111,19 +111,19 @@ export const tutorialEvents: EventCard[] = [
     category: "tutorial",
     phase: "early20s",
     text:
-      "자신감, 체력, 관계, 준비도.\n\n네 수치가 절반 이상이면 면접을 버틸 수 있다.",
+      "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
     choices: [
       makeTutorialChoice({
         id: "ask-endure",
-        label: "버틴다고?",
+        label: "네 가지?",
         resultText:
-          "기한은 30일.\n\n무너뜨리지 말고, 무사히 면접장까지 데려가라.",
+          "낮으면 무너지고, 지나치면 다른 것을 태운다.\n\n네 일은 한쪽으로 기울지 않게 붙드는 것이다.",
       }),
       makeTutorialChoice({
         id: "promise-pass",
-        label: "합격시켜볼게",
+        label: "중요하네",
         resultText:
-          "기한은 30일.\n\n무너뜨리지 말고, 무사히 면접장까지 데려가라.",
+          "낮으면 무너지고, 지나치면 다른 것을 태운다.\n\n네 일은 한쪽으로 기울지 않게 붙드는 것이다.",
       }),
     ],
   },
@@ -132,17 +132,19 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "기한은 30일.\n\n무너뜨리지 말고, 무사히 면접장까지 데려가라.",
+    text: "낮으면 무너지고, 지나치면 다른 것을 태운다.\n\n네 일은 한쪽으로 기울지 않게 붙드는 것이다.",
     choices: [
       makeTutorialChoice({
         id: "ask-who-are-you",
-        label: "넌 누군데?",
-        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+        label: "높아도?",
+        resultText:
+          "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
       }),
       makeTutorialChoice({
         id: "leave-it-to-me",
-        label: "맡겨만 둬",
-        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+        label: "균형을 잡으라고?",
+        resultText:
+          "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
       }),
     ],
   },
@@ -151,17 +153,17 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+    text: "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
     choices: [
       makeTutorialChoice({
         id: "ask-beyond",
-        label: "건너편?",
-        resultText: "설명은 끝났다.\n\n첫 번째 영혼이 왔다.",
+        label: "30일?",
+        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
       makeTutorialChoice({
         id: "say-cool",
-        label: "멋있네",
-        resultText: "설명은 끝났다.\n\n첫 번째 영혼이 왔다.",
+        label: "조심할게",
+        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
     ],
   },
@@ -170,19 +172,19 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "설명은 끝났다.\n\n첫 번째 영혼이 왔다.",
+    text: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
     choices: [
       makeTutorialChoice({
         id: "already",
-        label: "벌써?",
+        label: "건너편?",
         resultText:
-          "푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
+          "설명은 끝났다.\n\n푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
       }),
       makeTutorialChoice({
         id: "ready",
-        label: "좋아",
+        label: "멋있네",
         resultText:
-          "푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
+          "설명은 끝났다.\n\n푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
       }),
     ],
   },
@@ -191,7 +193,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "첫 번째 영혼",
     category: "tutorial",
     phase: "early20s",
-    text: "푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
+    text: "설명은 끝났다.\n\n푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
     choices: [
       makeTutorialChoice({
         id: "approach-first-soul",

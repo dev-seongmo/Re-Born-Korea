@@ -1,4 +1,10 @@
-export type RunScene = "setup" | "event" | "result" | "ending" | "game-over";
+export type RunScene =
+  | "setup"
+  | "event"
+  | "result"
+  | "ending"
+  | "game-over-final"
+  | "game-over";
 
 export type AppScene =
   | "title"

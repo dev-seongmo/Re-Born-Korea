@@ -7,6 +7,7 @@ import type {
   TendencyScores,
   VisibleMetrics,
 } from "../core/gameTypes";
+import { isGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
 import {
   amplifyMetricDelta,
   amplifySelfTrustDelta,
@@ -61,35 +62,55 @@ function getNextScene(session: GameSession): RunScene {
   return session.turn + 1 >= session.maxTurns ? "ending" : "result";
 }
 
+function ignoresNumericChanges(event: EventCard) {
+  return event.category === "tutorial" || event.category === "interview";
+}
+
 export function resolveTurn(params: {
   session: GameSession;
   event: EventCard;
   choice: EventChoice;
 }) {
   const { session, event, choice } = params;
+  const shouldIgnoreNumericChanges = ignoresNumericChanges(event);
 
-  const afterImmediate = applyMetricDelta(session.metrics, choice.immediate);
+  const afterImmediate = shouldIgnoreNumericChanges
+    ? session.metrics
+    : applyMetricDelta(session.metrics, choice.immediate);
   const roll = resolveRoll(choice, afterImmediate);
   const rolledOutcome = choice.results[roll.band];
-  const nextMetrics = applyMetricDelta(afterImmediate, rolledOutcome.delta ?? {});
-  const nextSelfTrust = applySelfTrust(
-    applySelfTrust(session.selfTrust, amplifySelfTrustDelta(choice.selfTrustDelta)),
-    amplifySelfTrustDelta(rolledOutcome.selfTrustDelta ?? 0),
-  );
-  const nextTendencies = bumpTendencies(
-    session.tendencyScores,
-    choice,
-    rolledOutcome.selfTrustDelta ?? 0,
-  );
+  const nextMetrics = shouldIgnoreNumericChanges
+    ? session.metrics
+    : applyMetricDelta(afterImmediate, rolledOutcome.delta ?? {});
+  const nextSelfTrust = shouldIgnoreNumericChanges
+    ? session.selfTrust
+    : applySelfTrust(
+        applySelfTrust(
+          session.selfTrust,
+          amplifySelfTrustDelta(choice.selfTrustDelta),
+        ),
+        amplifySelfTrustDelta(rolledOutcome.selfTrustDelta ?? 0),
+      );
+  const nextTendencies = shouldIgnoreNumericChanges
+    ? session.tendencyScores
+    : bumpTendencies(
+        session.tendencyScores,
+        choice,
+        rolledOutcome.selfTrustDelta ?? 0,
+      );
   const nextMemoryTags = Array.from(
     new Set([...session.memoryTags, ...(choice.memoryTags ?? [])]),
   );
-  const nextIdentityStage = calculateIdentityStage({
-    selfTrust: nextSelfTrust,
-    metrics: nextMetrics,
-    tendencies: nextTendencies,
-  });
-  const gameOverReason = getGameOverReason(nextMetrics);
+  const nextIdentityStage = shouldIgnoreNumericChanges
+    ? session.identityStage
+    : calculateIdentityStage({
+        selfTrust: nextSelfTrust,
+        metrics: nextMetrics,
+        tendencies: nextTendencies,
+      });
+  const gameOverReason = shouldIgnoreNumericChanges
+    ? null
+    : getGameOverReason(nextMetrics);
 
   return {
     eventId: event.id,
@@ -105,7 +126,11 @@ export function resolveTurn(params: {
     identityStage: nextIdentityStage,
     memoryTags: nextMemoryTags,
     tendencyScores: nextTendencies,
-    nextScene: gameOverReason ? "game-over" : getNextScene(session),
+    nextScene: gameOverReason
+      ? isGameOverFinalEventId(event.id)
+        ? "game-over"
+        : "game-over-final"
+      : getNextScene(session),
     gameOverReason,
   };
 }
