@@ -1,4 +1,9 @@
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import type {
+  AnimationEvent as ReactAnimationEvent,
+  CSSProperties,
+  PointerEvent as ReactPointerEvent,
+  TransitionEvent as ReactTransitionEvent,
+} from "react";
 import { useEffect, useRef, useState } from "react";
 import type { EventCard, EventChoice } from "../../game/core/gameTypes";
 import { mapEventToCardViewModel } from "../../game/presenters/mapEventToCardViewModel";
@@ -7,6 +12,7 @@ import { CardBody } from "./CardBody";
 import { CardImpactPreview } from "./CardImpactPreview";
 
 type SwipeDirection = "left" | "right" | null;
+type CardVisualPhase = "idle" | "exiting" | "hidden" | "entering";
 
 type Props = {
   event: EventCard;
@@ -23,6 +29,7 @@ const FLYOUT_DISTANCE = 920;
 const FIRST_TUTORIAL_EVENT_ID = "tutorial-afterlife-question";
 const AUTO_DEMO_INITIAL_DELAY = 620;
 const AUTO_DEMO_STEP_DELAY = 760;
+const CARD_HIDDEN_DELAY = 300;
 
 function applyElasticDrag(value: number) {
   const direction = value < 0 ? -1 : 1;
@@ -52,16 +59,18 @@ export function SwipeChoiceCard({
   const draggingRef = useRef(false);
   const resolveLockRef = useRef(false);
   const autoDemoStoppedRef = useRef(false);
+  const hiddenDelayRef = useRef<number | null>(null);
+  const pendingActionRef = useRef<(() => void) | null>(null);
   const [dragX, setDragX] = useState(0);
   const [demoDragX, setDemoDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [isFlyingOut, setIsFlyingOut] = useState(false);
+  const [phase, setPhase] = useState<CardVisualPhase>("idle");
 
   const shouldAutoDemo =
+    phase === "idle" &&
     event.id === FIRST_TUTORIAL_EVENT_ID &&
     !disabled &&
     !isDragging &&
-    !isFlyingOut &&
     !autoDemoStoppedRef.current;
   const visualDragX = shouldAutoDemo ? demoDragX : dragX;
   const leftChoice = event.choices[0];
@@ -75,6 +84,14 @@ export function SwipeChoiceCard({
   const rotation = visualDragX * 0.045;
   const showLeftBadge = !disabled && direction === "right";
   const showRightBadge = !disabled && direction === "left";
+
+  useEffect(() => {
+    return () => {
+      if (hiddenDelayRef.current !== null) {
+        window.clearTimeout(hiddenDelayRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     autoDemoStoppedRef.current = false;
@@ -124,50 +141,56 @@ export function SwipeChoiceCard({
     setDragX(0);
   }
 
-  function flyOutAndResolve(choice: EventChoice, targetDirection: "left" | "right") {
-    if (resolveLockRef.current) {
+  function beginFlyOut(targetDirection: "left" | "right", afterExit: () => void) {
+    if (resolveLockRef.current || phase !== "idle") {
       return;
     }
 
+    if (hiddenDelayRef.current !== null) {
+      window.clearTimeout(hiddenDelayRef.current);
+      hiddenDelayRef.current = null;
+    }
+
     resolveLockRef.current = true;
+    pendingActionRef.current = afterExit;
+    autoDemoStoppedRef.current = true;
     setIsDragging(false);
-    setIsFlyingOut(true);
+    setDemoDragX(0);
+    setPhase("exiting");
 
     const targetX = targetDirection === "right" ? FLYOUT_DISTANCE : -FLYOUT_DISTANCE;
     dragXRef.current = targetX;
     setDragX(targetX);
+  }
 
-    window.setTimeout(() => {
-      onResolve(choice);
-      resolveLockRef.current = false;
-      setIsFlyingOut(false);
-      setDragX(0);
-    }, 260);
+  function completeFlyOut() {
+    const pendingAction = pendingActionRef.current;
+    pendingActionRef.current = null;
+
+    setPhase("hidden");
+    resetCard();
+    pendingAction?.();
+
+    hiddenDelayRef.current = window.setTimeout(() => {
+      hiddenDelayRef.current = null;
+      setPhase("entering");
+    }, CARD_HIDDEN_DELAY);
+  }
+
+  function flyOutAndResolve(choice: EventChoice, targetDirection: "left" | "right") {
+    beginFlyOut(targetDirection, () => onResolve(choice));
   }
 
   function flyOutAndContinue(targetDirection: "left" | "right") {
-    if (resolveLockRef.current || !onContinue) {
+    if (!onContinue) {
       return;
     }
 
-    resolveLockRef.current = true;
-    setIsDragging(false);
-    setIsFlyingOut(true);
-
-    const targetX = targetDirection === "right" ? FLYOUT_DISTANCE : -FLYOUT_DISTANCE;
-    dragXRef.current = targetX;
-    setDragX(targetX);
-
-    window.setTimeout(() => {
-      onContinue();
-      resolveLockRef.current = false;
-      setIsFlyingOut(false);
-      setDragX(0);
-    }, 260);
+    beginFlyOut(targetDirection, onContinue);
   }
 
   function handlePointerDown(eventObject: ReactPointerEvent<HTMLDivElement>) {
-    if (resolveLockRef.current) {
+    if (resolveLockRef.current || phase !== "idle") {
       return;
     }
 
@@ -184,6 +207,7 @@ export function SwipeChoiceCard({
   function handlePointerMove(eventObject: ReactPointerEvent<HTMLDivElement>) {
     if (
       resolveLockRef.current ||
+      phase !== "idle" ||
       pointerIdRef.current !== eventObject.pointerId ||
       !draggingRef.current
     ) {
@@ -197,6 +221,10 @@ export function SwipeChoiceCard({
   }
 
   function handlePointerUp(eventObject: ReactPointerEvent<HTMLDivElement>) {
+    if (phase !== "idle") {
+      return;
+    }
+
     if (pointerIdRef.current !== eventObject.pointerId) {
       return;
     }
@@ -235,6 +263,10 @@ export function SwipeChoiceCard({
   }
 
   function handlePointerCancel(eventObject: ReactPointerEvent<HTMLDivElement>) {
+    if (phase !== "idle") {
+      return;
+    }
+
     if (pointerIdRef.current !== eventObject.pointerId) {
       return;
     }
@@ -242,6 +274,31 @@ export function SwipeChoiceCard({
     eventObject.preventDefault();
     releasePointerCapture(eventObject.pointerId);
     resetCard();
+  }
+
+  function handleTransitionEnd(eventObject: ReactTransitionEvent<HTMLDivElement>) {
+    if (
+      phase !== "exiting" ||
+      eventObject.target !== eventObject.currentTarget ||
+      eventObject.propertyName !== "transform"
+    ) {
+      return;
+    }
+
+    completeFlyOut();
+  }
+
+  function handleAnimationEnd(eventObject: ReactAnimationEvent<HTMLDivElement>) {
+    if (
+      phase !== "entering" ||
+      eventObject.target !== eventObject.currentTarget ||
+      eventObject.animationName !== "swipe-card-enter"
+    ) {
+      return;
+    }
+
+    resolveLockRef.current = false;
+    setPhase("idle");
   }
 
   return (
@@ -255,16 +312,20 @@ export function SwipeChoiceCard({
           "swipe-card",
           shouldAutoDemo ? "swipe-card--auto-demo" : "",
           isDragging ? "swipe-card--dragging" : "",
-          isFlyingOut ? "swipe-card--flying" : "",
+          phase === "exiting" ? "swipe-card--exiting" : "",
+          phase === "hidden" ? "swipe-card--hidden" : "",
+          phase === "entering" ? "swipe-card--entering" : "",
           disabled ? "swipe-card--disabled" : "",
         ]
           .filter(Boolean)
           .join(" ")}
         data-direction={direction ?? "neutral"}
+        onAnimationEnd={handleAnimationEnd}
         onPointerCancel={handlePointerCancel}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onTransitionEnd={handleTransitionEnd}
         ref={cardRef}
         role={disabled ? "button" : undefined}
         style={

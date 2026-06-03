@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { AtmosphereLayer } from "./AtmosphereLayer";
 import { SwipeChoiceCard } from "./SwipeChoiceCard";
 import type {
   GameScreenViewModel,
@@ -88,16 +89,7 @@ export function GameScreen({ viewModel }: Props) {
             </button>
           </div>
         ) : viewModel.eventPanel ? (
-          <div
-            className={[
-              "event-card",
-              viewModel.eventPanel.atmosphere
-                ? `event-card--${viewModel.eventPanel.atmosphere}`
-                : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
+          <div className="event-card">
             <SwipeChoiceCard
               continueLabel={viewModel.eventPanel.continueLabel}
               disabled={viewModel.eventPanel.disabled}
@@ -110,6 +102,7 @@ export function GameScreen({ viewModel }: Props) {
         ) : null}
       </section>
 
+      <AtmosphereLayer effect={viewModel.atmosphere} />
     </div>
   );
 }

@@ -18,6 +18,7 @@ import { getEndingResult } from "../selectors/getEndingResult";
 import { resolveTurn } from "../systems/turnSystem";
 import { evaluateInterviewOutcome } from "../systems/interviewSystem";
 import type {
+  AtmosphereEffect,
   EventPanelViewModel,
   GameScreenViewModel,
   StatusItemViewModel,
@@ -60,7 +61,7 @@ const interviewPressureQuestions: Record<VisibleMetricKey, string> = {
 
 const FOG_CLEARING_TUTORIAL_EVENT_ID = "tutorial-fog-clears";
 
-function getEventAtmosphere(eventId: string): EventPanelViewModel["atmosphere"] {
+function getEventAtmosphere(eventId: string): AtmosphereEffect | undefined {
   if (!tutorialEventIds.includes(eventId)) {
     return undefined;
   }
@@ -179,7 +180,6 @@ function buildEventPanel(
   const basePanel: EventPanelViewModel = {
     narrativeText: buildNarrativeText(session, event.text),
     event,
-    atmosphere: getEventAtmosphere(event.id),
     onResolveChoice: () => undefined,
   };
 
@@ -306,8 +306,11 @@ export function buildGameScreenViewModel(
     };
   }
 
+  const eventPanel = buildEventPanel(session, completedRunCount, dispatch);
+
   return {
     statusItems,
-    eventPanel: buildEventPanel(session, completedRunCount, dispatch),
+    atmosphere: getEventAtmosphere(eventPanel.event.id),
+    eventPanel,
   };
 }

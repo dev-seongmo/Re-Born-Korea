@@ -548,89 +548,119 @@ button {
   overflow: hidden;
 }
 
-.event-card {
-  position: relative;
-  isolation: isolate;
-}
-
-.event-card::before,
-.event-card::after {
-  content: "";
-  position: absolute;
-  inset: -12%;
-  z-index: 2;
-  opacity: 0;
+.atmosphere-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
   pointer-events: none;
+  mix-blend-mode: screen;
 }
 
-.event-card::before {
+.atmosphere-layer__veil {
+  position: absolute;
+  inset: -30%;
+  display: block;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity, filter;
+}
+
+.atmosphere-layer__veil--near {
   background:
-    radial-gradient(ellipse at 18% 18%, rgba(220, 228, 216, 0.2), transparent 34%),
-    radial-gradient(ellipse at 82% 26%, rgba(174, 194, 199, 0.16), transparent 32%),
-    linear-gradient(180deg, rgba(210, 220, 218, 0.1), transparent 30%, rgba(178, 196, 196, 0.16));
-  filter: blur(16px);
-  transform: translate3d(-2%, 1%, 0) scale(1.05);
+    radial-gradient(ellipse at 18% 68%, rgba(198, 222, 217, 0.24), transparent 30%),
+    radial-gradient(ellipse at 72% 20%, rgba(143, 177, 190, 0.2), transparent 34%),
+    linear-gradient(98deg, transparent 0%, rgba(218, 229, 218, 0.14) 22%, transparent 44%);
+  filter: blur(28px);
 }
 
-.event-card::after {
+.atmosphere-layer__veil--mid {
   background:
-    linear-gradient(94deg, transparent 0%, rgba(216, 225, 218, 0.16) 18%, transparent 36%),
-    linear-gradient(101deg, transparent 28%, rgba(166, 188, 194, 0.18) 50%, transparent 72%),
-    linear-gradient(88deg, transparent 54%, rgba(232, 232, 220, 0.11) 76%, transparent 100%);
-  filter: blur(22px);
-  transform: translate3d(-16%, 3%, 0);
+    linear-gradient(82deg, transparent 4%, rgba(111, 152, 168, 0.18) 30%, transparent 55%),
+    linear-gradient(106deg, transparent 34%, rgba(225, 226, 209, 0.13) 56%, transparent 78%),
+    radial-gradient(ellipse at 46% 48%, rgba(101, 143, 160, 0.14), transparent 38%);
+  filter: blur(20px);
 }
 
-.event-card--tutorial-fog::before {
-  opacity: 0.85;
-  animation: tutorial-fog-breathe 9s ease-in-out infinite alternate;
+.atmosphere-layer__veil--far {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(60, 99, 118, 0.22), transparent 42%),
+    radial-gradient(ellipse at 8% 12%, rgba(204, 224, 215, 0.16), transparent 28%),
+    radial-gradient(ellipse at 88% 82%, rgba(138, 188, 181, 0.13), transparent 32%);
+  filter: blur(42px);
 }
 
-.event-card--tutorial-fog::after {
+.atmosphere-layer--tutorial-fog .atmosphere-layer__veil--near {
   opacity: 0.72;
-  animation: tutorial-fog-drift 13s linear infinite alternate;
+  animation: afterlife-fog-near 8s ease-in-out infinite alternate;
 }
 
-.event-card--fog-clearing::before {
+.atmosphere-layer--tutorial-fog .atmosphere-layer__veil--mid {
+  opacity: 0.62;
+  animation: afterlife-fog-mid 13s linear infinite alternate;
+}
+
+.atmosphere-layer--tutorial-fog .atmosphere-layer__veil--far {
+  opacity: 0.5;
+  animation: afterlife-fog-far 18s ease-in-out infinite alternate;
+}
+
+.atmosphere-layer--fog-clearing .atmosphere-layer__veil--near {
   opacity: 0.34;
-  animation: tutorial-fog-clear 1200ms ease-out both;
+  animation: afterlife-fog-near 9s ease-in-out infinite alternate, afterlife-fog-clear 1400ms ease-out both;
 }
 
-.event-card--fog-clearing::after {
-  opacity: 0.22;
-  animation: tutorial-fog-drift 15s linear infinite alternate, tutorial-fog-clear 1200ms ease-out both;
+.atmosphere-layer--fog-clearing .atmosphere-layer__veil--mid {
+  opacity: 0.24;
+  animation: afterlife-fog-mid 14s linear infinite alternate, afterlife-fog-clear 1400ms ease-out both;
 }
 
-@keyframes tutorial-fog-breathe {
+.atmosphere-layer--fog-clearing .atmosphere-layer__veil--far {
+  opacity: 0.18;
+  animation: afterlife-fog-far 18s ease-in-out infinite alternate, afterlife-fog-clear 1400ms ease-out both;
+}
+
+@keyframes afterlife-fog-near {
   from {
-    filter: blur(18px);
-    transform: translate3d(-3%, 1%, 0) scale(1.04);
-  }
-
-  to {
     filter: blur(24px);
-    transform: translate3d(3%, -1%, 0) scale(1.09);
-  }
-}
-
-@keyframes tutorial-fog-drift {
-  from {
-    transform: translate3d(-18%, 3%, 0);
+    transform: translate3d(-12%, 5%, 0) scale(1.05) rotate(-2deg);
   }
 
   to {
-    transform: translate3d(18%, -2%, 0);
+    filter: blur(34px);
+    transform: translate3d(12%, -4%, 0) scale(1.14) rotate(2deg);
   }
 }
 
-@keyframes tutorial-fog-clear {
+@keyframes afterlife-fog-mid {
   from {
-    opacity: 0.72;
+    transform: translate3d(18%, -3%, 0) scale(1.08);
   }
 
   to {
-    opacity: 0.14;
-    filter: blur(30px);
+    transform: translate3d(-18%, 4%, 0) scale(1.16);
+  }
+}
+
+@keyframes afterlife-fog-far {
+  from {
+    filter: blur(38px);
+    transform: translate3d(-4%, -6%, 0) scale(1.1);
+  }
+
+  to {
+    filter: blur(50px);
+    transform: translate3d(5%, 6%, 0) scale(1.2);
+  }
+}
+
+@keyframes afterlife-fog-clear {
+  from {
+    opacity: 0.42;
+  }
+
+  to {
+    opacity: 0.08;
   }
 }
 
@@ -867,6 +897,7 @@ button {
   overflow: clip;
   border: 0;
   background: #111926;
+  opacity: 1;
   box-shadow:
     0 0 0 1px rgba(245, 239, 229, 0.12),
     0 18px 40px rgba(0, 0, 0, 0.26),
@@ -875,6 +906,7 @@ button {
     scale(calc(1 - (var(--choice-intensity, 0) * 0.02)));
   transition:
     transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease,
     box-shadow 220ms ease,
     border-color 220ms ease;
   touch-action: none;
@@ -909,8 +941,42 @@ button {
     border-color 360ms ease;
 }
 
-.swipe-card--flying {
-  transition: transform 260ms cubic-bezier(0.18, 0.88, 0.32, 1.04);
+.swipe-card--exiting {
+  pointer-events: none;
+  transition:
+    transform 260ms cubic-bezier(0.18, 0.88, 0.32, 1.04),
+    opacity 180ms ease;
+}
+
+.swipe-card--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(0.98);
+  transition: none;
+}
+
+.swipe-card--entering {
+  pointer-events: none;
+  animation: swipe-card-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes swipe-card-enter {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  62% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 .swipe-card--disabled {
@@ -1143,7 +1209,8 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swipe-stage {
+  .swipe-stage,
+  .atmosphere-layer__veil {
     animation: none;
   }
 }

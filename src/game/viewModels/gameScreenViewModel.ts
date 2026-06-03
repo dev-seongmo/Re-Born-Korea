@@ -29,10 +29,11 @@ export type GameOverPanelViewModel = {
   onContinue: () => void;
 };
 
+export type AtmosphereEffect = "tutorial-fog" | "fog-clearing";
+
 export type EventPanelViewModel = {
   narrativeText: string;
   event: EventCard;
-  atmosphere?: "tutorial-fog" | "fog-clearing";
   disabled?: boolean;
   continueLabel?: string;
   onContinue?: () => void;
@@ -41,6 +42,7 @@ export type EventPanelViewModel = {
 
 export type GameScreenViewModel = {
   statusItems: StatusItemViewModel[];
+  atmosphere?: AtmosphereEffect;
   endingPanel?: EndingPanelViewModel;
   gameOverPanel?: GameOverPanelViewModel;
   eventPanel?: EventPanelViewModel;
