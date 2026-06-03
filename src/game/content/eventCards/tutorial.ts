@@ -1,4 +1,7 @@
 import type { EventCard } from "../../core/gameTypes";
+import { getRunDeadlineText } from "../../config/runConfig";
+
+const runDeadlineText = getRunDeadlineText();
 
 function makeTutorialChoice(params: {
   id: string;
@@ -138,13 +141,13 @@ export const tutorialEvents: EventCard[] = [
         id: "ask-who-are-you",
         label: "높아도?",
         resultText:
-          "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
+          `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
       }),
       makeTutorialChoice({
         id: "leave-it-to-me",
         label: "균형을 잡으라고?",
         resultText:
-          "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
+          `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
       }),
     ],
   },
@@ -153,11 +156,11 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "기한은 30일.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.",
+    text: `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
     choices: [
       makeTutorialChoice({
         id: "ask-beyond",
-        label: "30일?",
+        label: `${runDeadlineText}?`,
         resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
       makeTutorialChoice({

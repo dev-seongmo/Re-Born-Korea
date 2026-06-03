@@ -1,14 +1,19 @@
 import type { Dispatch } from "react";
 import { audioManager } from "../../audio/audioManager";
-import { getGameOverContent } from "../content/gameOverResults";
+import { finalInterviewEventId } from "../content/eventCards";
 import {
   drawNextPrototypeEventId,
-  finalInterviewEventId,
   getPrototypeEventById,
   hasRemainingTutorialEvents,
   isTutorialEventId,
   tutorialEventIds,
 } from "../content/eventCards";
+import {
+  getNextInterviewEventId,
+  isInterviewEventId,
+  lastInterviewEventId,
+} from "../content/eventCards/interview";
+import { getGameOverContent } from "../content/gameOverResults";
 import type {
   GameAction,
   RunState,
@@ -16,7 +21,6 @@ import type {
 } from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
 import { resolveTurn } from "../systems/turnSystem";
-import { evaluateInterviewOutcome } from "../systems/interviewSystem";
 import type {
   AtmosphereEffect,
   EventPanelViewModel,
@@ -35,10 +39,10 @@ const statusItemsConfig: Array<{
 ];
 
 const metricMessageLabels: Record<VisibleMetricKey, string> = {
-  spec: "준비도",
-  money: "생활 안정",
+  spec: "스펙",
+  money: "돈",
   reputation: "관계",
-  mental: "체력",
+  mental: "멘탈",
 };
 
 const metricDisplayLabels: Record<VisibleMetricKey, string> = {
@@ -46,17 +50,6 @@ const metricDisplayLabels: Record<VisibleMetricKey, string> = {
   money: "Money",
   reputation: "Reputation",
   mental: "Mental",
-};
-
-const interviewPressureQuestions: Record<VisibleMetricKey, string> = {
-  spec:
-    "\"지원서에는 의지가 보이지만, 실제로 해낼 근거는 부족해 보입니다. 무엇으로 증명하시겠습니까?\"",
-  money:
-    "\"생활이 흔들리면 일도 흔들립니다. 지금 상태로 매일 출근을 버틸 수 있습니까?\"",
-  reputation:
-    "\"협업에서 신뢰를 얻는 데 시간이 걸리는 편입니까? 저희 팀은 오래 기다려주기 어렵습니다.\"",
-  mental:
-    "\"많이 지쳐 보입니다. 압박이 오면 무너지지 않을 자신이 정말 있습니까?\"",
 };
 
 const FOG_CLEARING_TUTORIAL_EVENT_ID = "tutorial-fog-clears";
@@ -87,36 +80,8 @@ function getCurrentEvent(session: RunState, completedRunCount: number) {
   return getPrototypeEventById(eventId);
 }
 
-function getWeakestMetricKey(session: RunState): VisibleMetricKey | null {
-  const weakMetricKeys = statusItemsConfig
-    .map((item) => item.key)
-    .filter((key) => session.metrics[key] < 50);
-
-  if (weakMetricKeys.length === 0) {
-    return null;
-  }
-
-  return weakMetricKeys.reduce((weakest, key) =>
-    session.metrics[key] < session.metrics[weakest] ? key : weakest,
-  );
-}
-
-function buildNarrativeText(session: RunState, eventText: string) {
-  if (session.currentEventId !== finalInterviewEventId) {
-    return eventText;
-  }
-
-  const weakestMetricKey = getWeakestMetricKey(session);
-
-  if (!weakestMetricKey) {
-    return eventText;
-  }
-
-  return `${eventText}\n\n면접관의 시선이 ${metricMessageLabels[weakestMetricKey]} 항목에서 멈췄다.\n\n${interviewPressureQuestions[weakestMetricKey]}`;
-}
-
 function getNextEventId(session: RunState, completedRunCount: number) {
-  return session.turn + 1 >= session.maxTurns - 1
+  return session.turn + 1 >= session.maxTurns
     ? finalInterviewEventId
     : drawNextPrototypeEventId(session.eventHistory, completedRunCount);
 }
@@ -130,6 +95,9 @@ function buildResolveChoice(
   return (choice: Parameters<EventPanelViewModel["onResolveChoice"]>[0]) => {
     const event = eventPanel.event;
     const isTutorialEvent = isTutorialEventId(event.id);
+    const nextInterviewEventId = getNextInterviewEventId(event.id);
+    const isIntermediateInterviewEvent =
+      isInterviewEventId(event.id) && nextInterviewEventId !== null;
     const resolvedTurn = resolveTurn({
       session,
       event,
@@ -140,26 +108,37 @@ function buildResolveChoice(
 
     dispatch({
       type: "turn/resolved",
-      payload: isTutorialEvent
-        ? {
-            ...resolvedTurn,
-            consumesTurn: false,
-            nextScene: resolvedTurn.gameOverReason ? "game-over-final" : "event",
-          }
-        : resolvedTurn,
+      payload:
+        isTutorialEvent || isIntermediateInterviewEvent
+          ? {
+              ...resolvedTurn,
+              consumesTurn: false,
+              nextScene: resolvedTurn.gameOverReason ? "game-over-final" : "event",
+            }
+          : event.id === lastInterviewEventId
+            ? {
+                ...resolvedTurn,
+                nextScene: "ending",
+              }
+            : resolvedTurn,
     });
 
-    if (isTutorialEvent && !resolvedTurn.gameOverReason) {
+    if (
+      (isTutorialEvent || isIntermediateInterviewEvent) &&
+      !resolvedTurn.gameOverReason
+    ) {
       dispatch({
         type: "run/continued",
         payload: {
-          nextEventId: getNextEventId(
-            {
-              ...session,
-              eventHistory: [...session.eventHistory, event.id],
-            },
-            completedRunCount,
-          ),
+          nextEventId:
+            nextInterviewEventId ??
+            getNextEventId(
+              {
+                ...session,
+                eventHistory: [...session.eventHistory, event.id],
+              },
+              completedRunCount,
+            ),
         },
       });
     }
@@ -178,7 +157,7 @@ function buildEventPanel(
   }
 
   const basePanel: EventPanelViewModel = {
-    narrativeText: buildNarrativeText(session, event.text),
+    narrativeText: event.text,
     event,
     onResolveChoice: () => undefined,
   };
@@ -201,12 +180,10 @@ function buildEventPanel(
       disabled: true,
       continueLabel:
         session.turn + 1 >= session.maxTurns
-          ? "Finish"
+          ? "Go to Interview"
           : tutorialJustEnded
             ? "Start Main Run"
-            : session.turn + 1 >= session.maxTurns - 1
-              ? "Go to Interview"
-              : "Next Event",
+            : "Next Event",
       onContinue: () =>
         dispatch({
           type: "run/continued",
@@ -253,45 +230,27 @@ export function buildGameScreenViewModel(
 
   if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);
-    const interview = evaluateInterviewOutcome(session);
-    const outcome = interview.passed ? "employed" : "failed";
-    const weakMetricText = interview.weakMetricKeys
-      .map((key) => metricMessageLabels[key])
-      .join(", ");
+    const outcome = "employed";
 
     return {
       statusItems,
       endingPanel: {
         eyebrow: "New Message",
-        title:
-          outcome === "employed"
-            ? "[Re:Born Korea] 최종 합격 안내"
-            : "[Re:Born Korea] 전형 결과 안내",
+        title: "[Re:Born Korea] 최종 합격 안내",
         outcome,
         sender: "recruit@reborn-careers.kr",
         receivedAt: "오늘 18:07",
-        messageLines:
-          outcome === "employed"
-            ? [
-                `${session.profile.name}님, 안녕하세요.`,
-                "Re:Born Korea 채용팀입니다.",
-                "최종 면접 결과, 합격하셨음을 안내드립니다.",
-                "불안정한 하루들을 통과해 끝까지 균형을 잃지 않은 점을 높게 평가했습니다.",
-                "자세한 입사 절차는 다음 안내 메일로 전달드리겠습니다.",
-              ]
-            : [
-                `${session.profile.name}님, 안녕하세요.`,
-                "Re:Born Korea 채용팀입니다.",
-                "최종 면접 결과, 아쉽게도 이번 전형에서는 함께하지 못하게 되었습니다.",
-                weakMetricText
-                  ? `면접 과정에서 ${weakMetricText} 항목의 불안정성이 확인되었습니다. 모든 항목이 50 이상이어야 최종 합격이 가능합니다.`
-                  : "면접 과정에서 최종 기준을 충족하지 못한 항목이 확인되었습니다.",
-                "지원해주셔서 감사드리며, 다음 기회에 더 좋은 인연으로 만나 뵙겠습니다.",
-              ],
+        messageLines: [
+          `${session.profile.name}님, 안녕하세요.`,
+          "Re:Born Korea 채용팀입니다.",
+          "최종 면접 결과, 합격하셨음을 안내드립니다.",
+          "불안정한 하루들을 통과해 면접장까지 도착한 점을 높게 평가했습니다.",
+          "자세한 입사 절차는 다음 안내 메일로 전달드리겠습니다.",
+        ],
         metricLines: statusItems.map(
           (item) => `${metricMessageLabels[item.key as VisibleMetricKey]} ${item.value}`,
         ),
-        nextLabel: outcome === "employed" ? "기억 확인하기" : "처음으로 돌아가기",
+        nextLabel: "기억 확인하기",
         onContinue: () =>
           dispatch({
             type: "run/completed",

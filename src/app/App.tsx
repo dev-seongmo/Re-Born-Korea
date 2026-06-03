@@ -42,7 +42,7 @@ export function App() {
   );
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [isNewGameConfirmOpen, setIsNewGameConfirmOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
 
   const footerName = state.run?.profile.name ?? "";
@@ -54,7 +54,7 @@ export function App() {
     state.run || state.meta.runCount > 0
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
-  const canContinue = Boolean(state.run && state.run.scene !== "setup");
+  const hasStartedGame = Boolean(state.run || state.meta.runCount > 0);
   const shouldShowTopbar =
     state.appScene !== "title" &&
     state.appScene !== "run-event" &&
@@ -92,18 +92,18 @@ export function App() {
     persistGameState(state);
   }, [state]);
 
-  function handleOpenNewGameConfirm() {
-    if (!canContinue) {
+  function handlePrimaryTitleAction() {
+    if (state.run) {
+      dispatch({ type: "app/continueRequested" });
+      return;
+    }
+
+    if (!hasStartedGame) {
       dispatch({ type: "app/newRunRequested" });
       return;
     }
 
-    setIsNewGameConfirmOpen(true);
-  }
-
-  function handleConfirmNewGame() {
-    dispatch({ type: "app/newGameResetRequested" });
-    setIsNewGameConfirmOpen(false);
+    dispatch({ type: "app/newRunRequested" });
   }
 
   function handleReturnToTitle() {
@@ -114,6 +114,16 @@ export function App() {
   function handleOpenEncyclopedia() {
     setIsSettingsModalOpen(false);
     dispatch({ type: "app/encyclopediaRequested" });
+  }
+
+  function handleOpenResetConfirm() {
+    setIsSettingsModalOpen(false);
+    setIsResetConfirmOpen(true);
+  }
+
+  function handleConfirmResetGame() {
+    dispatch({ type: "app/newGameResetRequested" });
+    setIsResetConfirmOpen(false);
   }
 
   async function handleShareGame() {
@@ -192,18 +202,10 @@ export function App() {
               <div className="title-screen__actions">
                 <button
                   className="title-screen__button title-screen__button--primary"
-                  onClick={handleOpenNewGameConfirm}
+                  onClick={handlePrimaryTitleAction}
                   type="button"
                 >
-                  새 게임
-                </button>
-                <button
-                  className="title-screen__button"
-                  disabled={!canContinue}
-                  onClick={() => dispatch({ type: "app/continueRequested" })}
-                  type="button"
-                >
-                  이어하기
+                  {hasStartedGame ? "이어하기" : "새 게임"}
                 </button>
                 <button
                   className="title-screen__button"
@@ -299,7 +301,7 @@ export function App() {
               />
             ) : null
           ) : state.appScene === "memory-hub" ? (
-            <section className="panel">
+            <section className="panel memory-hub">
               <div className="panel__header">
                 <p className="eyebrow">Memory Hub</p>
                 <h2>Fragments recovered</h2>
@@ -308,7 +310,7 @@ export function App() {
                 </p>
               </div>
 
-              <div className="choice-list">
+              <div className="choice-list memory-hub__list">
                 {memoryShards.map((shard) => {
                   const unlocked = state.meta.unlockedMemoryShardIds.includes(shard.id);
 
@@ -325,23 +327,25 @@ export function App() {
                 })}
               </div>
 
-              {state.meta.trueEndingUnlocked ? (
+              <div className="memory-hub__actions">
+                {state.meta.trueEndingUnlocked ? (
+                  <button
+                    className="primary-button"
+                    onClick={() => dispatch({ type: "hub/trueEndingRequested" })}
+                    type="button"
+                  >
+                    진엔딩 시작
+                  </button>
+                ) : null}
+
                 <button
-                  className="primary-button"
-                  onClick={() => dispatch({ type: "hub/trueEndingRequested" })}
+                  className="secondary-button"
+                  onClick={() => dispatch({ type: "hub/continueRequested" })}
                   type="button"
                 >
-                  Begin True Ending
+                  나가기
                 </button>
-              ) : null}
-
-              <button
-                className="secondary-button"
-                onClick={() => dispatch({ type: "hub/continueRequested" })}
-                type="button"
-              >
-                Return to Title
-              </button>
+              </div>
             </section>
           ) : (
             <section className="panel">
@@ -511,15 +515,23 @@ export function App() {
             >
               메인화면으로 나가기
             </button>
+
+            <button
+              className="secondary-button secondary-button--danger settings-modal__action"
+              onClick={handleOpenResetConfirm}
+              type="button"
+            >
+              게임 초기화
+            </button>
           </div>
         </div>
       ) : null}
 
-      {isNewGameConfirmOpen ? (
+      {isResetConfirmOpen ? (
         <div
           aria-hidden="true"
           className="memory-modal-backdrop"
-          onClick={() => setIsNewGameConfirmOpen(false)}
+          onClick={() => setIsResetConfirmOpen(false)}
         >
           <div
             aria-modal="true"
@@ -528,32 +540,33 @@ export function App() {
             role="dialog"
           >
             <div className="panel__header">
-              <p className="eyebrow">Warning</p>
-              <h2>새 게임을 시작할까요?</h2>
+              <p className="eyebrow">Reset</p>
+              <h2>게임을 초기화할까요?</h2>
               <p className="muted">
-                현재 이어하기 가능한 진행이 있다면 새 게임으로 덮어쓰게 됩니다.
+                현재 진행과 회차 기록, 기억 조각이 모두 처음 상태로 돌아갑니다.
               </p>
             </div>
 
             <div className="confirm-modal__actions">
               <button
                 className="secondary-button"
-                onClick={() => setIsNewGameConfirmOpen(false)}
+                onClick={() => setIsResetConfirmOpen(false)}
                 type="button"
               >
                 취소
               </button>
               <button
-                className="primary-button"
-                onClick={handleConfirmNewGame}
+                className="primary-button primary-button--danger"
+                onClick={handleConfirmResetGame}
                 type="button"
               >
-                새 게임 시작
+                초기화
               </button>
             </div>
           </div>
         </div>
       ) : null}
+
     </div>
   );
 }

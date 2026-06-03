@@ -1,7 +1,14 @@
 import { memoryShards } from "../content/memoryShards";
+import { drawNextPrototypeEventId } from "../content/eventCards";
 import { getGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
+import { runConfig } from "../config/runConfig";
 import { clampMetric } from "../systems/metricSystem";
-import { createInitialGameState, createInitialRunState } from "./gameState";
+import { sanitizePlayerName } from "../utils/playerName";
+import {
+  createInitialGameState,
+  createInitialRunState,
+  pickPrototypeArchetype,
+} from "./gameState";
 import type {
   EndingId,
   GameAction,
@@ -41,10 +48,37 @@ function updateRun(run: RunState | null, updater: (current: RunState) => RunStat
   return run ? updater(run) : run;
 }
 
+function createStartedRunForNextLife(state: GameState) {
+  const archetype = pickPrototypeArchetype();
+  const playerName = state.meta.playerName || state.run?.profile.name || "이름 없음";
+
+  return createInitialRunState({
+    scene: "event",
+    archetype,
+    profile: { name: playerName },
+    metrics: archetype.metrics,
+    currentEventId: drawNextPrototypeEventId([], state.meta.runCount),
+    maxTurns: runConfig.maxTurns,
+  });
+}
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "app/newRunRequested": {
-      const nextRun = createInitialRunState();
+      if (state.meta.runCount > 0) {
+        return {
+          ...state,
+          appScene: "run-event",
+          run: createStartedRunForNextLife(state),
+        };
+      }
+
+      const nextRun = createInitialRunState({
+        profile: {
+          name: state.meta.playerName || "이름 없음",
+        },
+      });
+
       return {
         ...state,
         appScene: "run-setup",
@@ -53,12 +87,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case "app/newGameResetRequested": {
-      const nextState = createInitialGameState();
-      return {
-        ...nextState,
-        appScene: "run-setup",
-        run: createInitialRunState(),
-      };
+      return createInitialGameState();
     }
 
     case "app/continueRequested":
@@ -81,22 +110,42 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         appScene: "title",
       };
 
-    case "profile/updated":
+    case "profile/updated": {
+      const nextProfileName =
+        typeof action.payload.name === "string"
+          ? sanitizePlayerName(action.payload.name)
+          : undefined;
+
       return {
         ...state,
+        meta:
+          typeof nextProfileName === "string"
+            ? {
+                ...state.meta,
+                playerName: nextProfileName,
+              }
+            : state.meta,
         run: updateRun(state.run, (run) => ({
           ...run,
           profile: {
             ...run.profile,
             ...action.payload,
+            ...(typeof nextProfileName === "string"
+              ? { name: nextProfileName }
+              : null),
           },
         })),
       };
+    }
 
     case "run/started":
       return {
         ...state,
         appScene: "run-event",
+        meta: {
+          ...state.meta,
+          playerName: state.run?.profile.name ?? state.meta.playerName,
+        },
         run: updateRun(state.run, (run) => ({
           ...run,
           scene: "event",
@@ -161,6 +210,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           action.payload.outcome === "employed" ? "memory-hub" : "title",
         run: null,
         meta: {
+          ...state.meta,
           runCount: state.meta.runCount + 1,
           successCount:
             state.meta.successCount +
@@ -184,13 +234,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       );
       const trueEndingUnlocked =
         unlockedMemoryShardIds.length >= memoryShards.length;
+      const nextRunCount = state.meta.runCount + 1;
+      const archetype = pickPrototypeArchetype();
+      const nextRun = createInitialRunState({
+        scene: "event",
+        archetype,
+        profile: {
+          name: state.meta.playerName || state.run?.profile.name || "이름 없음",
+        },
+        metrics: archetype.metrics,
+        currentEventId: drawNextPrototypeEventId([], nextRunCount),
+        maxTurns: state.run?.maxTurns ?? runConfig.maxTurns,
+      });
 
       return {
-        appScene: "title",
-        run: null,
+        appScene: "run-event",
+        run: nextRun,
         meta: {
           ...state.meta,
-          runCount: state.meta.runCount + 1,
+          runCount: nextRunCount,
           unlockedMemoryShardIds,
           trueEndingUnlocked,
         },

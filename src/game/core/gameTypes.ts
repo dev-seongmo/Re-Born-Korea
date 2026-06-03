@@ -180,6 +180,7 @@ export type RunState = {
 export type GameSession = RunState;
 
 export type MetaState = {
+  playerName: string;
   runCount: number;
   successCount: number;
   unlockedMemoryShardIds: string[];

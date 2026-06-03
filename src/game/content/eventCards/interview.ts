@@ -1,66 +1,190 @@
-import type { EventCard } from "../../core/gameTypes";
+import type { EventCard, EventChoice } from "../../core/gameTypes";
 
-export const interviewEvent: EventCard = {
-  id: "final-interview",
-  characterName: "면접관",
-  category: "interview",
-  phase: "late20s",
-  text:
-    "면접실 문이 닫히자 바깥 소음이 끊겼다.\n\n세 명의 면접관이 서류를 넘긴다. 가운데 앉은 사람이 고개를 들었다.\n\n\"마지막으로 묻겠습니다. 이 일을 왜 당신에게 맡겨야 합니까?\"",
-  choices: [
-    {
-      id: "answer-with-proof",
-      label: "준비한 근거로 차분히 답한다",
-      immediate: { spec: 1, reputation: 1 },
-      selfTrustDelta: 2,
-      primaryStat: "spec",
-      modifier: 0,
-      memoryTags: ["interview_day", "steady_answer"],
-      tendencyTags: ["spec", "selfTrust"],
-      results: {
-        bad: {
-          text:
-            "말끝이 조금 흔들렸지만, 답은 무너지지 않았다.\n\n당신은 경험과 준비한 내용을 하나씩 꺼내 놓았다. 면접관의 펜이 멈추지 않는다.",
-        },
-        mixed: {
-          text:
-            "완벽한 답은 아니었다. 그래도 빈칸은 없었다.\n\n당신은 할 수 있는 말과 해온 일을 구분해서 설명했다.",
-          delta: { reputation: 1 },
-        },
-        good: {
-          text:
-            "답변의 순서가 또렷하게 맞물렸다.\n\n준비한 시간, 버틴 마음, 사람들 앞에서의 태도가 한 문장 안에 들어왔다.",
-          delta: { spec: 1, reputation: 1 },
-          selfTrustDelta: 1,
-        },
-      },
+function interviewChoice(params: {
+  id: string;
+  label: string;
+  resultText: string;
+  memoryTags?: string[];
+  tendencyTags?: EventChoice["tendencyTags"];
+}): EventChoice {
+  return {
+    id: params.id,
+    label: params.label,
+    immediate: {},
+    selfTrustDelta: 0,
+    primaryStat: "mental",
+    modifier: 0,
+    memoryTags: params.memoryTags,
+    tendencyTags: params.tendencyTags,
+    results: {
+      bad: { text: params.resultText },
+      mixed: { text: params.resultText },
+      good: { text: params.resultText },
     },
-    {
-      id: "answer-with-desperation",
-      label: "절박함을 숨기지 않고 말한다",
-      immediate: { mental: 1, reputation: -1 },
-      selfTrustDelta: 1,
-      primaryStat: "mental",
-      modifier: -1,
-      memoryTags: ["interview_day"],
-      tendencyTags: ["mental"],
-      results: {
-        bad: {
-          text:
-            "목소리에 절박함이 먼저 새어 나왔다.\n\n면접관은 잠시 침묵했다. 진심은 닿았지만, 그들이 찾는 확신까지는 조금 모자랐다.",
-          delta: { reputation: -1 },
-        },
-        mixed: {
-          text:
-            "당신은 솔직했다. 그리고 겨우 중심을 되찾았다.\n\n\"그래도 이 일을 해내고 싶습니다.\" 마지막 문장은 작지만 분명했다.",
-        },
-        good: {
-          text:
-            "절박함은 변명이 아니라 이유가 되었다.\n\n면접관 한 명이 처음으로 서류에서 눈을 떼고 당신을 바라보았다.",
-          delta: { mental: 1, reputation: 1 },
-          selfTrustDelta: 1,
-        },
-      },
-    },
-  ],
-};
+  };
+}
+
+export const interviewEvents: EventCard[] = [
+  {
+    id: "final-interview-eve",
+    characterName: "나",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "드디어 내일 면접이다.\n\n달력에 표시해 둔 날짜가 오늘 밤 바로 앞까지 다가왔다.\n\n오늘은 괜히 더 욕심내지 말고, 준비한 것만 정리하고 일찍 자자.",
+    choices: [
+      interviewChoice({
+        id: "review-key-points",
+        label: "예상 질문만 짧게 훑고 눕는다",
+        resultText:
+          "답을 전부 외우려 하지는 않았다.\n\n대신 꼭 말하고 싶은 경험과 이유만 다시 확인했다.",
+        memoryTags: ["interview_day"],
+        tendencyTags: ["spec"],
+      }),
+      interviewChoice({
+        id: "sleep-before-interview",
+        label: "컨디션이 실력이라고 믿고 잔다",
+        resultText:
+          "불안은 남아 있었지만, 더 붙잡고 있어도 답이 선명해질 것 같지는 않았다.\n\n불을 끄자 심장이 천천히 밤에 적응했다.",
+        memoryTags: ["interview_day"],
+        tendencyTags: ["mental"],
+      }),
+    ],
+  },
+  {
+    id: "final-interview-arrival",
+    characterName: "나",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "면접 시간보다 30분 일찍 도착했다.\n\n건물 로비의 시계 초침이 유난히 크게 들린다.\n\n너무 떨린다. 손바닥에 땀이 찬다.",
+    choices: [
+      interviewChoice({
+        id: "breathe-in-lobby",
+        label: "숨을 고르고 천천히 물을 마신다",
+        resultText:
+          "목이 조금 풀렸다.\n\n떨림이 사라지지는 않았지만, 적어도 내가 여기까지 왔다는 사실은 분명했다.",
+        tendencyTags: ["mental"],
+      }),
+      interviewChoice({
+        id: "check-documents",
+        label: "서류와 포트폴리오를 다시 확인한다",
+        resultText:
+          "파일명, 출력물, 신분증.\n\n몇 번이고 확인한 것들이지만 다시 보니 마음 한구석이 조금 안정됐다.",
+        tendencyTags: ["spec"],
+      }),
+    ],
+  },
+  {
+    id: "final-interview-enter-room",
+    characterName: "면접관",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "면접장에 들어서자 공기가 달라졌다.\n\n문이 닫히고, 바깥의 소음이 한 번에 멀어졌다.\n\n세 명의 면접관이 서류에서 눈을 들었다.",
+    choices: [
+      interviewChoice({
+        id: "calm-greeting",
+        label: "침착하게 인사하고 자리에 앉는다",
+        resultText:
+          "목소리가 아주 조금 떨렸지만 인사는 끝까지 이어졌다.\n\n의자에 앉는 순간, 준비해 온 시간들이 등 뒤에 조용히 섰다.",
+        tendencyTags: ["reputation"],
+      }),
+      interviewChoice({
+        id: "honest-nervousness",
+        label: "긴장했지만 또렷하게 말하려 한다",
+        resultText:
+          "긴장을 숨기지는 못했다.\n\n그래도 시선을 피하지 않고 첫 문장을 꺼냈다.",
+        tendencyTags: ["mental"],
+      }),
+    ],
+  },
+  {
+    id: "final-interview-contribution",
+    characterName: "면접관",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "\"회사에서 어떻게 기여할 수 있을지 알려주세요.\"\n\n가장 준비했던 질문인데도, 막상 들으니 머릿속이 잠깐 하얘졌다.",
+    choices: [
+      interviewChoice({
+        id: "answer-with-experience",
+        label: "경험을 근거로 차분히 답한다",
+        resultText:
+          "프로젝트에서 맡았던 역할과 배운 점을 하나씩 꺼냈다.\n\n거창한 약속보다, 실제로 해 본 일에서 시작했다.",
+        memoryTags: ["steady_answer"],
+        tendencyTags: ["spec"],
+      }),
+      interviewChoice({
+        id: "answer-with-growth",
+        label: "배우고 적응하는 방식으로 답한다",
+        resultText:
+          "모든 걸 이미 잘한다고 말하지 않았다.\n\n대신 모르는 것을 어떻게 따라잡아 왔는지, 앞으로도 어떻게 해낼지 설명했다.",
+        memoryTags: ["steady_answer"],
+        tendencyTags: ["selfTrust"],
+      }),
+    ],
+  },
+  {
+    id: "final-interview-weakness",
+    characterName: "면접관",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "\"본인의 단점에 대해 알려주세요.\"\n\n피하고 싶었던 질문이다.\n\n잘못 말하면 변명처럼 들릴 것 같고, 너무 솔직하면 부족해 보일 것 같다.",
+    choices: [
+      interviewChoice({
+        id: "weakness-with-fix",
+        label: "단점과 보완 방법을 함께 말한다",
+        resultText:
+          "부족한 점을 숨기지 않았다.\n\n다만 그 부족함을 어떻게 기록하고, 어떻게 줄여 왔는지도 함께 말했다.",
+        tendencyTags: ["mental", "spec"],
+      }),
+      interviewChoice({
+        id: "weakness-with-example",
+        label: "실제 사례를 들어 담담히 말한다",
+        resultText:
+          "한 번의 실수를 이야기했다.\n\n그때의 부끄러움보다, 이후에 바꾼 행동을 더 길게 설명했다.",
+        tendencyTags: ["reputation", "selfTrust"],
+      }),
+    ],
+  },
+  {
+    id: "final-interview-finished",
+    characterName: "나",
+    category: "interview",
+    phase: "late20s",
+    text:
+      "정신없이 면접이 끝났다.\n\n무슨 말을 했는지 전부 기억나지는 않는다.\n\n다만 문밖으로 나오는 순간, 끝까지 도망치지 않았다는 사실만은 또렷했다.",
+    choices: [
+      interviewChoice({
+        id: "accept-the-day",
+        label: "오늘의 나를 인정한다",
+        resultText:
+          "완벽하지는 않았다.\n\n그래도 이 하루를 통과한 사람은 다른 누구도 아닌 나였다.",
+        memoryTags: ["interview_day", "steady_answer"],
+        tendencyTags: ["selfTrust"],
+      }),
+      interviewChoice({
+        id: "wait-for-result",
+        label: "결과를 기다리기로 한다",
+        resultText:
+          "핸드폰을 손에 쥐고 건물을 나섰다.\n\n이제 남은 것은 기다리는 일뿐이다.",
+        memoryTags: ["interview_day"],
+        tendencyTags: ["mental"],
+      }),
+    ],
+  },
+];
+
+export const finalInterviewEventId = interviewEvents[0].id;
+export const lastInterviewEventId = interviewEvents[interviewEvents.length - 1].id;
+
+export function isInterviewEventId(eventId: string) {
+  return interviewEvents.some((event) => event.id === eventId);
+}
+
+export function getNextInterviewEventId(eventId: string) {
+  const currentIndex = interviewEvents.findIndex((event) => event.id === eventId);
+  return currentIndex >= 0 ? interviewEvents[currentIndex + 1]?.id ?? null : null;
+}

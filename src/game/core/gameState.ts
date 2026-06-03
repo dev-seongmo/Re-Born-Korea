@@ -11,7 +11,7 @@ import type {
 } from "./gameTypes";
 
 const defaultProfile: PlayerProfile = {
-  name: "이름없는 영혼",
+  name: "",
 };
 
 const defaultMetrics: VisibleMetrics = {
@@ -65,6 +65,7 @@ export function createInitialRunState(
 
 export function createInitialMetaState(): MetaState {
   return {
+    playerName: "",
     runCount: 0,
     successCount: 0,
     unlockedMemoryShardIds: [],

@@ -35,7 +35,7 @@ export function SetupScreen({ viewModel }: Props) {
   return (
     <section className="panel">
       <div className="panel__header">
-        <p className="eyebrow">Soul Setup</p>
+        <p className="eyebrow">Setup</p>
         <h2>{viewModel.title}</h2>
         <p className="muted">{viewModel.description}</p>
       </div>
@@ -45,7 +45,7 @@ export function SetupScreen({ viewModel }: Props) {
           <label className="field" key={field.key}>
             <span>{field.label}</span>
             <input
-              placeholder="이름없는 영혼"
+              placeholder="내 이름"
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
             />

@@ -258,6 +258,29 @@ button {
   margin: 0;
 }
 
+.memory-hub {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 14px;
+}
+
+.memory-hub .panel__header {
+  margin-bottom: 0;
+}
+
+.memory-hub__list {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+}
+
+.memory-hub__actions {
+  display: grid;
+  gap: 10px;
+}
+
 .settings-modal__action {
   width: 100%;
 }
@@ -526,6 +549,17 @@ button {
 .secondary-button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.primary-button--danger {
+  background: #e0a09a;
+  color: #1e1112;
+}
+
+.secondary-button--danger {
+  color: #f0b5ad;
+  border-color: rgba(240, 181, 173, 0.26);
+  background: rgba(128, 48, 52, 0.18);
 }
 
 .choice-button {

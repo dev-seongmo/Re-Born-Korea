@@ -3,7 +3,7 @@ import { comparisonEvents } from "./comparison";
 import { familyEvents } from "./family";
 import { friendshipEvents } from "./friendship";
 import { gameOverFinalEvents } from "./gameOverFinalEvents";
-import { interviewEvent } from "./interview";
+import { interviewEvents } from "./interview";
 import { mentalEvents } from "./mental";
 import { moneyEvents } from "./money";
 import { recoveryEvents } from "./recovery";
@@ -14,7 +14,7 @@ import { tutorialEvents } from "./tutorial";
 export const prototypeEvents: EventCard[] = [
   ...tutorialEvents,
   ...secondLifeTutorialEvents,
-  interviewEvent,
+  ...interviewEvents,
   ...comparisonEvents,
   ...familyEvents,
   ...friendshipEvents,
@@ -34,7 +34,7 @@ export const tutorialEventIds = tutorialEvents.map((event) => event.id);
 export const secondLifeTutorialEventIds = secondLifeTutorialEvents.map(
   (event) => event.id,
 );
-export const finalInterviewEventId = interviewEvent.id;
+export { finalInterviewEventId } from "./interview";
 
 export function getTutorialEventIdsForRun(completedRunCount: number) {
   if (completedRunCount === 0) {

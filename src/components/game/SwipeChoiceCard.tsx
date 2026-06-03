@@ -1,7 +1,6 @@
 import type {
   AnimationEvent as ReactAnimationEvent,
   CSSProperties,
-  KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
   TransitionEvent as ReactTransitionEvent,
 } from "react";
@@ -96,6 +95,18 @@ export function SwipeChoiceCard({
       }
     };
   }, []);
+
+  useEffect(() => {
+    function handleWindowKeyDown(eventObject: KeyboardEvent) {
+      handleKeyboardChoice(eventObject);
+    }
+
+    window.addEventListener("keydown", handleWindowKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleWindowKeyDown);
+    };
+  });
 
   useEffect(() => {
     autoDemoStoppedRef.current = false;
@@ -296,7 +307,7 @@ export function SwipeChoiceCard({
     flyOutAndResolve(leftChoice, "left");
   }
 
-  function handleKeyDown(eventObject: ReactKeyboardEvent<HTMLDivElement>) {
+  function handleKeyboardChoice(eventObject: KeyboardEvent) {
     if (
       phase !== "idle" ||
       isDragging ||
@@ -371,7 +382,6 @@ export function SwipeChoiceCard({
         data-direction={direction ?? "neutral"}
         aria-label="왼쪽 또는 오른쪽 방향키로 선택"
         onAnimationEnd={handleAnimationEnd}
-        onKeyDown={handleKeyDown}
         onPointerCancel={handlePointerCancel}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
