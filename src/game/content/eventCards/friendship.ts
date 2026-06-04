@@ -9,7 +9,7 @@ export const friendshipEvents: EventCard[] = [
     choices: [
       {
         id: "meet-tonight",
-        label: "오늘은 만난다.",
+        label: "오늘은 만난다",
         immediate: { money: -2, mental: 4 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -31,7 +31,7 @@ export const friendshipEvents: EventCard[] = [
       },
       {
         id: "delay-again",
-        label: "이번만 미룬다.",
+        label: "이번만 미룬다",
         immediate: { spec: 1, mental: -2 },
         selfTrustDelta: -2,
         primaryStat: "spec",
@@ -59,7 +59,7 @@ export const friendshipEvents: EventCard[] = [
     choices: [
       {
         id: "stay-on-call",
-        label: "조금 피곤해도 전화를 받아준다.",
+        label: "전화를 받는다",
         immediate: { mental: -1, reputation: 1 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -82,7 +82,7 @@ export const friendshipEvents: EventCard[] = [
       },
       {
         id: "text-tomorrow",
-        label: "내일 연락하겠다고 짧게 남긴다.",
+        label: "내일로 미룬다",
         immediate: { spec: 1, mental: 0 },
         selfTrustDelta: -1,
         primaryStat: "spec",
@@ -112,7 +112,7 @@ export const friendshipEvents: EventCard[] = [
     choices: [
       {
         id: "send-long-message",
-        label: "늦었지만 진심 담긴 메시지를 보낸다.",
+        label: "진심을 보낸다",
         immediate: { mental: 1, reputation: 1 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -132,7 +132,7 @@ export const friendshipEvents: EventCard[] = [
       },
       {
         id: "pretend-notice-later",
-        label: "괜히 어색할까 봐 그냥 넘어간다.",
+        label: "그냥 넘긴다",
         immediate: { spec: 1, mental: -1 },
         selfTrustDelta: -2,
         primaryStat: "spec",
@@ -159,7 +159,7 @@ export const friendshipEvents: EventCard[] = [
     choices: [
       {
         id: "go-anyway",
-        label: "무리하지 않는 선에서 함께 간다.",
+        label: "함께 간다",
         immediate: { money: -3, mental: 3 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -177,7 +177,7 @@ export const friendshipEvents: EventCard[] = [
       },
       {
         id: "decline-gently",
-        label: "사정이 안 된다고 솔직히 말하고 다음을 약속한다.",
+        label: "이번엔 거절한다",
         immediate: { money: 1, mental: 0 },
         selfTrustDelta: 2,
         primaryStat: "money",

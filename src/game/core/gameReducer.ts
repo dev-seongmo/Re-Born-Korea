@@ -64,6 +64,10 @@ function createStartedRunForNextLife(state: GameState) {
       [],
       state.meta.runCount,
       state.meta.isFirstCleared,
+      {
+        nextTurn: 1,
+        girlfriendStatus: "none",
+      },
     ),
     maxTurns: runConfig.maxTurns,
   });
@@ -116,6 +120,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         appScene: "title",
       };
+
+    case "debug/phase2SaveLoaded":
+      return action.payload.state;
 
     case "profile/updated": {
       const nextProfileName =
@@ -189,6 +196,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           identityStage: action.payload.identityStage,
           memoryTags: action.payload.memoryTags,
           tendencyScores: action.payload.tendencyScores,
+          relationship: {
+            ...run.relationship,
+            ...action.payload.relationshipEffect,
+          },
         })),
       };
 
@@ -270,6 +281,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           [],
           nextRunCount,
           state.meta.isFirstCleared,
+          {
+            nextTurn: 1,
+            girlfriendStatus: "none",
+          },
         ),
         maxTurns: state.run?.maxTurns ?? runConfig.maxTurns,
       });

@@ -84,6 +84,10 @@ function getCurrentEvent(
       session.eventHistory,
       completedRunCount,
       meta.isFirstCleared,
+      {
+        nextTurn: session.turn + 1,
+        girlfriendStatus: session.relationship.girlfriendStatus,
+      },
     );
 
   return getPrototypeEventById(eventId);
@@ -100,6 +104,10 @@ function getNextEventId(
         session.eventHistory,
         completedRunCount,
         meta.isFirstCleared,
+        {
+          nextTurn: session.turn + 1,
+          girlfriendStatus: session.relationship.girlfriendStatus,
+        },
       );
 }
 

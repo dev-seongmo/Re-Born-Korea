@@ -9,7 +9,7 @@ export const familyEvents: EventCard[] = [
     choices: [
       {
         id: "speak-honestly",
-        label: "솔직하게 지금 상태를 말한다.",
+        label: "솔직히 말한다",
         immediate: { reputation: -2, mental: 2 },
         selfTrustDelta: 5,
         primaryStat: "mental",
@@ -31,7 +31,7 @@ export const familyEvents: EventCard[] = [
       },
       {
         id: "pretend-fine",
-        label: "괜찮은 척하며 숨긴다.",
+        label: "괜찮은 척한다",
         immediate: { reputation: 2, mental: -3 },
         selfTrustDelta: -4,
         primaryStat: "reputation",
@@ -59,7 +59,7 @@ export const familyEvents: EventCard[] = [
     choices: [
       {
         id: "set-boundary-softly",
-        label: "웃으며 넘기되, 비교 질문은 불편하다고 말한다.",
+        label: "불편하다고 말한다",
         immediate: { reputation: -1, mental: 2 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -79,7 +79,7 @@ export const familyEvents: EventCard[] = [
       },
       {
         id: "laugh-it-off",
-        label: "괜히 분위기 깰까 봐 같이 웃고 넘긴다.",
+        label: "웃고 넘긴다",
         immediate: { reputation: 2, mental: -2 },
         selfTrustDelta: -3,
         primaryStat: "reputation",
@@ -107,7 +107,7 @@ export const familyEvents: EventCard[] = [
     choices: [
       {
         id: "accept-with-honesty",
-        label: "도움을 받되, 압박도 같이 느낀다고 솔직히 말한다.",
+        label: "솔직히 도움받는다",
         immediate: { money: 3, mental: 1 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -128,7 +128,7 @@ export const familyEvents: EventCard[] = [
       },
       {
         id: "accept-silently",
-        label: "그냥 받는다. 불편한 감정은 혼자 삼킨다.",
+        label: "그냥 받는다",
         immediate: { money: 4, mental: -2, reputation: 1 },
         selfTrustDelta: -2,
         primaryStat: "money",
@@ -158,7 +158,7 @@ export const familyEvents: EventCard[] = [
     choices: [
       {
         id: "go-home-strategically",
-        label: "잠깐 숨을 고르기 위한 선택이라고 받아들인다.",
+        label: "잠깐 돌아간다",
         immediate: { money: 4, reputation: -1, mental: 1 },
         selfTrustDelta: 3,
         primaryStat: "money",
@@ -180,7 +180,7 @@ export const familyEvents: EventCard[] = [
       },
       {
         id: "hold-rented-room",
-        label: "어떻게든 지금의 독립을 유지한다.",
+        label: "독립을 고집한다",
         immediate: { money: -4, reputation: 1, mental: -1 },
         selfTrustDelta: 0,
         primaryStat: "money",

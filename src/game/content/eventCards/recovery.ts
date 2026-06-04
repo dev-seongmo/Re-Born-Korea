@@ -9,7 +9,7 @@ export const recoveryEvents: EventCard[] = [
     choices: [
       {
         id: "eat-favorite-food",
-        label: "오늘은 내가 좋아하는 걸 먹는다.",
+        label: "좋아하는 걸 먹는다",
         immediate: { money: -1, mental: 3 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -27,7 +27,7 @@ export const recoveryEvents: EventCard[] = [
       },
       {
         id: "skip-comfort-meal",
-        label: "아깝다 생각하고 그냥 참는다.",
+        label: "그냥 참는다",
         immediate: { money: 1, mental: -1 },
         selfTrustDelta: -1,
         primaryStat: "money",
@@ -49,7 +49,7 @@ export const recoveryEvents: EventCard[] = [
     choices: [
       {
         id: "return-to-hobby",
-        label: "짧게라도 다시 해본다.",
+        label: "다시 해본다",
         immediate: { mental: 3, spec: -1 },
         selfTrustDelta: 5,
         primaryStat: "mental",
@@ -69,7 +69,7 @@ export const recoveryEvents: EventCard[] = [
       },
       {
         id: "close-folder",
-        label: "지금은 사치라고 생각하고 닫는다.",
+        label: "폴더를 닫는다",
         immediate: { spec: 1, mental: -1 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -94,7 +94,7 @@ export const recoveryEvents: EventCard[] = [
     choices: [
       {
         id: "take-a-walk",
-        label: "10분만이라도 걷는다.",
+        label: "10분 걷는다",
         immediate: { mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -112,7 +112,7 @@ export const recoveryEvents: EventCard[] = [
       },
       {
         id: "stay-at-desk",
-        label: "괜히 흐름 끊길까 봐 자리에 남는다.",
+        label: "자리에 남는다",
         immediate: { spec: 1, mental: -1 },
         selfTrustDelta: -1,
         primaryStat: "spec",
@@ -134,7 +134,7 @@ export const recoveryEvents: EventCard[] = [
     choices: [
       {
         id: "write-to-myself",
-        label: "내 이름으로 짧은 문장을 남겨본다.",
+        label: "문장을 남긴다",
         immediate: { mental: 2 },
         selfTrustDelta: 5,
         primaryStat: "mental",
@@ -152,7 +152,7 @@ export const recoveryEvents: EventCard[] = [
       },
       {
         id: "crumple-note",
-        label: "감상에 젖는 것 같아 메모를 구겨버린다.",
+        label: "메모를 구긴다",
         immediate: { spec: 1, mental: -1 },
         selfTrustDelta: -3,
         primaryStat: "spec",

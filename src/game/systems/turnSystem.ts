@@ -126,6 +126,7 @@ export function resolveTurn(params: {
     identityStage: nextIdentityStage,
     memoryTags: nextMemoryTags,
     tendencyScores: nextTendencies,
+    relationshipEffect: choice.relationshipEffect,
     nextScene: gameOverReason
       ? isGameOverFinalEventId(event.id)
         ? "game-over"

@@ -8,25 +8,8 @@ export const moneyEvents: EventCard[] = [
     text: "주말 알바 사장이 한 타임 더 나와줄 수 있냐고 묻는다.",
     choices: [
       {
-        id: "take-extra-shift",
-        label: "이번 주만 더 일한다.",
-        immediate: { money: 4, mental: -2 },
-        selfTrustDelta: -1,
-        primaryStat: "money",
-        modifier: 1,
-        tendencyTags: ["money"],
-        results: {
-          bad: { text: "돈은 벌었지만 몸이 먼저 지쳤다.", delta: { mental: -2 } },
-          mixed: { text: "잔고는 늘었고 네 시간은 조금 줄었다." },
-          good: {
-            text: "이번 주는 버틸 수 있게 됐지만, 이런 식의 버팀은 오래 못 간다.",
-            delta: { money: 2 },
-          },
-        },
-      },
-      {
         id: "protect-weekend",
-        label: "시간을 지키고 쉬거나 공부한다.",
+        label: "시간을 지킨다",
         immediate: { money: -2, mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -41,6 +24,23 @@ export const moneyEvents: EventCard[] = [
           good: { text: "짧은 회복이 다음 주를 버티게 했다.", delta: { mental: 2 } },
         },
       },
+      {
+        id: "take-extra-shift",
+        label: "더 일한다",
+        immediate: { money: 4, mental: -2 },
+        selfTrustDelta: -1,
+        primaryStat: "money",
+        modifier: 1,
+        tendencyTags: ["money"],
+        results: {
+          bad: { text: "돈은 벌었지만 몸이 먼저 지쳤다.", delta: { mental: -2 } },
+          mixed: { text: "잔고는 늘었고 네 시간은 조금 줄었다." },
+          good: {
+            text: "이번 주는 버틸 수 있게 됐지만, 이런 식의 버팀은 오래 못 간다.",
+            delta: { money: 2 },
+          },
+        },
+      },
     ],
   },
   {
@@ -51,7 +51,7 @@ export const moneyEvents: EventCard[] = [
     choices: [
       {
         id: "sell-something",
-        label: "중고로 물건을 정리해 급한 불을 끈다.",
+        label: "물건을 판다",
         immediate: { money: 3, mental: -1 },
         selfTrustDelta: 1,
         primaryStat: "money",
@@ -71,7 +71,7 @@ export const moneyEvents: EventCard[] = [
       },
       {
         id: "borrow-quietly",
-        label: "지인에게 급히 빌린다.",
+        label: "급히 빌린다",
         immediate: { money: 4, reputation: -1, mental: -2 },
         selfTrustDelta: -1,
         primaryStat: "reputation",
@@ -98,8 +98,26 @@ export const moneyEvents: EventCard[] = [
     text: "이번 주는 식비를 아끼려고 편의점 도시락만 먹을지 고민한다.",
     choices: [
       {
+        id: "keep-one-good-meal",
+        label: "한 끼는 챙긴다",
+        immediate: { money: -1, mental: 2 },
+        selfTrustDelta: 3,
+        primaryStat: "mental",
+        modifier: 0,
+        memoryTags: ["warm_meal"],
+        tendencyTags: ["selfTrust", "mental"],
+        results: {
+          bad: { text: "여유롭진 않았지만 너는 최소한의 따뜻함을 포기하지 않았다." },
+          mixed: { text: "작은 식사가 생각보다 큰 회복이 되었다." },
+          good: {
+            text: "한 끼의 정성이 네 하루 전체를 조금 덜 삭막하게 했다.",
+            delta: { mental: 2 },
+          },
+        },
+      },
+      {
         id: "save-on-food",
-        label: "이번 주는 최대한 아낀다.",
+        label: "최대한 아낀다",
         immediate: { money: 2, mental: -1 },
         selfTrustDelta: -1,
         primaryStat: "money",
@@ -117,24 +135,6 @@ export const moneyEvents: EventCard[] = [
           },
         },
       },
-      {
-        id: "keep-one-good-meal",
-        label: "하루 한 끼만큼은 제대로 챙긴다.",
-        immediate: { money: -1, mental: 2 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["warm_meal"],
-        tendencyTags: ["selfTrust", "mental"],
-        results: {
-          bad: { text: "여유롭진 않았지만 너는 최소한의 따뜻함을 포기하지 않았다." },
-          mixed: { text: "작은 식사가 생각보다 큰 회복이 되었다." },
-          good: {
-            text: "한 끼의 정성이 네 하루 전체를 조금 덜 삭막하게 했다.",
-            delta: { mental: 2 },
-          },
-        },
-      },
     ],
   },
   {
@@ -145,12 +145,12 @@ export const moneyEvents: EventCard[] = [
     choices: [
       {
         id: "save-it",
-        label: "전부 비상금으로 남겨둔다.",
-        immediate: { money: 3, mental: 1 },
-        selfTrustDelta: 2,
+        label: "비상금으로 둔다",
+        immediate: { money: 3 },
+        selfTrustDelta: 1,
         primaryStat: "money",
         modifier: 0,
-        tendencyTags: ["money", "selfTrust"],
+        tendencyTags: ["money"],
         results: {
           bad: { text: "큰돈은 아니지만 예상치 못한 완충재가 생겼다." },
           mixed: {
@@ -165,9 +165,9 @@ export const moneyEvents: EventCard[] = [
       },
       {
         id: "buy-comfort",
-        label: "오랫동안 미뤘던 작은 위로를 산다.",
-        immediate: { money: -1, mental: 3 },
-        selfTrustDelta: 3,
+        label: "작은 위로를 산다",
+        immediate: { money: -2, mental: 2 },
+        selfTrustDelta: 2,
         primaryStat: "mental",
         modifier: 0,
         memoryTags: ["small_comfort"],

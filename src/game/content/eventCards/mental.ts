@@ -9,7 +9,7 @@ export const mentalEvents: EventCard[] = [
     choices: [
       {
         id: "rest-one-morning",
-        label: "오전 일정 하나를 포기하고 더 쉰다.",
+        label: "조금 더 쉰다",
         immediate: { mental: 3, reputation: -1 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -27,7 +27,7 @@ export const mentalEvents: EventCard[] = [
       },
       {
         id: "force-myself-up",
-        label: "억지로 일어나 일정을 밀어붙인다.",
+        label: "억지로 일어난다",
         immediate: { spec: 1, mental: -3 },
         selfTrustDelta: -2,
         primaryStat: "spec",
@@ -52,7 +52,7 @@ export const mentalEvents: EventCard[] = [
     choices: [
       {
         id: "write-one-small-plan",
-        label: "내일 할 것 하나만 정리하고 오늘은 끝낸다.",
+        label: "하나만 정리한다",
         immediate: { mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -71,7 +71,7 @@ export const mentalEvents: EventCard[] = [
       },
       {
         id: "keep-pushing",
-        label: "늦게까지 더 하며 불안을 없애보려 한다.",
+        label: "더 밀어붙인다",
         immediate: { spec: 2, mental: -2 },
         selfTrustDelta: -2,
         primaryStat: "spec",
@@ -96,7 +96,7 @@ export const mentalEvents: EventCard[] = [
     choices: [
       {
         id: "name-it-burnout",
-        label: "지금 상태를 번아웃으로 인정하고 속도를 늦춘다.",
+        label: "번아웃을 인정한다",
         immediate: { mental: 4, spec: -1 },
         selfTrustDelta: 5,
         primaryStat: "mental",
@@ -114,7 +114,7 @@ export const mentalEvents: EventCard[] = [
       },
       {
         id: "ignore-it",
-        label: "다들 이 정도는 한다고 생각하며 밀어붙인다.",
+        label: "그냥 버틴다",
         immediate: { spec: 2, mental: -4 },
         selfTrustDelta: -4,
         primaryStat: "spec",
@@ -142,7 +142,7 @@ export const mentalEvents: EventCard[] = [
     choices: [
       {
         id: "book-session",
-        label: "비용이 들더라도 예약해본다.",
+        label: "예약해본다",
         immediate: { money: -2, mental: 2 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -160,7 +160,7 @@ export const mentalEvents: EventCard[] = [
       },
       {
         id: "close-tab",
-        label: "아직 이건 과한 것 같아 창을 닫는다.",
+        label: "창을 닫는다",
         immediate: { money: 1, mental: -1 },
         selfTrustDelta: -2,
         primaryStat: "money",

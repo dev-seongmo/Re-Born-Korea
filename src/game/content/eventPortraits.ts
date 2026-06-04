@@ -77,6 +77,26 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     src: girlfriendPortraitImage,
     alt: "Travel invitation portrait",
   },
+  "girlfriend-first-meet": {
+    src: girlfriendPortraitImage,
+    alt: "Girlfriend event portrait",
+  },
+  "girlfriend-confession": {
+    src: girlfriendPortraitImage,
+    alt: "Girlfriend event portrait",
+  },
+  "girlfriend-first-date": {
+    src: girlfriendPortraitImage,
+    alt: "Girlfriend event portrait",
+  },
+  "girlfriend-conflict": {
+    src: girlfriendPortraitImage,
+    alt: "Girlfriend event portrait",
+  },
+  "girlfriend-support": {
+    src: girlfriendPortraitImage,
+    alt: "Girlfriend event portrait",
+  },
   "friend-major-company": {
     src: friendPortraitImage,
     alt: "Comparison portrait",
@@ -136,6 +156,7 @@ const defaultPortraitByCategory: Record<EventCard["category"], PortraitAsset> = 
   mental: { src: phonePortraitImage, alt: "Mental state portrait" },
   friendship: { src: friendPortraitImage, alt: "Friend portrait" },
   recovery: { src: paperPortraitImage, alt: "Recovery portrait" },
+  girlfriend: { src: girlfriendPortraitImage, alt: "Girlfriend portrait" },
 };
 
 export function getEventPortrait(event: EventCard): PortraitAsset {

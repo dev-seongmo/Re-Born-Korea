@@ -30,6 +30,10 @@ const defaultTendencies: TendencyScores = {
   comparison: 0,
 };
 
+const defaultRelationship = {
+  girlfriendStatus: "none" as const,
+};
+
 const defaultSettings: GameSettings = {
   reducedMotion: false,
   particleLevel: "medium",
@@ -54,6 +58,7 @@ export function createInitialRunState(
     currentEventId: null,
     memoryTags: [],
     tendencyScores: defaultTendencies,
+    relationship: defaultRelationship,
     eventHistory: [],
     latestResult: null,
     gameOverReason: null,

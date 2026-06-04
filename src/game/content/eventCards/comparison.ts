@@ -9,7 +9,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "stay-grounded",
-        label: "진심으로 축하하고 내 페이스를 지킨다.",
+        label: "진심으로 축하한다",
         immediate: { mental: 3 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -31,7 +31,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "rewrite-plan",
-        label: "불안해져서 계획을 전면 수정한다.",
+        label: "계획을 갈아엎는다",
         immediate: { spec: 2, mental: -4 },
         selfTrustDelta: -4,
         primaryStat: "spec",
@@ -62,7 +62,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "close-app",
-        label: "앱을 끄고 내일 할 일만 적는다.",
+        label: "앱을 끈다",
         immediate: { mental: 2 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -84,7 +84,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "doom-scroll",
-        label: "끝까지 다 보면서 나도 계획표를 다시 짠다.",
+        label: "계속 비교한다",
         immediate: { spec: 1, mental: -3 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -115,7 +115,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "acknowledge-pressure",
-        label: "부럽다는 마음을 인정하고, 내 루틴만 유지한다.",
+        label: "내 루틴을 지킨다",
         immediate: { mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -136,7 +136,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "panic-register",
-        label: "불안한 마음으로 강의와 시험 접수를 한꺼번에 늘린다.",
+        label: "한꺼번에 접수한다",
         immediate: { spec: 3, money: -2, mental: -3 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -166,7 +166,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "honor-my-timing",
-        label: "축하는 축하대로 하고, 내 삶의 속도를 분리해서 생각한다.",
+        label: "내 속도를 지킨다",
         immediate: { mental: 2, reputation: 1 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -187,7 +187,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "measure-myself",
-        label: "나도 뒤처진 건 아닌지 조건들을 하나씩 비교해본다.",
+        label: "조건을 비교한다",
         immediate: { reputation: 1, mental: -3 },
         selfTrustDelta: -4,
         primaryStat: "reputation",

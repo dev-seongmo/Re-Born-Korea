@@ -10,6 +10,7 @@ import {
   persistGameState,
 } from "../game/core/gamePersistence";
 import { gameReducer } from "../game/core/gameReducer";
+import { getPhase2DebugGameState } from "../game/debug/phase2DebugSave";
 import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenViewModel";
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
@@ -55,6 +56,7 @@ export function App() {
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
   const hasStartedGame = Boolean(state.run || state.meta.runCount > 0);
+  const shouldShowPhase2DebugLoad = import.meta.env.DEV;
   const shouldShowTopbar =
     state.appScene !== "title" &&
     state.appScene !== "run-event" &&
@@ -104,6 +106,22 @@ export function App() {
     }
 
     dispatch({ type: "app/newRunRequested" });
+  }
+
+  function handleLoadPhase2DebugSave() {
+    const debugState = getPhase2DebugGameState();
+
+    if (!debugState) {
+      window.alert("페이즈2 저장데이터가 아직 연결되지 않았습니다.");
+      return;
+    }
+
+    dispatch({
+      type: "debug/phase2SaveLoaded",
+      payload: {
+        state: debugState,
+      },
+    });
   }
 
   function handleReturnToTitle() {
@@ -200,6 +218,15 @@ export function App() {
               </div>
 
               <div className="title-screen__actions">
+                {shouldShowPhase2DebugLoad ? (
+                  <button
+                    className="title-screen__button"
+                    onClick={handleLoadPhase2DebugSave}
+                    type="button"
+                  >
+                    페이즈2 불러오기
+                  </button>
+                ) : null}
                 <button
                   className="title-screen__button title-screen__button--primary"
                   onClick={handlePrimaryTitleAction}

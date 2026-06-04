@@ -40,6 +40,10 @@ export function buildSetupScreenViewModel(
             session.eventHistory,
             completedRunCount,
             meta.isFirstCleared,
+            {
+              nextTurn: 1,
+              girlfriendStatus: session.relationship.girlfriendStatus,
+            },
           ),
           maxTurns: runConfig.maxTurns,
         },

@@ -48,6 +48,12 @@ export type TendencyScores = {
   comparison: number;
 };
 
+export type GirlfriendStatus = "none" | "met" | "dating" | "failed";
+
+export type RelationshipState = {
+  girlfriendStatus: GirlfriendStatus;
+};
+
 export type GameSettings = {
   reducedMotion: boolean;
   particleLevel: "high" | "medium" | "low" | "off";
@@ -79,6 +85,7 @@ export type EventChoice = {
   modifier: number;
   memoryTags?: string[];
   tendencyTags?: Array<keyof TendencyScores>;
+  relationshipEffect?: Partial<RelationshipState>;
   results: RollOutcomeSet;
 };
 
@@ -94,7 +101,8 @@ export type EventCard = {
     | "spec"
     | "mental"
     | "friendship"
-    | "recovery";
+    | "recovery"
+    | "girlfriend";
   phase: "early20s" | "mid20s" | "late20s";
   text: string;
   choices: [EventChoice, EventChoice];
@@ -170,6 +178,7 @@ export type RunState = {
   currentEventId: string | null;
   memoryTags: string[];
   tendencyScores: TendencyScores;
+  relationship: RelationshipState;
   eventHistory: string[];
   latestResult: EventResult | null;
   gameOverReason: GameOverReason | null;
@@ -214,6 +223,12 @@ export type GameAction =
       type: "app/returnedToTitle";
     }
   | {
+      type: "debug/phase2SaveLoaded";
+      payload: {
+        state: GameState;
+      };
+    }
+  | {
       type: "profile/updated";
       payload: Partial<PlayerProfile>;
     }
@@ -236,6 +251,7 @@ export type GameAction =
         identityStage: number;
         memoryTags: string[];
         tendencyScores: TendencyScores;
+        relationshipEffect?: Partial<RelationshipState>;
         nextScene: RunScene;
         gameOverReason?: GameOverReason | null;
         consumesTurn?: boolean;

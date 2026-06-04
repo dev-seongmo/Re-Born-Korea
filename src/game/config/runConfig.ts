@@ -1,5 +1,5 @@
 export const runConfig = {
-  maxTurns: 5,
+  maxTurns: 30,
   deadlineUnit: "일",
 };
 

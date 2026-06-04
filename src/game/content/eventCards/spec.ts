@@ -8,10 +8,27 @@ export const specEvents: EventCard[] = [
     text: "수강 광고가 뜬다. '지금 시작하면 남들보다 앞설 수 있습니다.'",
     choices: [
       {
+        id: "wait-and-check",
+        label: "먼저 따져본다",
+        immediate: { mental: 1 },
+        selfTrustDelta: 3,
+        primaryStat: "mental",
+        modifier: 0,
+        tendencyTags: ["selfTrust", "mental"],
+        results: {
+          bad: { text: "당장 시작하진 않았지만 그 멈춤은 도망만은 아니었다." },
+          mixed: { text: "필요한 것과 불안한 것을 구분하려는 시도가 생겼다." },
+          good: {
+            text: "모든 기회가 네 것이어야 하는 건 아니라는 걸 배웠다.",
+            delta: { mental: 1 },
+          },
+        },
+      },
+      {
         id: "join-course",
-        label: "불안하지만 일단 등록한다.",
-        immediate: { spec: 3, money: -2, mental: -2 },
-        selfTrustDelta: -2,
+        label: "일단 등록한다",
+        immediate: { money: -3, spec: 2 },
+        selfTrustDelta: -1,
         primaryStat: "spec",
         modifier: 1,
         tendencyTags: ["spec", "comparison"],
@@ -27,25 +44,6 @@ export const specEvents: EventCard[] = [
           },
         },
       },
-      {
-        id: "wait-and-check",
-        label: "지금 필요한지 먼저 따져본다.",
-        immediate: { mental: 1 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["self_pace"],
-        tendencyTags: ["selfTrust"],
-        results: {
-          bad: { text: "당장 시작하진 않았지만 그 멈춤은 도망만은 아니었다." },
-          mixed: { text: "필요한 것과 불안한 것을 구분하려는 시도가 생겼다." },
-          good: {
-            text: "모든 기회가 네 것이어야 하는 건 아니라는 걸 배웠다.",
-            delta: { mental: 1 },
-            selfTrustDelta: 1,
-          },
-        },
-      },
     ],
   },
   {
@@ -55,13 +53,30 @@ export const specEvents: EventCard[] = [
     text: "주말 내내 포트폴리오를 다듬으면 완성도는 올라갈 것 같다.",
     choices: [
       {
+        id: "split-work-rest",
+        label: "반나절만 한다",
+        immediate: { spec: 1, mental: 1 },
+        selfTrustDelta: 3,
+        primaryStat: "spec",
+        modifier: 0,
+        tendencyTags: ["spec", "selfTrust"],
+        results: {
+          bad: { text: "엄청난 진전은 없었지만 너는 다음 주를 남겨뒀다." },
+          mixed: { text: "속도는 느렸지만 균형은 조금 더 나아졌다." },
+          good: {
+            text: "덜 무너지는 방식이 결국 더 오래 가는 방식이 되었다.",
+            delta: { mental: 1, spec: 1 },
+          },
+        },
+      },
+      {
         id: "grind-weekend",
-        label: "이번 주말은 전부 작업에 쏟는다.",
+        label: "주말을 갈아넣는다",
         immediate: { spec: 3, mental: -3 },
-        selfTrustDelta: -1,
+        selfTrustDelta: -2,
         primaryStat: "spec",
         modifier: 1,
-        tendencyTags: ["spec"],
+        tendencyTags: ["spec", "comparison"],
         results: {
           bad: {
             text: "분량은 늘었지만 너는 점점 작업물 밖에서 사라졌다.",
@@ -74,23 +89,6 @@ export const specEvents: EventCard[] = [
           },
         },
       },
-      {
-        id: "split-work-rest",
-        label: "반나절만 하고 나머지는 쉰다.",
-        immediate: { spec: 1, mental: 2 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        tendencyTags: ["selfTrust", "mental"],
-        results: {
-          bad: { text: "엄청난 진전은 없었지만 너는 다음 주를 남겨뒀다." },
-          mixed: { text: "속도는 느렸지만 균형은 조금 더 나아졌다." },
-          good: {
-            text: "덜 무너지는 방식이 결국 더 오래 가는 방식이 되었다.",
-            delta: { mental: 1, spec: 1 },
-          },
-        },
-      },
     ],
   },
   {
@@ -100,34 +98,14 @@ export const specEvents: EventCard[] = [
     text: "AI가 자소서를 매끈하게 다듬어줬다. 그런데 너무 그럴듯해서 내 말 같지가 않다.",
     choices: [
       {
-        id: "submit-fast",
-        label: "그대로 제출해 효율을 챙긴다.",
-        immediate: { spec: 2, mental: -1 },
-        selfTrustDelta: -3,
-        primaryStat: "spec",
-        modifier: 1,
-        tendencyTags: ["spec", "comparison"],
-        results: {
-          bad: {
-            text: "문장은 좋아졌지만 네 목소리는 더 멀어졌다.",
-            delta: { mental: -2 },
-          },
-          mixed: { text: "효율은 챙겼지만, 제출 버튼이 조금 낯설었다." },
-          good: {
-            text: "분명 도움이 됐지만 결과보다도 찜찜함이 함께 남았다.",
-            delta: { spec: 1 },
-          },
-        },
-      },
-      {
         id: "rewrite-in-my-voice",
-        label: "시간이 걸려도 내 말로 다시 쓴다.",
-        immediate: { mental: 1 },
+        label: "내 말로 고친다",
+        immediate: { spec: 1, mental: 1 },
         selfTrustDelta: 4,
-        primaryStat: "mental",
+        primaryStat: "spec",
         modifier: 0,
         memoryTags: ["honesty"],
-        tendencyTags: ["selfTrust"],
+        tendencyTags: ["selfTrust", "spec"],
         results: {
           bad: { text: "더 오래 걸렸지만, 적어도 문장 속 화자는 너였다." },
           mixed: {
@@ -137,6 +115,26 @@ export const specEvents: EventCard[] = [
           good: {
             text: "네 언어로 쓴 문장이 오히려 더 오래 남을 무게를 얻었다.",
             delta: { spec: 1, mental: 1 },
+          },
+        },
+      },
+      {
+        id: "submit-fast",
+        label: "그대로 낸다",
+        immediate: { spec: 2, mental: -1 },
+        selfTrustDelta: -2,
+        primaryStat: "spec",
+        modifier: 1,
+        tendencyTags: ["spec"],
+        results: {
+          bad: {
+            text: "문장은 좋아졌지만 네 목소리는 더 멀어졌다.",
+            delta: { mental: -2 },
+          },
+          mixed: { text: "효율은 챙겼지만, 제출 버튼이 조금 낯설었다." },
+          good: {
+            text: "분명 도움이 됐지만 결과보다도 찜찜함이 함께 남았다.",
+            delta: { spec: 1 },
           },
         },
       },
@@ -150,12 +148,12 @@ export const specEvents: EventCard[] = [
     choices: [
       {
         id: "ask-questions-openly",
-        label: "모르는 부분을 솔직히 묻고 따라간다.",
-        immediate: { spec: 1, mental: 1 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
+        label: "솔직히 묻는다",
+        immediate: { spec: 1, reputation: 1 },
+        selfTrustDelta: 4,
+        primaryStat: "spec",
         modifier: 0,
-        memoryTags: ["honesty"],
+        memoryTags: ["asked_rule"],
         tendencyTags: ["selfTrust", "spec"],
         results: {
           bad: { text: "민망했지만 배우는 속도는 오히려 빨라졌다." },
@@ -168,12 +166,12 @@ export const specEvents: EventCard[] = [
       },
       {
         id: "fake-confidence",
-        label: "아는 척하고 집에 가서 혼자 따라잡으려 한다.",
+        label: "아는 척한다",
         immediate: { reputation: 1, mental: -2 },
         selfTrustDelta: -3,
         primaryStat: "reputation",
         modifier: 0,
-        tendencyTags: ["reputation", "comparison"],
+        tendencyTags: ["comparison", "reputation"],
         results: {
           bad: {
             text: "체면은 남았지만 이해는 더 뒤로 밀렸다.",
