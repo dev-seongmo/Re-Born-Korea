@@ -1,5 +1,8 @@
 import { memoryShards } from "../content/memoryShards";
-import { drawNextPrototypeEventId } from "../content/eventCards";
+import {
+  drawNextPrototypeEventId,
+  isFirstClearTutorialEventId,
+} from "../content/eventCards";
 import { getGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
 import { runConfig } from "../config/runConfig";
 import { clampMetric } from "../systems/metricSystem";
@@ -57,7 +60,11 @@ function createStartedRunForNextLife(state: GameState) {
     archetype,
     profile: { name: playerName },
     metrics: archetype.metrics,
-    currentEventId: drawNextPrototypeEventId([], state.meta.runCount),
+    currentEventId: drawNextPrototypeEventId(
+      [],
+      state.meta.runCount,
+      state.meta.isFirstCleared,
+    ),
     maxTurns: runConfig.maxTurns,
   });
 }
@@ -189,6 +196,18 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: "run-event",
+        meta:
+          state.run &&
+          state.meta.isFirstCleared &&
+          state.run.eventHistory.some((eventId) =>
+            isFirstClearTutorialEventId(eventId),
+          ) &&
+          !isFirstClearTutorialEventId(action.payload.nextEventId)
+            ? {
+                ...state.meta,
+                isFirstCleared: false,
+              }
+            : state.meta,
         run: updateRun(state.run, (run) => ({
           ...run,
           scene: "event",
@@ -215,6 +234,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           successCount:
             state.meta.successCount +
             (action.payload.outcome === "employed" ? 1 : 0),
+          isFirstCleared:
+            action.payload.outcome === "employed" && state.meta.successCount === 0
+              ? true
+              : state.meta.isFirstCleared,
           unlockedMemoryShardIds,
           unlockedCardIds: state.meta.unlockedCardIds,
           seenEndingIds: mergeEndingIds(
@@ -243,7 +266,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           name: state.meta.playerName || state.run?.profile.name || "이름 없음",
         },
         metrics: archetype.metrics,
-        currentEventId: drawNextPrototypeEventId([], nextRunCount),
+        currentEventId: drawNextPrototypeEventId(
+          [],
+          nextRunCount,
+          state.meta.isFirstCleared,
+        ),
         maxTurns: state.run?.maxTurns ?? runConfig.maxTurns,
       });
 
@@ -262,7 +289,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "hub/continueRequested":
       return {
         ...state,
-        appScene: "title",
+        appScene: "run-event",
+        run: createStartedRunForNextLife(state),
       };
 
     case "hub/trueEndingRequested":

@@ -284,6 +284,7 @@ export function App() {
               viewModel={buildSetupScreenViewModel(
                 state.run,
                 state.meta.runCount,
+                state.meta,
                 dispatch,
               )}
             />
@@ -296,6 +297,7 @@ export function App() {
                 viewModel={buildGameScreenViewModel(
                   state.run,
                   state.meta.runCount,
+                  state.meta,
                   dispatch,
                 )}
               />
@@ -343,7 +345,7 @@ export function App() {
                   onClick={() => dispatch({ type: "hub/continueRequested" })}
                   type="button"
                 >
-                  나가기
+                  다시 태어나기
                 </button>
               </div>
             </section>

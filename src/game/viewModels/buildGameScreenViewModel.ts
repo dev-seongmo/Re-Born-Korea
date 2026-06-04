@@ -16,6 +16,7 @@ import {
 import { getGameOverContent } from "../content/gameOverResults";
 import type {
   GameAction,
+  MetaState,
   RunState,
   VisibleMetricKey,
 } from "../core/gameTypes";
@@ -72,23 +73,40 @@ function buildStatusItems(session: RunState): StatusItemViewModel[] {
   }));
 }
 
-function getCurrentEvent(session: RunState, completedRunCount: number) {
+function getCurrentEvent(
+  session: RunState,
+  completedRunCount: number,
+  meta: MetaState,
+) {
   const eventId =
     session.currentEventId ??
-    drawNextPrototypeEventId(session.eventHistory, completedRunCount);
+    drawNextPrototypeEventId(
+      session.eventHistory,
+      completedRunCount,
+      meta.isFirstCleared,
+    );
 
   return getPrototypeEventById(eventId);
 }
 
-function getNextEventId(session: RunState, completedRunCount: number) {
+function getNextEventId(
+  session: RunState,
+  completedRunCount: number,
+  meta: MetaState,
+) {
   return session.turn + 1 >= session.maxTurns
     ? finalInterviewEventId
-    : drawNextPrototypeEventId(session.eventHistory, completedRunCount);
+    : drawNextPrototypeEventId(
+        session.eventHistory,
+        completedRunCount,
+        meta.isFirstCleared,
+      );
 }
 
 function buildResolveChoice(
   session: RunState,
   completedRunCount: number,
+  meta: MetaState,
   dispatch: Dispatch<GameAction>,
   eventPanel: EventPanelViewModel,
 ) {
@@ -138,6 +156,7 @@ function buildResolveChoice(
                 eventHistory: [...session.eventHistory, event.id],
               },
               completedRunCount,
+              meta,
             ),
         },
       });
@@ -148,9 +167,10 @@ function buildResolveChoice(
 function buildEventPanel(
   session: RunState,
   completedRunCount: number,
+  meta: MetaState,
   dispatch: Dispatch<GameAction>,
 ): EventPanelViewModel {
-  const event = getCurrentEvent(session, completedRunCount);
+  const event = getCurrentEvent(session, completedRunCount, meta);
 
   if (!event) {
     throw new Error("No event available for current game state.");
@@ -165,6 +185,7 @@ function buildEventPanel(
   basePanel.onResolveChoice = buildResolveChoice(
     session,
     completedRunCount,
+    meta,
     dispatch,
     basePanel,
   );
@@ -172,7 +193,11 @@ function buildEventPanel(
   if (session.scene === "result" && session.latestResult) {
     const tutorialJustEnded =
       isTutorialEventId(session.latestResult.eventId) &&
-      !hasRemainingTutorialEvents(session.eventHistory, completedRunCount);
+      !hasRemainingTutorialEvents(
+        session.eventHistory,
+        completedRunCount,
+        meta.isFirstCleared,
+      );
 
     return {
       ...basePanel,
@@ -188,7 +213,7 @@ function buildEventPanel(
         dispatch({
           type: "run/continued",
           payload: {
-            nextEventId: getNextEventId(session, completedRunCount),
+            nextEventId: getNextEventId(session, completedRunCount, meta),
           },
         }),
     };
@@ -200,6 +225,7 @@ function buildEventPanel(
 export function buildGameScreenViewModel(
   session: RunState,
   completedRunCount: number,
+  meta: MetaState,
   dispatch: Dispatch<GameAction>,
 ): GameScreenViewModel {
   const statusItems = buildStatusItems(session);
@@ -261,11 +287,11 @@ export function buildGameScreenViewModel(
             },
           }),
       },
-      eventPanel: buildEventPanel(session, completedRunCount, dispatch),
+      eventPanel: buildEventPanel(session, completedRunCount, meta, dispatch),
     };
   }
 
-  const eventPanel = buildEventPanel(session, completedRunCount, dispatch);
+  const eventPanel = buildEventPanel(session, completedRunCount, meta, dispatch);
 
   return {
     statusItems,

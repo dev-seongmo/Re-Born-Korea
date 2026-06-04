@@ -183,6 +183,7 @@ export type MetaState = {
   playerName: string;
   runCount: number;
   successCount: number;
+  isFirstCleared: boolean;
   unlockedMemoryShardIds: string[];
   unlockedCardIds: UnlockCardId[];
   seenEndingIds: EndingId[];

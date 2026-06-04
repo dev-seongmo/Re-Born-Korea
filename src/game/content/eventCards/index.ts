@@ -8,12 +8,16 @@ import { mentalEvents } from "./mental";
 import { moneyEvents } from "./money";
 import { recoveryEvents } from "./recovery";
 import { specEvents } from "./spec";
+import { firstClearTutorialEvents } from "./tutorial_first_clear";
+import { defaultLoopTutorialEvents } from "./tutorial_default";
 import { secondLifeTutorialEvents } from "./tutorial_second";
 import { tutorialEvents } from "./tutorial";
 
 export const prototypeEvents: EventCard[] = [
   ...tutorialEvents,
   ...secondLifeTutorialEvents,
+  ...firstClearTutorialEvents,
+  ...defaultLoopTutorialEvents,
   ...interviewEvents,
   ...comparisonEvents,
   ...familyEvents,
@@ -34,9 +38,22 @@ export const tutorialEventIds = tutorialEvents.map((event) => event.id);
 export const secondLifeTutorialEventIds = secondLifeTutorialEvents.map(
   (event) => event.id,
 );
+export const firstClearTutorialEventIds = firstClearTutorialEvents.map(
+  (event) => event.id,
+);
+export const defaultLoopTutorialEventIds = defaultLoopTutorialEvents.map(
+  (event) => event.id,
+);
 export { finalInterviewEventId } from "./interview";
 
-export function getTutorialEventIdsForRun(completedRunCount: number) {
+export function getTutorialEventIdsForRun(
+  completedRunCount: number,
+  isFirstCleared: boolean,
+) {
+  if (isFirstCleared) {
+    return firstClearTutorialEventIds;
+  }
+
   if (completedRunCount === 0) {
     return tutorialEventIds;
   }
@@ -45,21 +62,28 @@ export function getTutorialEventIdsForRun(completedRunCount: number) {
     return secondLifeTutorialEventIds;
   }
 
-  return [];
+  return defaultLoopTutorialEventIds;
 }
 
 export function isTutorialEventId(eventId: string) {
   return (
     tutorialEventIds.includes(eventId) ||
-    secondLifeTutorialEventIds.includes(eventId)
+    secondLifeTutorialEventIds.includes(eventId) ||
+    firstClearTutorialEventIds.includes(eventId) ||
+    defaultLoopTutorialEventIds.includes(eventId)
   );
+}
+
+export function isFirstClearTutorialEventId(eventId: string) {
+  return firstClearTutorialEventIds.includes(eventId);
 }
 
 export function hasRemainingTutorialEvents(
   usedEventIds: string[],
   completedRunCount: number,
+  isFirstCleared: boolean,
 ) {
-  return getTutorialEventIdsForRun(completedRunCount).some(
+  return getTutorialEventIdsForRun(completedRunCount, isFirstCleared).some(
     (eventId) => !usedEventIds.includes(eventId),
   );
 }
@@ -67,8 +91,16 @@ export function hasRemainingTutorialEvents(
 export function getNextPrototypeEvent(
   usedEventIds: string[],
   completedRunCount: number,
+  isFirstCleared: boolean,
 ): EventCard {
-  const activeTutorialEventIds = getTutorialEventIdsForRun(completedRunCount);
+  const hasConsumedFirstClearTutorial = firstClearTutorialEventIds.some((eventId) =>
+    usedEventIds.includes(eventId),
+  );
+  const shouldSkipFurtherTutorials =
+    completedRunCount >= 2 && hasConsumedFirstClearTutorial;
+  const activeTutorialEventIds = shouldSkipFurtherTutorials
+    ? []
+    : getTutorialEventIdsForRun(completedRunCount, isFirstCleared);
   const nextTutorialEventId = activeTutorialEventIds.find(
     (eventId) => !usedEventIds.includes(eventId),
   );
@@ -99,6 +131,11 @@ export function getPrototypeEventById(eventId: string) {
 export function drawNextPrototypeEventId(
   usedEventIds: string[],
   completedRunCount: number,
+  isFirstCleared: boolean,
 ) {
-  return getNextPrototypeEvent(usedEventIds, completedRunCount).id;
+  return getNextPrototypeEvent(
+    usedEventIds,
+    completedRunCount,
+    isFirstCleared,
+  ).id;
 }

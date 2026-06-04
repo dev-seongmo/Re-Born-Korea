@@ -68,6 +68,7 @@ export function createInitialMetaState(): MetaState {
     playerName: "",
     runCount: 0,
     successCount: 0,
+    isFirstCleared: false,
     unlockedMemoryShardIds: [],
     unlockedCardIds: [],
     seenEndingIds: [],

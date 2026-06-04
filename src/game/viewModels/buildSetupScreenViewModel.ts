@@ -2,13 +2,14 @@ import type { Dispatch } from "react";
 import { runConfig } from "../config/runConfig";
 import { drawNextPrototypeEventId } from "../content/eventCards";
 import { pickPrototypeArchetype } from "../core/gameState";
-import type { GameAction, RunState } from "../core/gameTypes";
+import type { GameAction, MetaState, RunState } from "../core/gameTypes";
 import { sanitizePlayerName } from "../utils/playerName";
 import type { SetupScreenViewModel } from "./setupScreenViewModel";
 
 export function buildSetupScreenViewModel(
   session: RunState,
   completedRunCount: number,
+  meta: MetaState,
   dispatch: Dispatch<GameAction>,
 ): SetupScreenViewModel {
   const name = sanitizePlayerName(session.profile.name);
@@ -38,6 +39,7 @@ export function buildSetupScreenViewModel(
           initialEventId: drawNextPrototypeEventId(
             session.eventHistory,
             completedRunCount,
+            meta.isFirstCleared,
           ),
           maxTurns: runConfig.maxTurns,
         },
