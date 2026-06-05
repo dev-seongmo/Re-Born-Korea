@@ -1,11 +1,17 @@
-import type { CSSProperties } from "react";
+﻿import type { CSSProperties } from "react";
 import { useEffect, useReducer, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import idCardImage from "../assets/images/objects/id_card.png";
+import { TrueEndingScreen } from "../components/ending/TrueEndingScreen";
 import { GameScreen } from "../components/game/GameScreen";
 import { SetupScreen } from "../components/setup/SetupScreen";
+import { trueEndingDefinition } from "../game/content/endings/trueEnding";
 import { prototypeEvents } from "../game/content/eventCards";
-import { memoryShards } from "../game/content/memoryShards";
+import {
+  countUnlockedDefinedMemoryShards,
+  getMemoryShardById,
+  memoryShards,
+} from "../game/content/memoryShards";
 import {
   loadPersistedGameState,
   persistGameState,
@@ -48,8 +54,11 @@ export function App() {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
   const selectedMemoryShard = selectedMemoryShardId
-    ? memoryShards.find((shard) => shard.id === selectedMemoryShardId) ?? null
+    ? getMemoryShardById(selectedMemoryShardId)
     : null;
+  const unlockedMemoryShardCount = countUnlockedDefinedMemoryShards(
+    state.meta.unlockedMemoryShardIds,
+  );
 
   const footerName = state.run?.profile.name ?? "";
   const footerDday =
@@ -62,6 +71,7 @@ export function App() {
       : "";
   const hasStartedGame = Boolean(state.run || state.meta.runCount > 0);
   const shouldShowPhase2DebugLoad = import.meta.env.DEV;
+  const shouldShowTrueEndingDebug = import.meta.env.DEV;
   const shouldShowTopbar =
     state.appScene !== "title" &&
     state.appScene !== "run-event" &&
@@ -130,6 +140,10 @@ export function App() {
         state: debugState,
       },
     });
+  }
+
+  function handleOpenTrueEndingDebug() {
+    dispatch({ type: "debug/trueEndingRequested" });
   }
 
   function handleReturnToTitle() {
@@ -234,6 +248,15 @@ export function App() {
                     type="button"
                   >
                     페이즈2 불러오기
+                  </button>
+                ) : null}
+                {shouldShowTrueEndingDebug ? (
+                  <button
+                    className="title-screen__button"
+                    onClick={handleOpenTrueEndingDebug}
+                    type="button"
+                  >
+                    최종엔딩 디버그
                   </button>
                 ) : null}
                 <button
@@ -429,23 +452,10 @@ export function App() {
               </section>
             </div>
           ) : (
-            <section className="panel">
-              <div className="panel__header">
-                <p className="eyebrow">True Ending</p>
-                <h2>The life designed on purpose</h2>
-                <p className="muted">
-                  All memory shards are restored. The final route can now be fully
-                  authored.
-                </p>
-              </div>
-              <button
-                className="primary-button"
-                onClick={() => dispatch({ type: "trueEnding/completed" })}
-                type="button"
-              >
-                Finish True Ending
-              </button>
-            </section>
+            <TrueEndingScreen
+              ending={trueEndingDefinition}
+              onComplete={() => dispatch({ type: "trueEnding/completed" })}
+            />
           )}
         </section>
       </main>
@@ -524,7 +534,7 @@ export function App() {
               <div>
                 <p className="eyebrow">기억 조각</p>
                 <h2>
-                  {state.meta.unlockedMemoryShardIds.length} / {memoryShards.length}
+                  {unlockedMemoryShardCount} / {memoryShards.length}
                 </h2>
               </div>
               <button
@@ -598,7 +608,7 @@ export function App() {
                 onClick={() => setSelectedMemoryShardId(null)}
                 type="button"
               >
-                횞
+                ×
               </button>
             </div>
 

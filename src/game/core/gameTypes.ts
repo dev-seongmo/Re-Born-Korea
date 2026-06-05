@@ -231,6 +231,9 @@ export type GameAction =
       };
     }
   | {
+      type: "debug/trueEndingRequested";
+    }
+  | {
       type: "profile/updated";
       payload: Partial<PlayerProfile>;
     }

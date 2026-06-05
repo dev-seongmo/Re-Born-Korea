@@ -1,4 +1,7 @@
-import { memoryShards } from "../content/memoryShards";
+import {
+  countUnlockedDefinedMemoryShards,
+  memoryShards,
+} from "../content/memoryShards";
 import {
   drawNextPrototypeEventId,
   isFirstClearTutorialEventId,
@@ -125,6 +128,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "debug/phase2SaveLoaded":
       return action.payload.state;
 
+    case "debug/trueEndingRequested":
+      return {
+        ...state,
+        appScene: "true-ending",
+      };
+
     case "profile/updated": {
       const nextProfileName =
         typeof action.payload.name === "string"
@@ -234,11 +243,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         action.payload.discoveredMemoryShardIds,
       );
       const trueEndingUnlocked =
-        unlockedMemoryShardIds.length >= memoryShards.length;
+        countUnlockedDefinedMemoryShards(unlockedMemoryShardIds) >= memoryShards.length;
+      const shouldShowTrueEnding =
+        action.payload.outcome === "employed" && trueEndingUnlocked;
 
       return {
         appScene:
-          action.payload.outcome === "employed"
+          shouldShowTrueEnding
+            ? "true-ending"
+            : action.payload.outcome === "employed"
             ? state.meta.successCount === 0
               ? "first-clear-reward"
               : "memory-hub"
@@ -274,7 +287,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         action.payload.discoveredMemoryShardIds,
       );
       const trueEndingUnlocked =
-        unlockedMemoryShardIds.length >= memoryShards.length;
+        countUnlockedDefinedMemoryShards(unlockedMemoryShardIds) >= memoryShards.length;
       const nextRunCount = state.meta.runCount + 1;
       const archetype = pickPrototypeArchetype();
       const nextRun = createInitialRunState({
