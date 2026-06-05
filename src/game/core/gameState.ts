@@ -74,6 +74,7 @@ export function createInitialMetaState(): MetaState {
     runCount: 0,
     successCount: 0,
     isFirstCleared: false,
+    pendingFirstClearTutorial: false,
     unlockedMemoryShardIds: [],
     unlockedCardIds: [],
     seenEndingIds: [],

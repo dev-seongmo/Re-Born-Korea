@@ -14,6 +14,7 @@ export type AppScene =
   | "run-result"
   | "run-ending"
   | "run-game-over"
+  | "first-clear-reward"
   | "memory-hub"
   | "true-ending";
 
@@ -193,6 +194,7 @@ export type MetaState = {
   runCount: number;
   successCount: number;
   isFirstCleared: boolean;
+  pendingFirstClearTutorial: boolean;
   unlockedMemoryShardIds: string[];
   unlockedCardIds: UnlockCardId[];
   seenEndingIds: EndingId[];
@@ -279,6 +281,9 @@ export type GameAction =
     }
   | {
       type: "hub/continueRequested";
+    }
+  | {
+      type: "reward/continueRequested";
     }
   | {
       type: "hub/trueEndingRequested";

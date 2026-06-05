@@ -216,7 +216,8 @@ button {
   max-height: min(80dvh, 640px);
   display: grid;
   gap: 18px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .memory-modal__header {
@@ -241,7 +242,9 @@ button {
 .memory-modal__list {
   display: grid;
   gap: 10px;
-  overflow: hidden;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 4px;
 }
 
@@ -252,10 +255,219 @@ button {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(245, 239, 229, 0.08);
+  width: 100%;
+  text-align: left;
+  color: inherit;
+}
+
+.memory-modal__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.memory-modal__status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d4c9ba;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.memory-modal__item--unlocked {
+  background: linear-gradient(180deg, rgba(94, 114, 85, 0.16), rgba(255, 255, 255, 0.04));
+  border-color: rgba(203, 227, 171, 0.16);
+}
+
+.memory-modal__item--locked {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+}
+
+.memory-modal__item[role="button"] {
+  cursor: pointer;
 }
 
 .memory-modal__item p {
   margin: 0;
+}
+
+.memory-modal__hint {
+  color: #e0d2b0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.memory-modal-backdrop--detail {
+  z-index: 12;
+}
+
+.memory-detail-modal {
+  align-items: center;
+  text-align: center;
+}
+
+.memory-detail-modal__symbol {
+  width: 132px;
+  height: 132px;
+  margin: 4px auto;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(223, 205, 164, 0.94), rgba(223, 205, 164, 0.18) 52%, transparent 72%);
+  box-shadow: 0 0 38px rgba(223, 205, 164, 0.2);
+}
+
+.memory-detail-modal__symbol span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3rem;
+  color: #1a1d24;
+}
+
+.memory-detail-modal__copy {
+  text-align: left;
+}
+
+.memory-modal-backdrop--reward {
+  background:
+    radial-gradient(circle at top, rgba(219, 196, 150, 0.18), transparent 28%),
+    rgba(3, 6, 12, 0.82);
+}
+
+.first-clear-reward {
+  position: relative;
+  align-items: center;
+  text-align: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  background:
+    radial-gradient(circle at top, rgba(219, 194, 149, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(18, 24, 38, 0.96), rgba(8, 11, 18, 0.98));
+}
+
+.first-clear-reward::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 36%),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.04), transparent 60%);
+  pointer-events: none;
+}
+
+.first-clear-reward__showcase {
+  position: relative;
+  width: min(100%, 280px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  margin: 4px auto 2px;
+}
+
+.first-clear-reward__halo {
+  position: absolute;
+  width: 82%;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(239, 224, 184, 0.92) 0%, rgba(239, 224, 184, 0.12) 42%, transparent 70%);
+  filter: blur(18px);
+  opacity: 0.88;
+  animation: reward-halo-pulse 2200ms ease-in-out infinite;
+}
+
+.first-clear-reward__burst {
+  position: absolute;
+  width: 64%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 236, 198, 0.94), transparent);
+  opacity: 0.88;
+}
+
+.first-clear-reward__burst--left {
+  transform: rotate(32deg) scaleX(1.04);
+}
+
+.first-clear-reward__burst--right {
+  transform: rotate(-28deg) scaleX(1.08);
+}
+
+.first-clear-reward__card-frame {
+  position: relative;
+  width: min(100%, 200px);
+  border-radius: 24px;
+  padding: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 229, 0.28), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 232, 187, 0.34);
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.3),
+    0 0 42px rgba(233, 204, 151, 0.24);
+  transform: translateY(0);
+  animation: reward-card-float 2400ms ease-in-out infinite;
+}
+
+.first-clear-reward__card-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%);
+  pointer-events: none;
+}
+
+.first-clear-reward__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+}
+
+.first-clear-reward__copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.first-clear-reward__button {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes reward-halo-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.72;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 0.96;
+  }
+
+  100% {
+    transform: scale(0.92);
+    opacity: 0.72;
+  }
+}
+
+@keyframes reward-card-float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .memory-hub {
@@ -390,6 +602,7 @@ button {
 
 .panel--hud {
   padding: 0;
+  margin: 0;
   border-radius: 0;
   border-bottom: 0;
 }
@@ -443,7 +656,7 @@ button {
   grid-row: 1;
   display: grid;
   justify-items: center;
-  gap: 0;
+  gap: 8px;
   color: #f5efe5;
   text-align: center;
   text-shadow:
@@ -467,6 +680,15 @@ button {
   font-weight: 700;
 }
 
+.title-screen__subtitle {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 229, 0.86);
+}
+
 .title-screen__actions {
   grid-row: 3;
   align-self: end;
@@ -474,6 +696,10 @@ button {
   gap: 12px;
   width: min(100%, 340px);
   justify-self: center;
+  position: sticky;
+  bottom: 0;
+  padding-top: 18px;
+  margin-top: auto;
 }
 
 .title-screen__button {
@@ -834,8 +1060,8 @@ button {
 
 .status-item__meter {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
 }
 
 .status-item__meter-base,
@@ -856,8 +1082,8 @@ button {
 }
 
 .status-icon {
-  width: 38px;
-  height: 38px;
+  width: 46px;
+  height: 46px;
   display: block;
 }
 

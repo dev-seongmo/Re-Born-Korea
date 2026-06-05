@@ -63,10 +63,11 @@ function createStartedRunForNextLife(state: GameState) {
     currentEventId: drawNextPrototypeEventId(
       [],
       state.meta.runCount,
-      state.meta.isFirstCleared,
+      state.meta.pendingFirstClearTutorial,
       {
         nextTurn: 1,
         girlfriendStatus: "none",
+        phase2Unlocked: state.meta.isFirstCleared,
       },
     ),
     maxTurns: runConfig.maxTurns,
@@ -209,14 +210,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         appScene: "run-event",
         meta:
           state.run &&
-          state.meta.isFirstCleared &&
+          state.meta.pendingFirstClearTutorial &&
           state.run.eventHistory.some((eventId) =>
             isFirstClearTutorialEventId(eventId),
           ) &&
           !isFirstClearTutorialEventId(action.payload.nextEventId)
             ? {
                 ...state.meta,
-                isFirstCleared: false,
+                pendingFirstClearTutorial: false,
               }
             : state.meta,
         run: updateRun(state.run, (run) => ({
@@ -237,7 +238,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       return {
         appScene:
-          action.payload.outcome === "employed" ? "memory-hub" : "title",
+          action.payload.outcome === "employed"
+            ? state.meta.successCount === 0
+              ? "first-clear-reward"
+              : "memory-hub"
+            : "title",
         run: null,
         meta: {
           ...state.meta,
@@ -246,9 +251,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             state.meta.successCount +
             (action.payload.outcome === "employed" ? 1 : 0),
           isFirstCleared:
+            action.payload.outcome === "employed" || state.meta.isFirstCleared,
+          pendingFirstClearTutorial:
             action.payload.outcome === "employed" && state.meta.successCount === 0
               ? true
-              : state.meta.isFirstCleared,
+              : state.meta.pendingFirstClearTutorial,
           unlockedMemoryShardIds,
           unlockedCardIds: state.meta.unlockedCardIds,
           seenEndingIds: mergeEndingIds(
@@ -280,10 +287,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentEventId: drawNextPrototypeEventId(
           [],
           nextRunCount,
-          state.meta.isFirstCleared,
+          state.meta.pendingFirstClearTutorial,
           {
             nextTurn: 1,
             girlfriendStatus: "none",
+            phase2Unlocked: state.meta.isFirstCleared,
           },
         ),
         maxTurns: state.run?.maxTurns ?? runConfig.maxTurns,
@@ -302,6 +310,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case "hub/continueRequested":
+    case "reward/continueRequested":
       return {
         ...state,
         appScene: "run-event",

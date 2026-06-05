@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { useEffect, useReducer, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
+import idCardImage from "../assets/images/objects/id_card.png";
 import { GameScreen } from "../components/game/GameScreen";
 import { SetupScreen } from "../components/setup/SetupScreen";
 import { prototypeEvents } from "../game/content/eventCards";
@@ -42,9 +43,13 @@ export function App() {
     loadPersistedGameState,
   );
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
+  const [selectedMemoryShardId, setSelectedMemoryShardId] = useState<string | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const selectedMemoryShard = selectedMemoryShardId
+    ? memoryShards.find((shard) => shard.id === selectedMemoryShardId) ?? null
+    : null;
 
   const footerName = state.run?.profile.name ?? "";
   const footerDday =
@@ -62,9 +67,12 @@ export function App() {
     state.appScene !== "run-event" &&
     state.appScene !== "run-result" &&
     state.appScene !== "run-ending" &&
-    state.appScene !== "run-game-over";
+    state.appScene !== "run-game-over" &&
+    state.appScene !== "first-clear-reward";
   const shouldShowFooter =
-    state.appScene !== "title" && state.appScene !== "run-setup";
+    state.appScene !== "title" &&
+    state.appScene !== "run-setup" &&
+    state.appScene !== "first-clear-reward";
 
   const eventGroups = [
     {
@@ -215,6 +223,7 @@ export function App() {
               <div className="title-screen__logo">
                 <span>Re:Born</span>
                 <strong>Korea</strong>
+                <p className="title-screen__subtitle">2026 한국 취업 시뮬레이션</p>
               </div>
 
               <div className="title-screen__actions">
@@ -376,6 +385,49 @@ export function App() {
                 </button>
               </div>
             </section>
+          ) : state.appScene === "first-clear-reward" ? (
+            <div className="memory-modal-backdrop memory-modal-backdrop--reward">
+              <section
+                aria-modal="true"
+                className="memory-modal panel first-clear-reward"
+                role="dialog"
+              >
+                <div className="memory-modal__header">
+                  <div>
+                    <h2>기억의 조각 획득</h2>
+                  </div>
+                </div>
+
+                <div className="first-clear-reward__showcase">
+                  <div className="first-clear-reward__halo" />
+                  <div className="first-clear-reward__burst first-clear-reward__burst--left" />
+                  <div className="first-clear-reward__burst first-clear-reward__burst--right" />
+                  <div className="first-clear-reward__card-frame">
+                    <img
+                      alt="첫 합격으로 되찾은 기억의 조각 신분증 이미지"
+                      className="first-clear-reward__image"
+                      src={idCardImage}
+                    />
+                  </div>
+                </div>
+
+                <div className="memory-modal__item first-clear-reward__copy">
+                  <strong>첫 합격의 흔적</strong>
+                  <p className="muted">
+                    첫 면접을 넘어섰다.
+                    잊고 있던 기억의 조각 하나가 돌아왔다.
+                  </p>
+                </div>
+
+                <button
+                  className="primary-button first-clear-reward__button"
+                  onClick={() => dispatch({ type: "reward/continueRequested" })}
+                  type="button"
+                >
+                  확인
+                </button>
+              </section>
+            </div>
           ) : (
             <section className="panel">
               <div className="panel__header">
@@ -457,7 +509,10 @@ export function App() {
         <div
           aria-hidden="true"
           className="memory-modal-backdrop"
-          onClick={() => setIsMemoryModalOpen(false)}
+          onClick={() => {
+            setIsMemoryModalOpen(false);
+            setSelectedMemoryShardId(null);
+          }}
         >
           <div
             aria-modal="true"
@@ -467,7 +522,7 @@ export function App() {
           >
             <div className="memory-modal__header">
               <div>
-                <p className="eyebrow">Memory Shards</p>
+                <p className="eyebrow">기억 조각</p>
                 <h2>
                   {state.meta.unlockedMemoryShardIds.length} / {memoryShards.length}
                 </h2>
@@ -487,16 +542,74 @@ export function App() {
                 const unlocked = state.meta.unlockedMemoryShardIds.includes(shard.id);
 
                 return (
-                  <div className="memory-modal__item" key={shard.id}>
-                    <strong>{unlocked ? shard.title : "Locked shard"}</strong>
+                  <div
+                    className={`memory-modal__item ${
+                      unlocked ? "memory-modal__item--unlocked" : "memory-modal__item--locked"
+                    }`}
+                    key={shard.id}
+                    onClick={() => {
+                      if (unlocked) {
+                        setSelectedMemoryShardId(shard.id);
+                      }
+                    }}
+                    role={unlocked ? "button" : undefined}
+                    tabIndex={unlocked ? 0 : undefined}
+                  >
+                    <div className="memory-modal__item-header">
+                      <strong>{unlocked ? shard.title : "잠긴 조각"}</strong>
+                      <span className="memory-modal__status">
+                        {unlocked ? "획득" : "힌트"}
+                      </span>
+                    </div>
                     <p className="muted">
                       {unlocked
                         ? shard.description
                         : "아직 이 기억 조각은 회수하지 못했습니다."}
                     </p>
+                    <p className="memory-modal__hint">힌트: {shard.hint}</p>
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {selectedMemoryShard ? (
+        <div
+          aria-hidden="true"
+          className="memory-modal-backdrop memory-modal-backdrop--detail"
+          onClick={() => setSelectedMemoryShardId(null)}
+        >
+          <div
+            aria-modal="true"
+            className="memory-modal panel memory-detail-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="memory-modal__header">
+              <div>
+                <p className="eyebrow">기억 조각</p>
+                <h2>{selectedMemoryShard.title}</h2>
+              </div>
+              <button
+                aria-label="닫기"
+                className="memory-modal__close"
+                onClick={() => setSelectedMemoryShardId(null)}
+                type="button"
+              >
+                횞
+              </button>
+            </div>
+
+            <div className="memory-detail-modal__symbol">
+              <span>{selectedMemoryShard.title.slice(0, 1)}</span>
+            </div>
+
+            <div className="memory-modal__item memory-detail-modal__copy">
+              <strong>회수 완료</strong>
+              <p className="muted">{selectedMemoryShard.description}</p>
+              <p className="memory-modal__hint">힌트: {selectedMemoryShard.hint}</p>
             </div>
           </div>
         </div>

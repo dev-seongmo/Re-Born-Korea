@@ -83,10 +83,11 @@ function getCurrentEvent(
     drawNextPrototypeEventId(
       session.eventHistory,
       completedRunCount,
-      meta.isFirstCleared,
+      meta.pendingFirstClearTutorial,
       {
         nextTurn: session.turn + 1,
         girlfriendStatus: session.relationship.girlfriendStatus,
+        phase2Unlocked: meta.isFirstCleared,
       },
     );
 
@@ -103,10 +104,11 @@ function getNextEventId(
     : drawNextPrototypeEventId(
         session.eventHistory,
         completedRunCount,
-        meta.isFirstCleared,
+        meta.pendingFirstClearTutorial,
         {
           nextTurn: session.turn + 1,
           girlfriendStatus: session.relationship.girlfriendStatus,
+          phase2Unlocked: meta.isFirstCleared,
         },
       );
 }
@@ -204,7 +206,7 @@ function buildEventPanel(
       !hasRemainingTutorialEvents(
         session.eventHistory,
         completedRunCount,
-        meta.isFirstCleared,
+        meta.pendingFirstClearTutorial,
       );
 
     return {

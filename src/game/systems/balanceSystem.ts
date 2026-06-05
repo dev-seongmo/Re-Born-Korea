@@ -5,8 +5,8 @@ import type {
   VisibleMetricKey,
 } from "../core/gameTypes";
 
-const METRIC_DELTA_MULTIPLIER = 6;
-const SELF_TRUST_MULTIPLIER = 5;
+const METRIC_DELTA_MULTIPLIER = 3;
+const SELF_TRUST_MULTIPLIER = 2.5;
 
 function scaleNumber(value: number, multiplier: number) {
   if (value === 0) {

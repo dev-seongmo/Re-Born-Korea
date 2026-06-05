@@ -39,10 +39,11 @@ export function buildSetupScreenViewModel(
           initialEventId: drawNextPrototypeEventId(
             session.eventHistory,
             completedRunCount,
-            meta.isFirstCleared,
+            meta.pendingFirstClearTutorial,
             {
               nextTurn: 1,
               girlfriendStatus: session.relationship.girlfriendStatus,
+              phase2Unlocked: meta.isFirstCleared,
             },
           ),
           maxTurns: runConfig.maxTurns,

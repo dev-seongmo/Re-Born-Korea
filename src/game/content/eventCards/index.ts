@@ -55,9 +55,9 @@ export { finalInterviewEventId } from "./interview";
 
 export function getTutorialEventIdsForRun(
   completedRunCount: number,
-  isFirstCleared: boolean,
+  pendingFirstClearTutorial: boolean,
 ) {
-  if (isFirstCleared) {
+  if (pendingFirstClearTutorial) {
     return firstClearTutorialEventIds;
   }
 
@@ -103,9 +103,12 @@ function getScheduledGirlfriendEventId(params: {
 export function hasRemainingTutorialEvents(
   usedEventIds: string[],
   completedRunCount: number,
-  isFirstCleared: boolean,
+  pendingFirstClearTutorial: boolean,
 ) {
-  return getTutorialEventIdsForRun(completedRunCount, isFirstCleared).some(
+  return getTutorialEventIdsForRun(
+    completedRunCount,
+    pendingFirstClearTutorial,
+  ).some(
     (eventId) => !usedEventIds.includes(eventId),
   );
 }
@@ -113,20 +116,21 @@ export function hasRemainingTutorialEvents(
 export function getNextPrototypeEvent(
   usedEventIds: string[],
   completedRunCount: number,
-  isFirstCleared: boolean,
+  pendingFirstClearTutorial: boolean,
   options: {
     nextTurn?: number;
     girlfriendStatus?: GirlfriendStatus;
+    phase2Unlocked?: boolean;
   } = {},
 ): EventCard {
   const hasConsumedFirstClearTutorial = firstClearTutorialEventIds.some((eventId) =>
     usedEventIds.includes(eventId),
   );
   const shouldSkipFurtherTutorials =
-    completedRunCount >= 2 && hasConsumedFirstClearTutorial;
+    hasConsumedFirstClearTutorial && !pendingFirstClearTutorial;
   const activeTutorialEventIds = shouldSkipFurtherTutorials
     ? []
-    : getTutorialEventIdsForRun(completedRunCount, isFirstCleared);
+    : getTutorialEventIdsForRun(completedRunCount, pendingFirstClearTutorial);
   const nextTutorialEventId = activeTutorialEventIds.find(
     (eventId) => !usedEventIds.includes(eventId),
   );
@@ -136,7 +140,9 @@ export function getNextPrototypeEvent(
   }
 
   const scheduledGirlfriendEventId =
-    options.nextTurn !== undefined && options.girlfriendStatus
+    options.phase2Unlocked &&
+    options.nextTurn !== undefined &&
+    options.girlfriendStatus
       ? getScheduledGirlfriendEventId({
           nextTurn: options.nextTurn,
           usedEventIds,
@@ -173,16 +179,17 @@ export function getPrototypeEventById(eventId: string) {
 export function drawNextPrototypeEventId(
   usedEventIds: string[],
   completedRunCount: number,
-  isFirstCleared: boolean,
+  pendingFirstClearTutorial: boolean,
   options?: {
     nextTurn?: number;
     girlfriendStatus?: GirlfriendStatus;
+    phase2Unlocked?: boolean;
   },
 ) {
   return getNextPrototypeEvent(
     usedEventIds,
     completedRunCount,
-    isFirstCleared,
+    pendingFirstClearTutorial,
     options,
   ).id;
 }
