@@ -2,16 +2,22 @@
 import { useEffect, useReducer, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import idCardImage from "../assets/images/objects/id_card.png";
+import { TrueEndingCreditsScreen } from "../components/ending/TrueEndingCreditsScreen";
 import { TrueEndingScreen } from "../components/ending/TrueEndingScreen";
+import { TrueEndingStoryScreen } from "../components/ending/TrueEndingStoryScreen";
 import { GameScreen } from "../components/game/GameScreen";
 import { SetupScreen } from "../components/setup/SetupScreen";
-import { trueEndingDefinition } from "../game/content/endings/trueEnding";
 import { prototypeEvents } from "../game/content/eventCards";
 import {
   countUnlockedDefinedMemoryShards,
   getMemoryShardById,
   memoryShards,
 } from "../game/content/memoryShards";
+import {
+  trueEndingCredits,
+  trueEndingIntro,
+  trueEndingStoryCards,
+} from "../game/content/trueEnding";
 import {
   loadPersistedGameState,
   persistGameState,
@@ -59,6 +65,11 @@ export function App() {
   const unlockedMemoryShardCount = countUnlockedDefinedMemoryShards(
     state.meta.unlockedMemoryShardIds,
   );
+  const activeTrueEndingCard =
+    state.trueEndingProgress &&
+    trueEndingStoryCards[state.trueEndingProgress.storyIndex]
+      ? trueEndingStoryCards[state.trueEndingProgress.storyIndex]
+      : null;
 
   const footerName = state.run?.profile.name ?? "";
   const footerDday =
@@ -451,9 +462,21 @@ export function App() {
                 </button>
               </section>
             </div>
-          ) : (
+          ) : state.appScene === "true-ending" ? (
             <TrueEndingScreen
-              ending={trueEndingDefinition}
+              ending={trueEndingIntro}
+              onComplete={() => dispatch({ type: "trueEnding/started" })}
+            />
+          ) : state.appScene === "true-ending-story" && activeTrueEndingCard ? (
+            <TrueEndingStoryScreen
+              card={activeTrueEndingCard}
+              currentIndex={state.trueEndingProgress?.storyIndex ?? 0}
+              onNext={() => dispatch({ type: "trueEnding/storyAdvanced" })}
+              total={trueEndingStoryCards.length}
+            />
+          ) : (
+            <TrueEndingCreditsScreen
+              credits={trueEndingCredits}
               onComplete={() => dispatch({ type: "trueEnding/completed" })}
             />
           )}

@@ -16,7 +16,9 @@ export type AppScene =
   | "run-game-over"
   | "first-clear-reward"
   | "memory-hub"
-  | "true-ending";
+  | "true-ending"
+  | "true-ending-story"
+  | "true-ending-credits";
 
 export type VisibleMetricKey = "spec" | "money" | "reputation" | "mental";
 
@@ -202,10 +204,15 @@ export type MetaState = {
   trueEndingSeen: boolean;
 };
 
+export type TrueEndingProgress = {
+  storyIndex: number;
+};
+
 export type GameState = {
   appScene: AppScene;
   run: RunState | null;
   meta: MetaState;
+  trueEndingProgress: TrueEndingProgress | null;
 };
 
 export type GameAction =
@@ -290,6 +297,12 @@ export type GameAction =
     }
   | {
       type: "hub/trueEndingRequested";
+    }
+  | {
+      type: "trueEnding/started";
+    }
+  | {
+      type: "trueEnding/storyAdvanced";
     }
   | {
       type: "trueEnding/completed";

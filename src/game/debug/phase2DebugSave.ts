@@ -10,6 +10,7 @@ type Phase2DebugSave = GameState | { state: GameState };
 const phase2DebugSave: Phase2DebugSave | null = {
   state: {
     appScene: "run-event",
+    trueEndingProgress: null,
     run: {
       scene: "event",
       turn: 0,

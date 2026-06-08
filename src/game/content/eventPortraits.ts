@@ -59,6 +59,30 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     src: suitGuyPortraitImage,
     alt: "First soul portrait",
   },
+  "true-ending-chasa-truth": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "true-ending-prelude-prep": {
+    src: suitGuyPortraitImage,
+    alt: "First soul portrait",
+  },
+  "true-ending-comparison-scroll": {
+    src: phonePortraitImage,
+    alt: "Phone screen portrait",
+  },
+  "true-ending-self-trust-collapse": {
+    src: suitGuyPortraitImage,
+    alt: "First soul portrait",
+  },
+  "true-ending-edge-of-death": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "true-ending-chasa-farewell": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
   "final-interview": { src: suitGuyPortraitImage, alt: "Interview portrait" },
   "parents-question": { src: dadPortraitImage, alt: "Parent portrait" },
   "relative-comparison-dinner": {

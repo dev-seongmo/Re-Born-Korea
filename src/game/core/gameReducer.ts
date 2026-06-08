@@ -2,6 +2,7 @@ import {
   countUnlockedDefinedMemoryShards,
   memoryShards,
 } from "../content/memoryShards";
+import { trueEndingStoryCards } from "../content/trueEnding";
 import {
   drawNextPrototypeEventId,
   isFirstClearTutorialEventId,
@@ -84,6 +85,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           appScene: "run-event",
+          trueEndingProgress: null,
           run: createStartedRunForNextLife(state),
         };
       }
@@ -97,6 +99,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: "run-setup",
+        trueEndingProgress: null,
         run: nextRun,
       };
     }
@@ -123,6 +126,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: "title",
+        trueEndingProgress: null,
       };
 
     case "debug/phase2SaveLoaded":
@@ -132,6 +136,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: "true-ending",
+        run: null,
+        trueEndingProgress: { storyIndex: 0 },
       };
 
     case "profile/updated": {
@@ -257,6 +263,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
               : "memory-hub"
             : "title",
         run: null,
+        trueEndingProgress: shouldShowTrueEnding ? { storyIndex: 0 } : null,
         meta: {
           ...state.meta,
           runCount: state.meta.runCount + 1,
@@ -313,6 +320,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         appScene: "run-event",
         run: nextRun,
+        trueEndingProgress: null,
         meta: {
           ...state.meta,
           runCount: nextRunCount,
@@ -327,6 +335,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: "run-event",
+        trueEndingProgress: null,
         run: createStartedRunForNextLife(state),
       };
 
@@ -335,13 +344,39 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ? {
             ...state,
             appScene: "true-ending",
+            trueEndingProgress: { storyIndex: 0 },
           }
         : state;
+
+    case "trueEnding/started":
+      return {
+        ...state,
+        appScene: "true-ending-story",
+        trueEndingProgress: state.trueEndingProgress ?? { storyIndex: 0 },
+      };
+
+    case "trueEnding/storyAdvanced":
+      return {
+        ...state,
+        appScene:
+          state.trueEndingProgress &&
+          state.trueEndingProgress.storyIndex >= trueEndingStoryCards.length - 1
+            ? "true-ending-credits"
+            : "true-ending-story",
+        trueEndingProgress:
+          state.trueEndingProgress &&
+          state.trueEndingProgress.storyIndex >= trueEndingStoryCards.length - 1
+            ? state.trueEndingProgress
+            : {
+                storyIndex: (state.trueEndingProgress?.storyIndex ?? 0) + 1,
+              },
+      };
 
     case "trueEnding/completed":
       return {
         ...state,
         appScene: "title",
+        trueEndingProgress: null,
         meta: {
           ...state.meta,
           trueEndingSeen: true,

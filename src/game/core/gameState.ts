@@ -88,6 +88,7 @@ export function createInitialGameState(): GameState {
     appScene: "title",
     run: null,
     meta: createInitialMetaState(),
+    trueEndingProgress: null,
   };
 }
 

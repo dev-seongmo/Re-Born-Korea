@@ -1,7 +1,7 @@
-import type { StoryEndingDefinition } from "../../game/content/endings/trueEnding";
+import type { TrueEndingIntroDefinition } from "../../game/content/trueEnding";
 
 type TrueEndingScreenProps = {
-  ending: StoryEndingDefinition;
+  ending: TrueEndingIntroDefinition;
   onComplete: () => void;
 };
 
