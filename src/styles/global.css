@@ -1625,6 +1625,10 @@ button {
   opacity: calc(0.2 + (var(--choice-intensity, 0) * 0.8));
 }
 
+.swipe-card__answer--persistent {
+  opacity: 0.96;
+}
+
 .swipe-card__impact {
   position: absolute;
   top: 78px;

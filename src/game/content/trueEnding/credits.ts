@@ -8,12 +8,12 @@ export type TrueEndingCreditsDefinition = {
 
 export const trueEndingCredits: TrueEndingCreditsDefinition = {
   eyebrow: "Credits",
-  title: "끝내 살아남은 영혼",
+  title: "나를 구한 사람",
   lines: [
     "Re:Born Korea",
-    "A soul who chose to live again",
+    "A person who asked to be held",
     "Cheongryeong Chasa, still watching",
   ],
-  outro: "이제 다시, 너의 삶으로 돌아가자.",
+  outro: "다시 일어날 때는 누군가의 손을 잡아도 된다.",
   confirmLabel: "엔딩 닫기",
 };

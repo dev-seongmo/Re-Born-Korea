@@ -72,6 +72,7 @@ export function TrueEndingStoryScreen({
           narrativeText={card.text}
           onContinue={onNext}
           onResolve={() => undefined}
+          showDisabledChoiceLabels
         />
       </div>
     </section>

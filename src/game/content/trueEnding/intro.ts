@@ -7,7 +7,7 @@ export type TrueEndingIntroDefinition = {
 
 export const trueEndingIntro: TrueEndingIntroDefinition = {
   eyebrow: "True Ending",
-  title: "온전한 영혼",
-  paragraphs: ["기억의 조각이 한곳으로 모여 온전한 영혼이 되었다."],
-  confirmLabel: "영혼 들여다 보기",
+  title: "나를 구한 사람",
+  paragraphs: ["기억의 조각이 한곳으로 모인다. 이제 외면했던 그날의 방으로 돌아간다."],
+  confirmLabel: "기억 속으로",
 };
