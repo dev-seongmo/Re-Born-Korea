@@ -22,6 +22,7 @@ import type {
 } from "../core/gameTypes";
 import { getEndingResult } from "../selectors/getEndingResult";
 import { resolveTurn } from "../systems/turnSystem";
+import { formatCompanyName } from "../utils/playerName";
 import type {
   AtmosphereEffect,
   EventPanelViewModel,
@@ -267,18 +268,19 @@ export function buildGameScreenViewModel(
   if (Number.isFinite(session.maxTurns) && session.turn >= session.maxTurns) {
     const ending = getEndingResult(session);
     const outcome = "employed";
+    const targetCompany = formatCompanyName(session.profile.targetCompany);
 
     return {
       statusItems,
       endingPanel: {
         eyebrow: "New Message",
-        title: "[Re:Born Korea] 최종 합격 안내",
+        title: `[${targetCompany}] 최종 합격 안내`,
         outcome,
         sender: "recruit@reborn-careers.kr",
         receivedAt: "오늘 18:07",
         messageLines: [
           `${session.profile.name}님, 안녕하세요.`,
-          "Re:Born Korea 채용팀입니다.",
+          `${targetCompany} 채용팀입니다.`,
           "최종 면접 결과, 합격하셨음을 안내드립니다.",
           "불안정한 하루들을 통과해 면접장까지 도착한 점을 높게 평가했습니다.",
           "자세한 입사 절차는 다음 안내 메일로 전달드리겠습니다.",

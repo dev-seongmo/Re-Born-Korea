@@ -12,6 +12,7 @@ import type {
 
 const defaultProfile: PlayerProfile = {
   name: "",
+  targetCompany: "",
 };
 
 const defaultMetrics: VisibleMetrics = {
@@ -46,11 +47,15 @@ const defaultSettings: GameSettings = {
 export function createInitialRunState(
   overrides: Partial<RunState> = {},
 ): RunState {
+  const profile = {
+    ...defaultProfile,
+    ...overrides.profile,
+  };
+
   return {
     scene: "setup",
     turn: 0,
     maxTurns: Number.POSITIVE_INFINITY,
-    profile: defaultProfile,
     archetype: null,
     metrics: defaultMetrics,
     selfTrust: 50,
@@ -65,12 +70,14 @@ export function createInitialRunState(
     settings: defaultSettings,
     runOutcome: null,
     ...overrides,
+    profile,
   };
 }
 
 export function createInitialMetaState(): MetaState {
   return {
     playerName: "",
+    targetCompany: "",
     runCount: 0,
     successCount: 0,
     isFirstCleared: false,

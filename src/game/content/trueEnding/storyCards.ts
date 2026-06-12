@@ -1,251 +1,275 @@
+import cheapLunchBoxImage from "../../../assets/images/characters/npc/cheap_lunch_box.png";
+import extraShiftWorkImage from "../../../assets/images/characters/npc/extra_shift_work.png";
+import failedTextOnPhoneImage from "../../../assets/images/characters/npc/failed_text_on_phone.png";
+import memoImage from "../../../assets/images/characters/npc/memo.png";
+import paperImage from "../../../assets/images/characters/npc/paper.png";
+import rentDayNoticeImage from "../../../assets/images/characters/npc/rent_day_notice.png";
+import sajaImage from "../../../assets/images/characters/npc/saja1.png";
+import smallRoomImage from "../../../assets/images/characters/npc/small_room.png";
+
+export type TrueEndingStoryChoice = {
+  id: string;
+  label: string;
+  resultText: string;
+};
+
 export type TrueEndingStoryCard = {
   id: string;
-  speaker: string;
+  characterName: string;
+  imageSrc: string;
   text: string;
-  eyebrow: string;
-  leftLabel: string;
-  rightLabel: string;
+  choices: {
+    left: TrueEndingStoryChoice;
+    right: TrueEndingStoryChoice;
+  };
 };
 
 export const trueEndingStoryCards: TrueEndingStoryCard[] = [
   {
-    id: "true-ending-familiar-room",
-    speaker: "나",
-    eyebrow: "낯익은 방",
-    text: "기억이 난다.\n여긴... 내 자취방이다.",
-    leftLabel: "알고 싶지 않아",
-    rightLabel: "여긴 어디지?",
+    id: "true-ending-rejection-room",
+    characterName: "청령차사",
+    imageSrc: failedTextOnPhoneImage,
+    text:
+      "새벽의 자취방.\n\n꺼지지 않은 노트북 옆에 구겨진 이력서가 놓여 있다.\n핸드폰에는 불합격 문자가 떠 있다.\n\n문이 하나 닫혔다.",
+    choices: {
+      left: {
+        id: "hide-phone",
+        label: "핸드폰을 엎는다",
+        resultText: "안 봐도 문장은 남아 있었다.\n\n외면해도 실패가 사라지진 않았다.",
+      },
+      right: {
+        id: "read-again",
+        label: "다시 읽는다",
+        resultText: "같은 문장인데 매번 다르게 아프다.\n\n그래도 아직 읽고 있다.",
+      },
+    },
   },
   {
-    id: "true-ending-dark-room",
-    speaker: "기억",
-    eyebrow: "꺼진 방",
-    text: "불은 꺼져 있다.\n책상 위 컵라면은 반쯤 불어 있다.",
-    leftLabel: "숨이 막힌다",
-    rightLabel: "익숙한 냄새다",
+    id: "true-ending-rejection-meaning",
+    characterName: "청령차사",
+    imageSrc: failedTextOnPhoneImage,
+    text:
+      "이번에도 안 되면 내가 아무것도 아닌 사람 같았다.\n\n청령차사는 말했다.\n\n문 하나가 닫혔다고 너까지 닫힌 건 아니라고.",
+    choices: {
+      left: {
+        id: "ask-failure",
+        label: "그럼 실패는 뭔데?",
+        resultText: "실패는 끝이 아니라 선택지 앞에 섰다는 신호였다.",
+      },
+      right: {
+        id: "ask-alone",
+        label: "나만 이런 게 아니야?",
+        resultText: "아니었다.\n\n시대마다 고민의 이름만 달랐을 뿐이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-phone",
-    speaker: "기억",
-    eyebrow: "핸드폰",
-    text: "핸드폰 화면이 켜진다.\n알림이 너무 많다.",
-    leftLabel: "보고 싶지 않다",
-    rightLabel: "확인한다",
+    id: "true-ending-joseon-exam",
+    characterName: "조선의 청년",
+    imageSrc: paperImage,
+    text:
+      "촛불이 흔들리는 좁은 방.\n\n낡은 책과 붓이 함께 놓여 있다.\n과거에 붙으면 집안을 일으킬 수 있다.\n\n하지만 붓을 잡을 때만 살아있는 것 같았다.",
+    choices: {
+      left: {
+        id: "choose-exam",
+        label: "과거 시험을 준비한다",
+        resultText: "책을 다시 펼쳤다.\n\n마음은 조용해진 척했다.\n누군가를 지키려는 선택도 삶이었다.",
+      },
+      right: {
+        id: "choose-painting",
+        label: "몰래 그림을 그린다",
+        resultText: "들키면 혼나겠지만, 선 안에 내가 있었다.\n\n자신을 잃지 않으려는 선택도 삶이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-document-results",
-    speaker: "기억",
-    eyebrow: "서류 결과",
-    text: "\"아쉽지만...\"\n\"뛰어난 역량에도 불구하고...\"\n\n전부 같은 말이다.",
-    leftLabel: "이제 그만",
-    rightLabel: "또 떨어졌구나",
+    id: "true-ending-joseon-question",
+    characterName: "청령차사",
+    imageSrc: paperImage,
+    text:
+      "저 사람도 자기가 뭘 해야 하는지 몰랐다.\n\n청춘은 처음부터 자신을 아는 시간이 아니었다.\n자신을 찾아가는 시간이었다.",
+    choices: {
+      left: {
+        id: "envy-certainty",
+        label: "나는 아직 모르겠어",
+        resultText: "모르는 채로 고르는 날들이 나를 만든다.",
+      },
+      right: {
+        id: "accept-search",
+        label: "찾아가는 중이구나",
+        resultText: "정답보다 방향을 배워가는 중이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-unread-messages",
-    speaker: "엄마",
-    eyebrow: "읽지 않은 문자",
-    text: "엄마에게 문자가 와 있다.\n\n\"밥은 먹었어?\"\n\"전화 한 번만 줘.\"",
-    leftLabel: "답장 못 하겠어",
-    rightLabel: "미안해",
+    id: "true-ending-postwar-bag",
+    characterName: "전후 시대의 청년",
+    imageSrc: cheapLunchBoxImage,
+    text:
+      "무너진 담장 앞.\n먼지 묻은 가방을 멘 청년이 서 있다.\n\n학교에 가고 싶었다.\n하지만 집에는 오늘 먹을 것이 부족했다.",
+    choices: {
+      left: {
+        id: "work-for-family",
+        label: "일을 구하러 간다",
+        resultText: "꿈을 버린 건 아니었다.\n잠시 접어둔 것뿐이었다.\n\n살아남는 것도 어려운 선택이었다.",
+      },
+      right: {
+        id: "study-at-night",
+        label: "공부를 놓지 않는다",
+        resultText: "밤마다 글자를 붙잡았다.\n내가 사라지는 것보다는 나았다.\n\n꿈을 붙잡는 것도 생존이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-friend-message",
-    speaker: "친구",
-    eyebrow: "친구의 문자",
-    text: "친구에게도 문자가 와 있다.\n\n\"야, 살아있냐?\"\n\"내일 시간 되면 보자.\"",
-    leftLabel: "나갈 힘이 없어",
-    rightLabel: "고마운데",
+    id: "true-ending-postwar-survival",
+    characterName: "청령차사",
+    imageSrc: cheapLunchBoxImage,
+    text:
+      "선택이 꼭 멋있을 필요는 없었다.\n\n가끔은 버티는 게 전부인 날도 있었다.",
+    choices: {
+      left: {
+        id: "small-choice",
+        label: "그것도 선택이야?",
+        resultText: "살아남겠다는 선택만큼 큰 것도 드물었다.",
+      },
+      right: {
+        id: "remember-survival",
+        label: "버틴 것도 남는구나",
+        resultText: "남는다.\n\n아주 오래, 사람의 뼈대가 된다.",
+      },
+    },
   },
   {
-    id: "true-ending-reply-box",
-    speaker: "나",
-    eyebrow: "답장창",
-    text: "답장창에 글자를 쓴다.\n\n\"나 괜찮아.\"\n\n지우고 다시 쓴다.\n\n\"미안.\"\n\n그것도 지운다.",
-    leftLabel: "괜찮은 척도 힘들다",
-    rightLabel: "아무 말도 못 하겠다",
+    id: "true-ending-industrial-bus",
+    characterName: "산업화 시대의 청년",
+    imageSrc: extraShiftWorkImage,
+    text:
+      "새벽 공장 앞 버스 정류장.\n작업복 차림의 청년이 도시락 가방을 들고 있다.\n\n돈을 벌면 동생을 학교에 보낼 수 있다.\n하지만 내가 뭘 좋아했는지 점점 잊어간다.",
+    choices: {
+      left: {
+        id: "more-overtime",
+        label: "야근을 더 한다",
+        resultText: "손은 아팠지만 봉투가 조금 두꺼워졌다.\n\n누군가를 위한 선택도 청춘이었다.",
+      },
+      right: {
+        id: "write-dream",
+        label: "작은 꿈을 적는다",
+        resultText: "낡은 수첩에 적었다.\n\n언젠가 내 가게를 갖고 싶다.\n\n작은 문장 하나가 사람을 살릴 때도 있었다.",
+      },
+    },
   },
   {
-    id: "true-ending-silent-room",
-    speaker: "기억",
-    eyebrow: "조용한 방",
-    text: "방이 너무 조용하다.\n세상에서 나만 멈춘 것 같다.",
-    leftLabel: "누가 알아줬으면",
-    rightLabel: "아무도 몰랐으면",
+    id: "true-ending-industrial-note",
+    characterName: "청령차사",
+    imageSrc: memoImage,
+    text:
+      "그 사람이 꿈을 이루었는지는 모른다.\n\n하지만 잊지 않으려고 했다.\n그게 중요했다.",
+    choices: {
+      left: {
+        id: "ask-enough",
+        label: "그걸로 충분해?",
+        resultText: "어떤 날엔 충분하다.\n\n자기 이름을 잃지 않았으니까.",
+      },
+      right: {
+        id: "hold-name",
+        label: "나도 잊고 싶지 않아",
+        resultText: "그 마음이 있으면 아직 끝난 게 아니었다.",
+      },
+    },
   },
   {
-    id: "true-ending-mirror",
-    speaker: "나",
-    eyebrow: "거울",
-    text: "거울 속 얼굴이 낯설다.\n언제부터 이렇게 지쳐 있었을까.",
-    leftLabel: "보기 싫다",
-    rightLabel: "내가 맞나?",
+    id: "true-ending-imf-door",
+    characterName: "IMF 시대의 청년",
+    imageSrc: rentDayNoticeImage,
+    text:
+      "닫힌 회사 문 앞.\n정장 차림의 청년이 구겨진 이력서를 쥐고 있다.\n\n어제까지 다니던 회사가 오늘 문을 닫았다.\n내가 흔들리면 집도 같이 흔들릴 것 같았다.",
+    choices: {
+      left: {
+        id: "any-work",
+        label: "아무 일이라도 시작한다",
+        resultText: "하고 싶은 일은 아니었다.\n그래도 집으로 돌아갈 수는 없었다.\n\n책임도 선택이었다.",
+      },
+      right: {
+        id: "fall-one-day",
+        label: "하루만 무너진다",
+        resultText: "그날은 아무것도 하지 못했다.\n처음으로 몰래 울었다.\n\n무너짐을 아는 것도 다시 세우는 시작이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-desk-note",
-    speaker: "기억",
-    eyebrow: "책상 위 메모",
-    text: "메모지가 보인다.\n\n\"이번엔 꼭 붙자.\"\n\"조금만 더 버티자.\"",
-    leftLabel: "충분하지 않았나 봐",
-    rightLabel: "열심히 했는데",
+    id: "true-ending-imf-rest",
+    characterName: "청령차사",
+    imageSrc: rentDayNoticeImage,
+    text:
+      "무너지지 않는 사람은 없었다.\n\n중요한 건 거기서 자기 자신을 미워하지 않는 일이었다.",
+    choices: {
+      left: {
+        id: "fear-collapse",
+        label: "무너지면 끝날까 봐",
+        resultText: "끝이 아니라 신호일 때도 있다.\n\n쉬어야 한다는 신호.",
+      },
+      right: {
+        id: "stop-hating",
+        label: "나를 미워하지 않기",
+        resultText: "그건 아주 오래 걸리는 선택이다.\n\n그래도 해볼 만하다.",
+      },
+    },
   },
   {
-    id: "true-ending-old-dream",
-    speaker: "나",
-    eyebrow: "오래된 꿈",
-    text: "어릴 때는 되고 싶은 게 많았다.\n지금은 내일이 오는 것도 무섭다.",
-    leftLabel: "다 사라졌어",
-    rightLabel: "나도 꿈이 있었지",
+    id: "true-ending-present-room",
+    characterName: "청령차사",
+    imageSrc: smallRoomImage,
+    text:
+      "다시 자취방.\n창밖이 조금 밝아지고 있다.\n\n나는 취업에 실패했다.\n그래서 내가 실패한 사람인 줄 알았다.\n\n하지만 나는 실패한 사람이 아니라 선택지 앞에 선 사람이었다.",
+    choices: {
+      left: {
+        id: "write-again",
+        label: "다시 지원서를 쓴다",
+        resultText: "아직 무섭다.\n그래도 나를 미워하면서 쓰진 않을래.\n\n이번 선택은 전보다 조금 더 나답다.",
+      },
+      right: {
+        id: "text-friend",
+        label: "친구에게 답장한다",
+        resultText: "나 떨어졌어.\n근데 밥은 먹고 싶어.\n\n그 정도면 충분했다.\n살아가는 쪽을 고른 거니까.",
+      },
+    },
   },
   {
-    id: "true-ending-last-thought",
-    speaker: "나",
-    eyebrow: "마지막 생각",
-    text: "나는 사라져도 괜찮을 거라고 생각했다.\n아무도 크게 달라지지 않을 거라고.",
-    leftLabel: "정말 그럴까?",
-    rightLabel: "그럴 리 없어",
+    id: "true-ending-present-answer",
+    characterName: "청령차사",
+    imageSrc: smallRoomImage,
+    text:
+      "청춘은 정답을 맞히는 시간이 아니었다.\n계속 자신을 찾아가는 시간이었다.\n\n취업은 길 중 하나일 뿐.\n나 자체가 답안지는 아니었다.",
+    choices: {
+      left: {
+        id: "not-answer",
+        label: "취업이 답은 아니구나",
+        resultText: "삶은 합격 통지보다 넓었다.",
+      },
+      right: {
+        id: "still-afraid",
+        label: "그래도 무서워",
+        resultText: "무서워도 괜찮다.\n\n무서운 채로 고르는 게 청춘이었다.",
+      },
+    },
   },
   {
-    id: "true-ending-true-heart",
-    speaker: "나",
-    eyebrow: "진짜 마음",
-    text: "하지만 그건 죽고 싶다는 뜻이 아니었다.\n\n그냥,\n혼자 버티고 싶지 않았다.",
-    leftLabel: "나 너무 힘들어",
-    rightLabel: "살려줘",
-  },
-  {
-    id: "true-ending-blue-fog",
-    speaker: "기억",
-    eyebrow: "푸른 안개",
-    text: "방 안에 푸른 안개가 번진다.\n누군가 천천히 걸어온다.",
-    leftLabel: "무서워",
-    rightLabel: "누구야?",
-  },
-  {
-    id: "true-ending-cheongryeong-chasa",
-    speaker: "청령차사",
-    eyebrow: "청령차사",
-    text: "청령차사가 나를 내려다본다.\n\n\"드디어 기억났나.\"",
-    leftLabel: "나를 알아?",
-    rightLabel: "당신은...",
-  },
-  {
-    id: "true-ending-chasa-words",
-    speaker: "청령차사",
-    eyebrow: "차사의 말",
-    text: "\"네가 도와주던 영혼들.\"\n\n\"그 아이들은 모두,\n네가 외면한 너였다.\"",
-    leftLabel: "내가... 나를?",
-    rightLabel: "그럴 리 없어",
-  },
-  {
-    id: "true-ending-memory-shards",
-    speaker: "기억",
-    eyebrow: "기억 조각",
-    text: "스쳐 지나간다.\n\n면접장 앞에서 떨던 영혼.\n돈이 없어 밥을 굶던 영혼.\n친구 연락을 피하던 영혼.\n밤새 울던 영혼.\n\n전부 나였다.",
-    leftLabel: "몰랐으면 했어",
-    rightLabel: "알고 있었어",
-  },
-  {
-    id: "true-ending-chasa-gaze",
-    speaker: "청령차사",
-    eyebrow: "차사의 시선",
-    text: "청령차사는 꾸짖지 않았다.\n그저 조용히 옆에 앉았다.",
-    leftLabel: "화 안 내?",
-    rightLabel: "왜 아무 말 안 해?",
-  },
-  {
-    id: "true-ending-chasa-answer",
-    speaker: "청령차사",
-    eyebrow: "청령차사의 대답",
-    text: "\"이미 충분히 혼났잖아.\"\n\n\"네가 너한테.\"",
-    leftLabel: "미안해",
-    rightLabel: "......",
-  },
-  {
-    id: "true-ending-why-broke",
-    speaker: "청령차사",
-    eyebrow: "무너진 이유",
-    text: "\"너는 약해서 무너진 게 아니다.\"\n\n\"너무 오래,\n혼자 강한 척해서 무너진 거다.\"",
-    leftLabel: "기대고 싶었어",
-    rightLabel: "혼자여야 했어",
-  },
-  {
-    id: "true-ending-phone-rings-again",
-    speaker: "엄마",
-    eyebrow: "다시 울리는 핸드폰",
-    text: "핸드폰이 다시 울린다.\n\n엄마: 답장 안 해도 돼.\n그냥 살아만 있어줘.",
-    leftLabel: "미안해",
-    rightLabel: "엄마...",
-  },
-  {
-    id: "true-ending-friend-new-message",
-    speaker: "친구",
-    eyebrow: "친구의 새 문자",
-    text: "친구: 야.\n내일 네 집 앞에 간다.\n\n친구: 싫어도 문은 열어라.",
-    leftLabel: "고맙다",
-    rightLabel: "바보 같네",
-  },
-  {
-    id: "true-ending-hand",
-    speaker: "나",
-    eyebrow: "손",
-    text: "손이 떨린다.\n하지만 핸드폰을 놓지 않는다.",
-    leftLabel: "아직 무서워",
-    rightLabel: "답장한다",
-  },
-  {
-    id: "true-ending-first-sentence",
-    speaker: "나",
-    eyebrow: "첫 문장",
-    text: "답장창에 아주 천천히 쓴다.\n\n\"나 좀 힘들어.\"",
-    leftLabel: "지우지 않는다",
-    rightLabel: "보낸다",
-  },
-  {
-    id: "true-ending-sent",
-    speaker: "나",
-    eyebrow: "전송",
-    text: "메시지가 전송된다.\n\n아무것도 해결되지 않았다.\n그런데 이상하게 숨이 조금 쉬어진다.",
-    leftLabel: "조금만 더",
-    rightLabel: "아직 살아있다",
-  },
-  {
-    id: "true-ending-chasa-hand",
-    speaker: "청령차사",
-    eyebrow: "청령차사의 손",
-    text: "청령차사가 손을 내민다.\n\n\"잘했다.\"\n\n\"합격보다 어려운 걸 했구나.\"",
-    leftLabel: "정말?",
-    rightLabel: "이게 뭐가...",
-  },
-  {
-    id: "true-ending-chasa-smile",
-    speaker: "청령차사",
-    eyebrow: "차사의 미소",
-    text: "\"도움을 청하는 건 약한 일이 아니다.\"\n\n\"살겠다고 말하는 일이지.\"",
-    leftLabel: "도와줘",
-    rightLabel: "살고 싶어",
-  },
-  {
-    id: "true-ending-morning",
-    speaker: "나",
-    eyebrow: "아침",
-    text: "창문 틈으로 아침빛이 들어온다.\n방은 여전히 엉망이다.\n\n하지만 끝난 건 아니었다.",
-    leftLabel: "먼저 전화부터",
-    rightLabel: "정리해볼까",
-  },
-  {
-    id: "true-ending-last-memory",
-    speaker: "나",
-    eyebrow: "마지막 기억",
-    text: "나는 그날 합격하지 못했다.\n대단한 사람이 된 것도 아니었다.\n\n그저 처음으로,\n나를 혼자 두지 않았다.",
-    leftLabel: "다시 시작하자",
-    rightLabel: "괜찮아",
-  },
-  {
-    id: "true-ending-saved-myself",
-    speaker: "나",
-    eyebrow: "엔딩 문구",
-    text: "그날 이후로도\n힘든 날은 계속 있었다.\n\n하지만 나는 알게 되었다.\n\n사람은 혼자 무너지지만,\n다시 일어날 때는 누군가의 손을 잡아도 된다는 걸.",
-    leftLabel: "나를 구한 사람",
-    rightLabel: "끝",
+    id: "true-ending-final-choice",
+    characterName: "청령차사",
+    imageSrc: sajaImage,
+    text:
+      "아침빛이 방 안으로 들어온다.\n끝났다고 생각했던 물건들이 다시 보인다.\n\n아직 모르겠어도 괜찮다.\n아직 모르는 채로 고르는 게 청춘이니까.",
+    choices: {
+      left: {
+        id: "rest-today",
+        label: "조금 쉬어간다",
+        resultText: "오늘은 쉬어간다.\n도망이 아니라 숨 고르기라고 믿어본다.\n\n쉬는 것도 삶의 선택지다.",
+      },
+      right: {
+        id: "walk-again",
+        label: "다시 걸어간다",
+        resultText: "아직 모르겠지만 다시 걸어가본다.\n\n모르는 채로 걷는 것.\n그게 청춘이다.",
+      },
+    },
   },
 ];

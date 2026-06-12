@@ -10,7 +10,11 @@ import {
 import { getGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
 import { runConfig } from "../config/runConfig";
 import { clampMetric } from "../systems/metricSystem";
-import { sanitizePlayerName } from "../utils/playerName";
+import {
+  DEFAULT_COMPANY_NAME,
+  sanitizeCompanyName,
+  sanitizePlayerName,
+} from "../utils/playerName";
 import {
   createInitialGameState,
   createInitialRunState,
@@ -58,11 +62,15 @@ function updateRun(run: RunState | null, updater: (current: RunState) => RunStat
 function createStartedRunForNextLife(state: GameState) {
   const archetype = pickPrototypeArchetype();
   const playerName = state.meta.playerName || state.run?.profile.name || "이름 없음";
+  const targetCompany =
+    state.meta.targetCompany ||
+    state.run?.profile.targetCompany ||
+    DEFAULT_COMPANY_NAME;
 
   return createInitialRunState({
     scene: "event",
     archetype,
-    profile: { name: playerName },
+    profile: { name: playerName, targetCompany },
     metrics: archetype.metrics,
     currentEventId: drawNextPrototypeEventId(
       [],
@@ -93,6 +101,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const nextRun = createInitialRunState({
         profile: {
           name: state.meta.playerName || "이름 없음",
+          targetCompany: state.meta.targetCompany,
         },
       });
 
@@ -145,14 +154,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         typeof action.payload.name === "string"
           ? sanitizePlayerName(action.payload.name)
           : undefined;
+      const nextTargetCompany =
+        typeof action.payload.targetCompany === "string"
+          ? sanitizeCompanyName(action.payload.targetCompany)
+          : undefined;
 
       return {
         ...state,
         meta:
-          typeof nextProfileName === "string"
+          typeof nextProfileName === "string" ||
+          typeof nextTargetCompany === "string"
             ? {
                 ...state.meta,
-                playerName: nextProfileName,
+                ...(typeof nextProfileName === "string"
+                  ? { playerName: nextProfileName }
+                  : null),
+                ...(typeof nextTargetCompany === "string"
+                  ? { targetCompany: nextTargetCompany }
+                  : null),
               }
             : state.meta,
         run: updateRun(state.run, (run) => ({
@@ -162,6 +181,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             ...action.payload,
             ...(typeof nextProfileName === "string"
               ? { name: nextProfileName }
+              : null),
+            ...(typeof nextTargetCompany === "string"
+              ? { targetCompany: nextTargetCompany }
               : null),
           },
         })),
@@ -175,6 +197,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         meta: {
           ...state.meta,
           playerName: state.run?.profile.name ?? state.meta.playerName,
+          targetCompany:
+            state.run?.profile.targetCompany ?? state.meta.targetCompany,
         },
         run: updateRun(state.run, (run) => ({
           ...run,
@@ -302,6 +326,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         archetype,
         profile: {
           name: state.meta.playerName || state.run?.profile.name || "이름 없음",
+          targetCompany:
+            state.meta.targetCompany ||
+            state.run?.profile.targetCompany ||
+            DEFAULT_COMPANY_NAME,
         },
         metrics: archetype.metrics,
         currentEventId: drawNextPrototypeEventId(

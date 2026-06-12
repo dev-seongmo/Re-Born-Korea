@@ -3,7 +3,7 @@ import { runConfig } from "../config/runConfig";
 import { drawNextPrototypeEventId } from "../content/eventCards";
 import { pickPrototypeArchetype } from "../core/gameState";
 import type { GameAction, MetaState, RunState } from "../core/gameTypes";
-import { sanitizePlayerName } from "../utils/playerName";
+import { sanitizeCompanyName, sanitizePlayerName } from "../utils/playerName";
 import type { SetupScreenViewModel } from "./setupScreenViewModel";
 
 export function buildSetupScreenViewModel(
@@ -13,21 +13,34 @@ export function buildSetupScreenViewModel(
   dispatch: Dispatch<GameAction>,
 ): SetupScreenViewModel {
   const name = sanitizePlayerName(session.profile.name);
+  const targetCompany = sanitizeCompanyName(session.profile.targetCompany);
 
   return {
-    title: "이름 등록",
-    description: "이번 생에서 사용할 내 이름을 입력하세요.",
+    title: "지원 정보 등록",
+    description: "이번 생에서 사용할 이름과 목표 회사를 입력하세요.",
     startLabel: "시작하기",
-    canStart: name.length > 0,
+    canStart: name.length > 0 && targetCompany.trim().length > 0,
     fields: [
       {
         key: "name",
         label: "내 이름",
+        placeholder: "내 이름",
         value: name,
         onChange: (value) =>
           dispatch({
             type: "profile/updated",
             payload: { name: sanitizePlayerName(value) },
+          }),
+      },
+      {
+        key: "targetCompany",
+        label: "목표 회사",
+        placeholder: "예: Re:Born Korea",
+        value: targetCompany,
+        onChange: (value) =>
+          dispatch({
+            type: "profile/updated",
+            payload: { targetCompany: sanitizeCompanyName(value) },
           }),
       },
     ],

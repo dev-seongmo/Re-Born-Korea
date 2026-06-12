@@ -4,10 +4,16 @@ import { soundMap, type SoundCue } from "./soundMap";
 export class AudioManager {
   private cache = new Map<SoundCue, Howl>();
 
-  play(cue: SoundCue, volume = 1) {
+  play(cue: SoundCue, volume = 1, options: { loop?: boolean } = {}) {
     const sound = this.getOrCreate(cue);
     sound.volume(volume);
+    sound.loop(options.loop ?? false);
     sound.play();
+  }
+
+  stop(cue: SoundCue) {
+    const sound = this.cache.get(cue);
+    sound?.stop();
   }
 
   private getOrCreate(cue: SoundCue) {

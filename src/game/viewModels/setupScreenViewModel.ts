@@ -1,8 +1,9 @@
-export type SetupFieldKey = "name";
+export type SetupFieldKey = "name" | "targetCompany";
 
 export type SetupFieldViewModel = {
   key: SetupFieldKey;
   label: string;
+  placeholder: string;
   value: string;
   onChange: (value: string) => void;
 };

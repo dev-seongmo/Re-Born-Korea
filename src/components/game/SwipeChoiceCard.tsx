@@ -19,7 +19,6 @@ type Props = {
   narrativeText: string;
   continueLabel?: string;
   disabled?: boolean;
-  showDisabledChoiceLabels?: boolean;
   onContinue?: () => void;
   onResolve: (choice: EventChoice) => void;
 };
@@ -51,7 +50,6 @@ export function SwipeChoiceCard({
   narrativeText,
   continueLabel,
   disabled = false,
-  showDisabledChoiceLabels = false,
   onContinue,
   onResolve,
 }: Props) {
@@ -87,9 +85,8 @@ export function SwipeChoiceCard({
 
   const intensity = Math.min(Math.abs(visualDragX) / COMMIT_DISTANCE, 1);
   const rotation = visualDragX * 0.045;
-  const shouldPersistDisabledChoiceLabels = disabled && showDisabledChoiceLabels;
-  const showLeftBadge = shouldPersistDisabledChoiceLabels || (!disabled && direction === "right");
-  const showRightBadge = shouldPersistDisabledChoiceLabels || (!disabled && direction === "left");
+  const showLeftBadge = !disabled && direction === "right";
+  const showRightBadge = !disabled && direction === "left";
 
   useEffect(() => {
     return () => {
@@ -404,7 +401,6 @@ export function SwipeChoiceCard({
         <CardAnswerBadge
           align="left"
           isVisible={showLeftBadge}
-          persistent={shouldPersistDisabledChoiceLabels}
           text={card.leftPreviewText}
         />
         <CardImpactPreview
@@ -415,7 +411,6 @@ export function SwipeChoiceCard({
         <CardAnswerBadge
           align="right"
           isVisible={showRightBadge}
-          persistent={shouldPersistDisabledChoiceLabels}
           text={card.rightPreviewText}
         />
         <CardImpactPreview

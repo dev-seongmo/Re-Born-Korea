@@ -17,6 +17,7 @@ const phase2DebugSave: Phase2DebugSave | null = {
       maxTurns: 30,
       profile: {
         name: "페이즈투",
+        targetCompany: "Re:Born Korea",
       },
       archetype: {
         id: "average",
@@ -65,6 +66,7 @@ const phase2DebugSave: Phase2DebugSave | null = {
     },
     meta: {
       playerName: "페이즈투",
+      targetCompany: "Re:Born Korea",
       runCount: 2,
       successCount: 1,
       isFirstCleared: true,

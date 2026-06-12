@@ -215,6 +215,82 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     src: smallRoomImage,
     alt: "Ending room portrait",
   },
+  "true-ending-rejection-message": {
+    src: failedTextOnPhoneImage,
+    alt: "Rejected message portrait",
+  },
+  "true-ending-joseon-youth": {
+    src: paperPortraitImage,
+    alt: "Joseon youth portrait",
+  },
+  "true-ending-postwar-youth": {
+    src: cheapLunchBoxImage,
+    alt: "Postwar youth portrait",
+  },
+  "true-ending-industrial-youth": {
+    src: extraShiftWorkImage,
+    alt: "Industrial youth portrait",
+  },
+  "true-ending-imf-youth": {
+    src: rentDayNoticeImage,
+    alt: "IMF youth portrait",
+  },
+  "true-ending-present-youth": {
+    src: smallRoomImage,
+    alt: "Present youth portrait",
+  },
+  "true-ending-final-choice": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
+  "true-ending-rejection-room": {
+    src: failedTextOnPhoneImage,
+    alt: "Rejected message portrait",
+  },
+  "true-ending-rejection-meaning": {
+    src: failedTextOnPhoneImage,
+    alt: "Rejected message portrait",
+  },
+  "true-ending-joseon-exam": {
+    src: paperPortraitImage,
+    alt: "Joseon youth portrait",
+  },
+  "true-ending-joseon-question": {
+    src: paperPortraitImage,
+    alt: "Joseon youth portrait",
+  },
+  "true-ending-postwar-bag": {
+    src: cheapLunchBoxImage,
+    alt: "Postwar youth portrait",
+  },
+  "true-ending-postwar-survival": {
+    src: cheapLunchBoxImage,
+    alt: "Postwar youth portrait",
+  },
+  "true-ending-industrial-bus": {
+    src: extraShiftWorkImage,
+    alt: "Industrial youth portrait",
+  },
+  "true-ending-industrial-note": {
+    src: memoImage,
+    alt: "Industrial youth note portrait",
+  },
+  "true-ending-imf-door": {
+    src: rentDayNoticeImage,
+    alt: "IMF youth portrait",
+  },
+  "true-ending-imf-rest": {
+    src: rentDayNoticeImage,
+    alt: "IMF youth portrait",
+  },
+  "true-ending-present-room": {
+    src: smallRoomImage,
+    alt: "Present youth portrait",
+  },
+  "true-ending-present-answer": {
+    src: smallRoomImage,
+    alt: "Present youth portrait",
+  },
   "final-interview": { src: suitGuyPortraitImage, alt: "Interview portrait" },
   "parents-question": { src: dadPortraitImage, alt: "Parent portrait" },
   "relative-comparison-dinner": {

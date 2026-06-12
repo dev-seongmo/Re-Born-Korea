@@ -26,6 +26,7 @@ export type VisibleMetrics = Record<VisibleMetricKey, number>;
 
 export type PlayerProfile = {
   name: string;
+  targetCompany: string;
 };
 
 export type StartArchetypeId =
@@ -95,6 +96,8 @@ export type EventChoice = {
 export type EventCard = {
   id: string;
   characterName?: string;
+  imageSrc?: string;
+  imageAlt?: string;
   category:
     | "tutorial"
     | "interview"
@@ -193,6 +196,7 @@ export type GameSession = RunState;
 
 export type MetaState = {
   playerName: string;
+  targetCompany: string;
   runCount: number;
   successCount: number;
   isFirstCleared: boolean;

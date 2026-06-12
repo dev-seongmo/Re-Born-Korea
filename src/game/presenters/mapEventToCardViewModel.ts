@@ -20,11 +20,13 @@ function buildVisibleImpactPreview(event: EventCard, choiceIndex: 0 | 1) {
 
 export function mapEventToCardViewModel(event: EventCard): CardViewModel {
   const portrait = getEventPortrait(event);
+  const portraitSrc = event.imageSrc ?? portrait.src;
+  const portraitAlt = event.imageAlt ?? portrait.alt;
 
   return {
     characterName: event.characterName ?? "청령차사",
-    portraitAlt: portrait.alt,
-    portraitSrc: portrait.src,
+    portraitAlt,
+    portraitSrc,
     leftPreviewText: event.choices[1].label,
     rightPreviewText: event.choices[0].label,
     leftImpactPreview: buildVisibleImpactPreview(event, 1),
