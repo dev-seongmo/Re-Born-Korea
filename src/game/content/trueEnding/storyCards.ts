@@ -30,7 +30,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     characterName: "청령차사",
     imageSrc: failedTextOnPhoneImage,
     text:
-      "새벽의 자취방.\n\n꺼지지 않은 노트북 옆에 구겨진 이력서가 놓여 있다.\n핸드폰에는 불합격 문자가 떠 있다.\n\n문이 하나 닫혔다.",
+      "새벽의 자취방.\n\n꺼지지 않은 노트북 옆에 구겨진 이력서가 놓여 있다.\n핸드폰에는 불합격 문자가 떠 있다.",
     choices: {
       left: {
         id: "hide-phone",
@@ -49,17 +49,17 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     characterName: "청령차사",
     imageSrc: failedTextOnPhoneImage,
     text:
-      "이번에도 안 되면 내가 아무것도 아닌 사람 같았다.\n\n청령차사는 말했다.\n\n문 하나가 닫혔다고 너까지 닫힌 건 아니라고.",
+      "이번에도 안 되면 내가 아무것도 아닌 사람 같았다.\n\n문 하나가 닫혔다고 너까지 닫힌 건 아니라고.",
     choices: {
       left: {
         id: "ask-failure",
         label: "그럼 실패는 뭔데?",
-        resultText: "실패는 끝이 아니라 선택지 앞에 섰다는 신호였다.",
+        resultText: "실패는 끝이 아니라 선택지 앞에 섰다는 신호였다.\n\n그리고 청춘의 선택과 고민은 옛날부터 반복되어 왔다. \n\n오래되어 보이는 영혼 앞에 섰다.",
       },
       right: {
         id: "ask-alone",
         label: "나만 이런 게 아니야?",
-        resultText: "아니었다.\n\n시대마다 고민의 이름만 달랐을 뿐이었다.",
+        resultText: "아니었다.\n\n시대마다 고민의 이름만 달랐을 뿐이었다.\n\n오래되어 보이는 영혼 앞에 섰다.",
       },
     },
   },
