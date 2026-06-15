@@ -72,7 +72,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     choices: {
       left: {
         id: "choose-exam",
-        label: "과거 시험을 준비한다",
+        label: "시험을 준비한다",
         resultText: "책을 다시 펼쳤다.\n\n마음은 조용해진 척했다.\n누군가를 지키려는 선택도 삶이었다.",
       },
       right: {
@@ -91,7 +91,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     choices: {
       left: {
         id: "envy-certainty",
-        label: "나는 아직 모르겠어",
+        label: "아직 모르겠어",
         resultText: "모르는 채로 고르는 날들이 나를 만든다.",
       },
       right: {
@@ -134,7 +134,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
       },
       right: {
         id: "remember-survival",
-        label: "버틴 것도 남는구나",
+        label: "버틴 것도 남네",
         resultText: "남는다.\n\n아주 오래, 사람의 뼈대가 된다.",
       },
     },
@@ -172,7 +172,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
       },
       right: {
         id: "hold-name",
-        label: "나도 잊고 싶지 않아",
+        label: "잊고 싶지 않아",
         resultText: "그 마음이 있으면 아직 끝난 게 아니었다.",
       },
     },
@@ -186,7 +186,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     choices: {
       left: {
         id: "any-work",
-        label: "아무 일이라도 시작한다",
+        label: "일을 시작한다",
         resultText: "하고 싶은 일은 아니었다.\n그래도 집으로 돌아갈 수는 없었다.\n\n책임도 선택이었다.",
       },
       right: {
@@ -210,7 +210,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
       },
       right: {
         id: "stop-hating",
-        label: "나를 미워하지 않기",
+        label: "미워하지 않는다",
         resultText: "그건 아주 오래 걸리는 선택이다.\n\n그래도 해볼 만하다.",
       },
     },
@@ -243,7 +243,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     choices: {
       left: {
         id: "not-answer",
-        label: "취업이 답은 아니구나",
+        label: "답은 아니구나",
         resultText: "삶은 합격 통지보다 넓었다.",
       },
       right: {

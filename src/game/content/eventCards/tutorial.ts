@@ -74,7 +74,7 @@ export const tutorialEvents: EventCard[] = [
     choices: [
       makeTutorialChoice({
         id: "question-employment-grudge",
-        label: "취업이 한이라고?",
+        label: "취업이 한이야?",
         resultText:
           "현실에서 맺힌 한은 쉽게 사라지지 않는다.\n\n선택은 영혼의 상태를 바꾼다.",
       }),
@@ -145,7 +145,7 @@ export const tutorialEvents: EventCard[] = [
       }),
       makeTutorialChoice({
         id: "leave-it-to-me",
-        label: "균형을 잡으라고?",
+        label: "균형을 잡아?",
         resultText:
           `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
       }),

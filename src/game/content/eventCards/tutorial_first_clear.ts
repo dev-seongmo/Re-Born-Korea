@@ -37,7 +37,7 @@ export const firstClearTutorialEvents: EventCard[] = [
       }),
       makeFirstClearTutorialChoice({
         id: "say-it-is-real",
-        label: "정말 돌아온 거군.",
+        label: "돌아온 거군",
         resultText:
           "그래. 아직 미약하지만 분명한 되찾음이다. 네 영혼이 완전히 잠들지는 않았다는 증거이기도 하고.",
       }),
@@ -59,7 +59,7 @@ export const firstClearTutorialEvents: EventCard[] = [
       }),
       makeFirstClearTutorialChoice({
         id: "ask-if-random",
-        label: "아무 때나 나오는 건가?",
+        label: "아무 때나 나와?",
         resultText:
           "아무렇게나 튀어나오진 않는다. 네가 버텨낸 삶과 선택의 결이 맞아떨어질 때만 문이 열린다.",
       }),
@@ -75,7 +75,7 @@ export const firstClearTutorialEvents: EventCard[] = [
     choices: [
       makeFirstClearTutorialChoice({
         id: "ask-why-collect-them",
-        label: "왜 꼭 모아야 하지?",
+        label: "왜 모아야 해?",
         resultText:
           "조각이 흩어진 채로는 너도 흩어진 채다. 이어 붙여야만 네 삶의 모양도, 이 반복의 이유도 제대로 드러난다.",
       }),
@@ -97,13 +97,13 @@ export const firstClearTutorialEvents: EventCard[] = [
     choices: [
       makeFirstClearTutorialChoice({
         id: "ask-about-self-trust",
-        label: "자기신뢰가 그렇게 중요해?",
+        label: "자기신뢰가 중요해?",
         resultText:
           "중요하지. 흔들려도 다시 일어서는 힘, 무너진 선택 앞에서도 스스로를 놓지 않는 힘이니까. 보이지 않아도 분명히 다음 삶들을 바꾼다.",
       }),
       makeFirstClearTutorialChoice({
         id: "ask-how-it-changes",
-        label: "그게 어떻게 달라지는데?",
+        label: "어떻게 달라져?",
         resultText:
           "남과 너를 함부로 비교하고 스스로를 깎아내리면 무너진다. 반대로 네 선택을 네 힘으로 받아내면 조금씩 단단해지지.",
       }),
@@ -119,13 +119,13 @@ export const firstClearTutorialEvents: EventCard[] = [
     choices: [
       makeFirstClearTutorialChoice({
         id: "accept-new-purpose",
-        label: "이제 기억을 모으겠다.",
+        label: "기억을 모으겠다",
         resultText:
           "좋다. 그럼 다시 걸어라. 이번부터는 버티기만 하는 삶이 아니라, 되찾으러 가는 삶이 될 테니.",
       }),
       makeFirstClearTutorialChoice({
         id: "ask-to-begin-again",
-        label: "다시 태어나면 되겠군.",
+        label: "다시 시작하자",
         resultText:
           "그래. 다음 삶으로 가라. 하지만 이번엔 눈앞의 합격만 쫓지 말고, 네가 흘린 조각들이 어디서 울고 있는지도 함께 살펴라.",
       }),

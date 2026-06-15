@@ -27,8 +27,7 @@ export function TrueEndingCreditsScreen({
   const [hasReachedEnd, setHasReachedEnd] = useState(false);
 
   useEffect(() => {
-    audioManager.stop("ending.credits");
-    audioManager.play("ending.credits", 0.62);
+    audioManager.play("ending.credits", 0.62, { restart: true, seek: 0 });
 
     return () => audioManager.stop("ending.credits");
   }, []);

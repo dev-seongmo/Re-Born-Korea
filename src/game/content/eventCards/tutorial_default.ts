@@ -30,12 +30,12 @@ export const defaultLoopTutorialEvents: EventCard[] = [
     choices: [
       makeDefaultTutorialChoice({
         id: "move-to-next-soul",
-        label: "다음 영혼으로 간다.",
+        label: "다음으로 간다",
         resultText: "이번 삶도 다시 시작된다.",
       }),
       makeDefaultTutorialChoice({
         id: "start-without-hesitation",
-        label: "주저하지 않고 시작한다.",
+        label: "바로 시작한다",
         resultText: "이번 삶도 다시 시작된다.",
       }),
     ],

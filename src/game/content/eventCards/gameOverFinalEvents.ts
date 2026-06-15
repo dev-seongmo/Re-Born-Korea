@@ -67,7 +67,7 @@ export const gameOverFinalEvents: EventCard[] = [
       }),
       makeFinalChoice({
         id: "spend-nothing",
-        label: "아무것도 쓰지 않는다",
+        label: "아무것도 안 쓴다",
         resultText: "통장은 가득 찼지만, 삶은 더 이상 움직이지 않았다.",
       }),
     ],
@@ -107,7 +107,7 @@ export const gameOverFinalEvents: EventCard[] = [
       }),
       makeFinalChoice({
         id: "feel-insufficient",
-        label: "아직 부족하다고 느낀다",
+        label: "아직 부족하다",
         resultText: "이력서는 완성됐지만, 너는 그 안에서 사라졌다.",
       }),
     ],
@@ -127,7 +127,7 @@ export const gameOverFinalEvents: EventCard[] = [
       }),
       makeFinalChoice({
         id: "delete-message",
-        label: "보낸 메시지를 지운다",
+        label: "메시지를 지운다",
         resultText: "기회는 혼자 오는 법이 없었다. 이번에는 아무도 부르지 않았다.",
       }),
     ],
@@ -187,7 +187,7 @@ export const gameOverFinalEvents: EventCard[] = [
       }),
       makeFinalChoice({
         id: "pretend-fine",
-        label: "아무렇지 않은 척한다",
+        label: "괜찮은 척한다",
         resultText: "무너지지 않는 척하던 마음은, 끝내 스스로를 놓쳐버렸다.",
       }),
     ],

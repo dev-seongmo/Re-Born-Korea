@@ -35,7 +35,7 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "review-key-points",
-        label: "예상 질문만 짧게 훑고 눕는다",
+        label: "핵심만 훑는다",
         resultText:
           "답을 전부 외우려 하지는 않았다.\n\n대신 꼭 말하고 싶은 경험과 이유만 다시 확인했다.",
         memoryTags: ["interview_day"],
@@ -43,7 +43,7 @@ export const interviewEvents: EventCard[] = [
       }),
       interviewChoice({
         id: "sleep-before-interview",
-        label: "컨디션이 실력이라고 믿고 잔다",
+        label: "그냥 잔다",
         resultText:
           "불안은 남아 있었지만, 더 붙잡고 있어도 답이 선명해질 것 같지는 않았다.\n\n불을 끄자 심장이 천천히 밤에 적응했다.",
         memoryTags: ["interview_day"],
@@ -61,14 +61,14 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "breathe-in-lobby",
-        label: "숨을 고르고 천천히 물을 마신다",
+        label: "숨을 고른다",
         resultText:
           "목이 조금 풀렸다.\n\n떨림이 사라지지는 않았지만, 적어도 내가 여기까지 왔다는 사실은 분명했다.",
         tendencyTags: ["mental"],
       }),
       interviewChoice({
         id: "check-documents",
-        label: "서류와 포트폴리오를 다시 확인한다",
+        label: "서류를 확인한다",
         resultText:
           "파일명, 출력물, 신분증.\n\n몇 번이고 확인한 것들이지만 다시 보니 마음 한구석이 조금 안정됐다.",
         tendencyTags: ["spec"],
@@ -85,14 +85,14 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "calm-greeting",
-        label: "침착하게 인사하고 자리에 앉는다",
+        label: "침착하게 인사한다",
         resultText:
           "목소리가 아주 조금 떨렸지만 인사는 끝까지 이어졌다.\n\n의자에 앉는 순간, 준비해 온 시간들이 등 뒤에 조용히 섰다.",
         tendencyTags: ["reputation"],
       }),
       interviewChoice({
         id: "honest-nervousness",
-        label: "긴장했지만 또렷하게 말하려 한다",
+        label: "또렷하게 말한다",
         resultText:
           "긴장을 숨기지는 못했다.\n\n그래도 시선을 피하지 않고 첫 문장을 꺼냈다.",
         tendencyTags: ["mental"],
@@ -109,7 +109,7 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "answer-with-experience",
-        label: "경험을 근거로 차분히 답한다",
+        label: "경험으로 답한다",
         resultText:
           "프로젝트에서 맡았던 역할과 배운 점을 하나씩 꺼냈다.\n\n거창한 약속보다, 실제로 해 본 일에서 시작했다.",
         memoryTags: ["steady_answer"],
@@ -117,7 +117,7 @@ export const interviewEvents: EventCard[] = [
       }),
       interviewChoice({
         id: "answer-with-growth",
-        label: "배우고 적응하는 방식으로 답한다",
+        label: "성장으로 답한다",
         resultText:
           "모든 걸 이미 잘한다고 말하지 않았다.\n\n대신 모르는 것을 어떻게 따라잡아 왔는지, 앞으로도 어떻게 해낼지 설명했다.",
         memoryTags: ["steady_answer"],
@@ -135,14 +135,14 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "weakness-with-fix",
-        label: "단점과 보완 방법을 함께 말한다",
+        label: "보완책을 말한다",
         resultText:
           "부족한 점을 숨기지 않았다.\n\n다만 그 부족함을 어떻게 기록하고, 어떻게 줄여 왔는지도 함께 말했다.",
         tendencyTags: ["mental", "spec"],
       }),
       interviewChoice({
         id: "weakness-with-example",
-        label: "실제 사례를 들어 담담히 말한다",
+        label: "사례로 말한다",
         resultText:
           "한 번의 실수를 이야기했다.\n\n그때의 부끄러움보다, 이후에 바꾼 행동을 더 길게 설명했다.",
         tendencyTags: ["reputation", "selfTrust"],
@@ -159,7 +159,7 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "accept-the-day",
-        label: "오늘의 나를 인정한다",
+        label: "오늘을 인정한다",
         resultText:
           "완벽하지는 않았다.\n\n그래도 이 하루를 통과한 사람은 다른 누구도 아닌 나였다.",
         memoryTags: ["interview_day", "steady_answer"],
@@ -167,7 +167,7 @@ export const interviewEvents: EventCard[] = [
       }),
       interviewChoice({
         id: "wait-for-result",
-        label: "결과를 기다리기로 한다",
+        label: "기다리기로 한다",
         resultText:
           "핸드폰을 손에 쥐고 건물을 나섰다.\n\n이제 남은 것은 기다리는 일뿐이다.",
         memoryTags: ["interview_day"],
