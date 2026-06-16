@@ -9,7 +9,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "stay-grounded",
-        label: "진심으로 축하한다",
+        label: "축하메세지를 보낸다",
         immediate: { mental: 3 },
         selfTrustDelta: 4,
         primaryStat: "mental",
@@ -31,7 +31,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "rewrite-plan",
-        label: "계획을 갈아엎는다",
+        label: "무시하고 공부한다",
         immediate: { spec: 2, mental: -4 },
         selfTrustDelta: -4,
         primaryStat: "spec",
@@ -84,7 +84,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "doom-scroll",
-        label: "계속 비교한다",
+        label: "더 내려본다",
         immediate: { spec: 1, mental: -3 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -115,7 +115,7 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "acknowledge-pressure",
-        label: "내 루틴을 지킨다",
+        label: "축하만 한다",
         immediate: { mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
@@ -136,7 +136,7 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "panic-register",
-        label: "한꺼번에 접수한다",
+        label: "나도 따라서 접수한다",
         immediate: { spec: 3, money: -2, mental: -3 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -166,20 +166,20 @@ export const comparisonEvents: EventCard[] = [
     choices: [
       {
         id: "honor-my-timing",
-        label: "내 속도를 지킨다",
-        immediate: { mental: 2, reputation: 1 },
+        label: "축하만 건넨다",
+        immediate: { mental: 2, money: 1 },
         selfTrustDelta: 4,
         primaryStat: "mental",
         modifier: 0,
         memoryTags: ["self_pace"],
         tendencyTags: ["mental", "selfTrust"],
         results: {
-          bad: { text: "쉽지 않았지만 너는 남의 계절을 네 기준으로 삼지 않았다." },
+          bad: { text: "아쉽지만 너는 남의 계절을 네 기준으로 삼지 않았다." },
           mixed: {
-            text: "조금 흔들렸지만, 인생의 시간표를 빌려오지는 않았다.",
+            text: "축하는 건넸고, 네 생활의 선도 함께 지켰다.",
           },
           good: {
-            text: "축하도 진심이었고, 너의 시간도 끝내 지켜졌다.",
+            text: "모두에게 맞추지 않아도 마음을 전할 수 있다는 걸 배웠다.",
             delta: { mental: 2 },
             selfTrustDelta: 1,
           },
@@ -187,23 +187,23 @@ export const comparisonEvents: EventCard[] = [
       },
       {
         id: "measure-myself",
-        label: "조건을 비교한다",
-        immediate: { reputation: 1, mental: -3 },
-        selfTrustDelta: -4,
+        label: "모두 참여한다",
+        immediate: { reputation: 3, money: -4, mental: -2 },
+        selfTrustDelta: -3,
         primaryStat: "reputation",
         modifier: 0,
-        tendencyTags: ["comparison", "reputation"],
+        tendencyTags: ["reputation", "comparison"],
         results: {
           bad: {
-            text: "남의 인생 표를 들여다볼수록 네 이름은 흐려졌다.",
-            delta: { mental: -2 },
+            text: "축의금과 일정이 겹치자 축하보다 버거움이 먼저 남았다.",
+            delta: { money: -2, mental: -2 },
           },
           mixed: {
-            text: "겉으로는 차분했지만 속에서는 숫자들이 떠다녔다.",
+            text: "관계는 지켰지만 네 생활은 며칠 더 팽팽해졌다.",
           },
           good: {
-            text: "당장은 자극이 됐어도 그 방식은 오래 버티기 어려웠다.",
-            delta: { reputation: 1 },
+            text: "좋은 마음도 있었지만, 모두 맞추는 방식은 오래 버티기 어려웠다.",
+            delta: { reputation: 1, mental: -1 },
           },
         },
       },
