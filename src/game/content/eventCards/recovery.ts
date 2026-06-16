@@ -126,44 +126,4 @@ export const recoveryEvents: EventCard[] = [
       },
     ],
   },
-  {
-    id: "name-written-on-paper",
-    category: "recovery",
-    phase: "late20s",
-    text: "메모장 한쪽에 네 이름을 적었다가 한참 바라보게 된다.",
-    choices: [
-      {
-        id: "write-to-myself",
-        label: "문장을 남긴다",
-        immediate: { mental: 2 },
-        selfTrustDelta: 5,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["name_return"],
-        tendencyTags: ["selfTrust"],
-        results: {
-          bad: { text: "어색했지만 그 이름은 아직 너의 것이었다." },
-          mixed: { text: "점수표보다 이름이 먼저 오는 순간이 잠깐 생겼다." },
-          good: {
-            text: "세상이 뭐라 부르든 너를 부를 말은 결국 네 이름이었다.",
-            delta: { mental: 2 },
-          },
-        },
-      },
-      {
-        id: "crumple-note",
-        label: "메모를 구긴다",
-        immediate: { spec: 1, mental: -1 },
-        selfTrustDelta: -3,
-        primaryStat: "spec",
-        modifier: 0,
-        tendencyTags: ["comparison"],
-        results: {
-          bad: { text: "민망함 뒤에 남은 건 더 익숙한 무표정뿐이었다.", delta: { mental: -2 } },
-          mixed: { text: "다시 현실로 돌아왔지만, 무엇을 놓고 왔는지는 남았다." },
-          good: { text: "구겨도 사라지진 않았다. 네 이름은 여전히 너를 기다리고 있었다." },
-        },
-      },
-    ],
-  },
 ];

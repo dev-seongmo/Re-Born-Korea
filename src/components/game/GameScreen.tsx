@@ -8,12 +8,21 @@ import type {
 
 type Props = {
   viewModel: GameScreenViewModel;
+  highlightHud?: boolean;
 };
 
-export function GameScreen({ viewModel }: Props) {
+export function GameScreen({ highlightHud = false, viewModel }: Props) {
   return (
     <div className="game-grid">
-      <section className="panel panel--hud">
+      <section
+        className={[
+          "panel",
+          "panel--hud",
+          highlightHud ? "panel--hud-highlight" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div className="status-bar" aria-label="game status">
           {viewModel.statusItems.map((item) => (
             <StatusItem item={item} key={item.key} />

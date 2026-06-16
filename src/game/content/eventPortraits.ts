@@ -292,12 +292,10 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     alt: "Present youth portrait",
   },
   "final-interview": { src: suitGuyPortraitImage, alt: "Interview portrait" },
-  "parents-question": { src: dadPortraitImage, alt: "Parent portrait" },
   "relative-comparison-dinner": {
     src: unclePortraitImage,
     alt: "Relative portrait",
   },
-  "family-support-offer": { src: momPortraitImage, alt: "Family portrait" },
   "move-back-home": { src: youngUnclePortraitImage, alt: "Home portrait" },
   "old-friend-call": { src: friendPortraitImage, alt: "Friend portrait" },
   "friend-asks-for-help": { src: friendPortraitImage, alt: "Friend portrait" },
@@ -371,10 +369,6 @@ const portraitByEventId: Record<string, PortraitAsset> = {
   "walk-without-purpose": {
     src: friendPortraitImage,
     alt: "Walking portrait",
-  },
-  "name-written-on-paper": {
-    src: paperPortraitImage,
-    alt: "Name note portrait",
   },
 };
 

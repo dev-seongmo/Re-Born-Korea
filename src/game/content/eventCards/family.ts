@@ -2,56 +2,6 @@ import type { EventCard } from "../../core/gameTypes";
 
 export const familyEvents: EventCard[] = [
   {
-    id: "parents-question",
-    category: "family",
-    phase: "early20s",
-    text: "부모님이 묻는다. '언제까지 준비할 거니?'",
-    choices: [
-      {
-        id: "speak-honestly",
-        label: "솔직히 말한다",
-        immediate: { reputation: -2, mental: 2 },
-        selfTrustDelta: 5,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["honesty"],
-        tendencyTags: ["selfTrust", "mental"],
-        results: {
-          bad: { text: "대화는 서툴렀지만, 적어도 너는 숨지 않았다." },
-          mixed: {
-            text: "쉽지 않았지만 말한 뒤 숨이 조금은 쉬어졌다.",
-            selfTrustDelta: 1,
-          },
-          good: {
-            text: "완벽히 이해받진 못했어도, 너의 언어를 지켜냈다.",
-            delta: { mental: 2 },
-            selfTrustDelta: 2,
-          },
-        },
-      },
-      {
-        id: "pretend-fine",
-        label: "괜찮은 척한다",
-        immediate: { reputation: 2, mental: -3 },
-        selfTrustDelta: -4,
-        primaryStat: "reputation",
-        modifier: 1,
-        tendencyTags: ["reputation", "comparison"],
-        results: {
-          bad: {
-            text: "대화는 지나갔지만 속은 더 조용히 무너졌다.",
-            delta: { mental: -2 },
-          },
-          mixed: { text: "겉은 잠잠했지만 네 마음은 더 닫혔다." },
-          good: {
-            text: "당장은 체면을 지켰지만, 그 비용은 네 안에 남았다.",
-            delta: { reputation: 1 },
-          },
-        },
-      },
-    ],
-  },
-  {
     id: "relative-comparison-dinner",
     category: "family",
     phase: "early20s",
@@ -94,57 +44,6 @@ export const familyEvents: EventCard[] = [
           good: {
             text: "당장은 무난했지만, 답은 오래 마음에 남았다.",
             delta: { reputation: 1 },
-          },
-        },
-      },
-    ],
-  },
-  {
-    id: "family-support-offer",
-    category: "family",
-    phase: "mid20s",
-    text: "부모님이 학원비를 보태주겠다고 한다. 고맙지만 다시 기대에 묶일까 마음이 복잡하다.",
-    choices: [
-      {
-        id: "accept-with-honesty",
-        label: "솔직히 도움받는다",
-        immediate: { money: 3, mental: 1 },
-        selfTrustDelta: 3,
-        primaryStat: "mental",
-        modifier: 0,
-        memoryTags: ["honesty"],
-        tendencyTags: ["selfTrust", "money"],
-        results: {
-          bad: { text: "어색했지만 도움과 감정을 함께 다루려 한 건 의미 있었다." },
-          mixed: {
-            text: "부담은 남았지만 네 입장도 같이 놓였다.",
-            delta: { money: 1 },
-          },
-          good: {
-            text: "도움이 빚만은 아니라는 감각이 조금 생겼다.",
-            delta: { money: 2, mental: 1 },
-          },
-        },
-      },
-      {
-        id: "accept-silently",
-        label: "그냥 받는다",
-        immediate: { money: 4, mental: -2, reputation: 1 },
-        selfTrustDelta: -2,
-        primaryStat: "money",
-        modifier: 1,
-        tendencyTags: ["money", "reputation"],
-        results: {
-          bad: {
-            text: "현실은 나아졌지만, 설명되지 않은 부담이 더 커졌다.",
-            delta: { mental: -2 },
-          },
-          mixed: {
-            text: "당장 필요한 건 해결됐지만 네 속마음은 더 말이 없어졌다.",
-          },
-          good: {
-            text: "한숨은 돌렸지만 조건 없는 안도감은 아니었다.",
-            delta: { money: 1 },
           },
         },
       },

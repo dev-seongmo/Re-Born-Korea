@@ -48,6 +48,12 @@ const secondLifeTutorialIds = [
   "second-life-oath",
 ];
 
+const hudHighlightTutorialIds = [
+  "tutorial-choice-state",
+  "second-life-four-metrics",
+  "second-life-metric-meanings",
+];
+
 export function App() {
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -83,6 +89,10 @@ export function App() {
   const hasStartedGame = Boolean(state.run || state.meta.runCount > 0);
   const shouldShowPhase2DebugLoad = import.meta.env.DEV;
   const shouldShowTrueEndingDebug = import.meta.env.DEV;
+  const shouldHighlightHud =
+    state.run?.currentEventId !== null &&
+    state.run?.currentEventId !== undefined &&
+    hudHighlightTutorialIds.includes(state.run.currentEventId);
   const shouldShowTopbar =
     state.appScene !== "title" &&
     state.appScene !== "run-event" &&
@@ -364,6 +374,7 @@ export function App() {
             state.appScene === "run-game-over" ? (
             state.run ? (
               <GameScreen
+                highlightHud={shouldHighlightHud}
                 viewModel={buildGameScreenViewModel(
                   state.run,
                   state.meta.runCount,
@@ -526,13 +537,23 @@ export function App() {
 
             <button
               aria-label="기억 조각 보기"
-              className="memory-dots-button"
+              className="memory-shard-button"
               onClick={() => setIsMemoryModalOpen(true)}
               type="button"
             >
-              <span />
-              <span />
-              <span />
+              <svg
+                aria-hidden="true"
+                className="memory-shard-button__icon"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8 3h5v3a2 2 0 1 0 4 0V3h4v6h-3a2 2 0 1 0 0 4h3v6h-5v-3a2 2 0 1 0-4 0v3H8v-5H5a2 2 0 1 1 0-4h3V3Z"
+                  stroke="currentColor"
+                  strokeLinejoin="round"
+                  strokeWidth="1.7"
+                />
+              </svg>
             </button>
           </div>
         </footer>
