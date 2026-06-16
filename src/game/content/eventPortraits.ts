@@ -35,6 +35,10 @@ export const fallbackPortrait: PortraitAsset = {
 };
 
 const portraitByEventId: Record<string, PortraitAsset> = {
+  "tutorial-fog-awakening": {
+    src: sajaPortraitImage,
+    alt: "Cheongryeong chasa portrait",
+  },
   "tutorial-afterlife-question": {
     src: sajaPortraitImage,
     alt: "Cheongryeong chasa portrait",

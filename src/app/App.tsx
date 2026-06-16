@@ -28,6 +28,7 @@ import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenView
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
 const firstLifeTutorialIds = [
+  "tutorial-fog-awakening",
   "tutorial-afterlife-question",
   "tutorial-chasa-request",
   "tutorial-employment-grudge",
@@ -50,8 +51,11 @@ const secondLifeTutorialIds = [
 
 const hudHighlightTutorialIds = [
   "tutorial-choice-state",
+  "tutorial-stat-threshold",
+  "tutorial-thirty-days",
   "second-life-four-metrics",
   "second-life-metric-meanings",
+  "second-life-too-high",
 ];
 
 export function App() {
@@ -544,14 +548,11 @@ export function App() {
               <svg
                 aria-hidden="true"
                 className="memory-shard-button__icon"
-                fill="none"
-                viewBox="0 0 24 24"
+                viewBox="0 0 48 48"
               >
                 <path
-                  d="M8 3h5v3a2 2 0 1 0 4 0V3h4v6h-3a2 2 0 1 0 0 4h3v6h-5v-3a2 2 0 1 0-4 0v3H8v-5H5a2 2 0 1 1 0-4h3V3Z"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="1.7"
+                  d="M25 2C21.704 2 19 4.704 19 8h-6.5C10.585 8 9 9.585 9 11.5V18c-3.296 0-6 2.704-6 6s2.704 6 6 6v6.5c0 1.915 1.585 3.5 3.5 3.5H19c0 3.296 2.704 6 6 6s6-2.704 6-6h6.5c1.915 0 3.5-1.585 3.5-3.5v-8a1.5 1.5 0 0 0-1.5-1.5H37c-1.674 0-3-1.326-3-3s1.326-3 3-3h2.5a1.5 1.5 0 0 0 1.5-1.5v-8C41 9.585 39.415 8 37.5 8H31c0-3.296-2.704-6-6-6Zm0 3c1.674 0 3 1.326 3 3v1.5a1.5 1.5 0 0 0 1.5 1.5h8c.295 0 .5.205.5.5V18h-1c-3.296 0-6 2.704-6 6s2.704 6 6 6h1v6.5c0 .295-.205.5-.5.5h-8a1.5 1.5 0 0 0-1.5 1.5V40c0 1.674-1.326 3-3 3s-3-1.326-3-3v-1.5a1.5 1.5 0 0 0-1.5-1.5h-8c-.295 0-.5-.205-.5-.5v-8a1.5 1.5 0 0 0-1.5-1.5H9c-1.674 0-3-1.326-3-3s1.326-3 3-3h1.5a1.5 1.5 0 0 0 1.5-1.5v-8c0-.295.205-.5.5-.5h8A1.5 1.5 0 0 0 22 9.5V8c0-1.674 1.326-3 3-3Z"
+                  fill="currentColor"
                 />
               </svg>
             </button>

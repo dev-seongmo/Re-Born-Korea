@@ -25,6 +25,25 @@ function makeTutorialChoice(params: {
 
 export const tutorialEvents: EventCard[] = [
   {
+    id: "tutorial-fog-awakening",
+    characterName: "???",
+    category: "tutorial",
+    phase: "early20s",
+    text: "눈앞에 안개가 자욱하다.\n\n흐린 시야 너머로 저승사자가 서 있다.\n아무 기억도 나지 않는다.",
+    choices: [
+      makeTutorialChoice({
+        id: "open-eyes",
+        label: "눈을 뜬다",
+        resultText: "낯선 목소리가 안개 너머에서 들려온다.",
+      }),
+      makeTutorialChoice({
+        id: "look-around",
+        label: "주위를 본다",
+        resultText: "낯선 목소리가 안개 너머에서 들려온다.",
+      }),
+    ],
+  },
+  {
     id: "tutorial-afterlife-question",
     characterName: "청령차사",
     category: "tutorial",
