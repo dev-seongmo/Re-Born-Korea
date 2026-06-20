@@ -133,9 +133,9 @@ button {
 .footer-bar__content {
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: end;
-  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
 }
 
 .footer-bar p {
@@ -147,7 +147,8 @@ button {
 
 .footer-bar__identity-block {
   display: grid;
-  gap: 8px;
+  align-content: center;
+  gap: 5px;
   min-width: 0;
 }
 
@@ -161,9 +162,24 @@ button {
   gap: 2px;
 }
 
-.footer-bar__dday {
-  font-size: 0.74rem;
-  color: #aab79f;
+.footer-bar__identity p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer-bar__calendar-slot {
+  min-width: 90px;
+  display: grid;
+  justify-items: start;
+}
+
+.footer-bar__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .footer-bar__settings-button,
@@ -191,6 +207,124 @@ button {
   height: 22px;
   display: block;
   color: #d4c9ba;
+}
+
+.dday-calendar {
+  position: relative;
+  width: 90px;
+  min-height: 66px;
+  display: grid;
+  grid-template-rows: 17px 1fr;
+  color: #1b1b18;
+  perspective: 520px;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
+}
+
+.dday-calendar__rings {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  display: flex;
+  gap: 34px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.dday-calendar__rings span {
+  width: 5px;
+  height: 10px;
+  border-radius: 999px;
+  background: #d4c9ba;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.dday-calendar__header {
+  display: grid;
+  place-items: center;
+  border-radius: 7px 7px 0 0;
+  background: #2f4b37;
+  color: #f5efe5;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.dday-calendar__page {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1px;
+  min-height: 49px;
+  border: 1px solid rgba(245, 239, 229, 0.32);
+  border-top: 0;
+  border-radius: 0 0 7px 7px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(226, 215, 190, 0.96)),
+    #ded3bd;
+  transform-origin: top center;
+  backface-visibility: hidden;
+}
+
+.dday-calendar__page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 52%);
+  pointer-events: none;
+}
+
+.dday-calendar__label {
+  position: relative;
+  color: rgba(27, 27, 24, 0.64);
+  font-size: 0.54rem;
+  font-weight: 700;
+}
+
+.dday-calendar strong {
+  position: relative;
+  color: #181b18;
+  font-size: 1.28rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.dday-calendar--warning .dday-calendar__header {
+  background: #7b6130;
+}
+
+.dday-calendar--warning .dday-calendar__page {
+  border-color: rgba(240, 205, 130, 0.52);
+}
+
+.dday-calendar--urgent .dday-calendar__header {
+  background: #7d3f3d;
+}
+
+.dday-calendar--urgent .dday-calendar__page {
+  border-color: rgba(224, 160, 154, 0.62);
+}
+
+.dday-calendar--flipping .dday-calendar__page {
+  animation: calendar-page-flip 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes calendar-page-flip {
+  0% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+
+  42% {
+    transform: rotateX(-74deg);
+    filter: brightness(0.88);
+  }
+
+  100% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
 }
 
 .memory-modal-backdrop {
@@ -2083,6 +2217,19 @@ button {
     gap: 2px;
   }
 
+  .footer-bar__content {
+    gap: 8px;
+  }
+
+  .footer-bar__calendar-slot {
+    min-width: 86px;
+  }
+
+  .dday-calendar {
+    width: 84px;
+    min-height: 62px;
+  }
+
   .swipe-card__text {
     font-size: 1.05rem;
   }
@@ -2093,7 +2240,8 @@ button {
   .swipe-stage,
   .atmosphere-layer__veil,
   .panel--hud-highlight,
-  .panel--hud-highlight .status-item {
+  .panel--hud-highlight .status-item,
+  .dday-calendar--flipping .dday-calendar__page {
     animation: none;
   }
 

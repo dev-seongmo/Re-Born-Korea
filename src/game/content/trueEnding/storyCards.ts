@@ -1,4 +1,5 @@
 import cheapLunchBoxImage from "../../../assets/images/characters/npc/cheap_lunch_box.png";
+import blueFireImage from "../../../assets/images/characters/npc/blue_fire.png";
 import extraShiftWorkImage from "../../../assets/images/characters/npc/extra_shift_work.png";
 import failedTextOnPhoneImage from "../../../assets/images/characters/npc/failed_text_on_phone.png";
 import memoImage from "../../../assets/images/characters/npc/memo.png";
@@ -64,6 +65,27 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     },
   },
   {
+    id: "true-ending-blue-soul-joseon",
+    characterName: "푸른 영혼",
+    imageSrc: blueFireImage,
+    text:
+      "오래되어 보이는 파란 불꽃 앞에 섰다.\n\n불꽃은 말없이 흔들렸다.\n그리고 아주 먼 시대의 청춘이 천천히 모습을 드러냈다.",
+    choices: {
+      left: {
+        id: "approach-joseon-soul",
+        label: "불꽃에 다가간다",
+        resultText:
+          "푸른 빛이 손끝에 닿았다.\n\n낡은 종이 냄새와 촛불 그림자가 눈앞에 번졌다.",
+      },
+      right: {
+        id: "watch-joseon-soul",
+        label: "잠시 바라본다",
+        resultText:
+          "불꽃 속에서 오래된 방 하나가 떠올랐다.\n\n누군가 밤새 자신이 누구인지 묻고 있었다.",
+      },
+    },
+  },
+  {
     id: "true-ending-joseon-exam",
     characterName: "조선의 청년",
     imageSrc: paperImage,
@@ -98,6 +120,27 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
         id: "accept-search",
         label: "찾아가는 중이구나",
         resultText: "정답보다 방향을 배워가는 중이었다.",
+      },
+    },
+  },
+  {
+    id: "true-ending-blue-soul-postwar",
+    characterName: "푸른 영혼",
+    imageSrc: blueFireImage,
+    text:
+      "오래되어 보이는 파란 불꽃 앞에 섰다.\n\n이번 불꽃은 먼지 낀 바람처럼 흔들렸다.\n무너진 시대의 청춘이 그 안에서 기다리고 있었다.",
+    choices: {
+      left: {
+        id: "approach-postwar-soul",
+        label: "불꽃에 다가간다",
+        resultText:
+          "발밑에서 마른 흙먼지가 일었다.\n\n살아남는 일이 먼저였던 시간이 열렸다.",
+      },
+      right: {
+        id: "listen-postwar-soul",
+        label: "소리를 듣는다",
+        resultText:
+          "불꽃 너머로 배고픈 하루와 접어둔 꿈의 소리가 들렸다.\n\n그래도 꺼지지 않은 마음이 있었다.",
       },
     },
   },
@@ -140,6 +183,27 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     },
   },
   {
+    id: "true-ending-blue-soul-industrial",
+    characterName: "푸른 영혼",
+    imageSrc: blueFireImage,
+    text:
+      "오래되어 보이는 파란 불꽃 앞에 섰다.\n\n불꽃은 새벽 공장의 불빛처럼 작게 떨렸다.\n누군가의 긴 노동과 작은 꿈이 그 안에 남아 있었다.",
+    choices: {
+      left: {
+        id: "approach-industrial-soul",
+        label: "불꽃에 다가간다",
+        resultText:
+          "차가운 새벽 공기가 폐 안으로 들어왔다.\n\n도시락 가방을 든 청춘의 등이 보였다.",
+      },
+      right: {
+        id: "hold-industrial-soul",
+        label: "빛을 붙잡는다",
+        resultText:
+          "푸른 빛이 손안에서 작게 흔들렸다.\n\n잊지 않으려 적어둔 문장 하나가 떠올랐다.",
+      },
+    },
+  },
+  {
     id: "true-ending-industrial-bus",
     characterName: "산업화 시대의 청년",
     imageSrc: extraShiftWorkImage,
@@ -174,6 +238,27 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
         id: "hold-name",
         label: "잊고 싶지 않아",
         resultText: "그 마음이 있으면 아직 끝난 게 아니었다.",
+      },
+    },
+  },
+  {
+    id: "true-ending-blue-soul-imf",
+    characterName: "푸른 영혼",
+    imageSrc: blueFireImage,
+    text:
+      "오래되어 보이는 파란 불꽃 앞에 섰다.\n\n이번 불꽃은 닫힌 문 앞에서 멈춘 숨처럼 흔들렸다.\n무너진 뒤에도 끝나지 않은 청춘이 그 안에 있었다.",
+    choices: {
+      left: {
+        id: "approach-imf-soul",
+        label: "불꽃에 다가간다",
+        resultText:
+          "정장 소매 끝이 구겨진 손 하나가 보였다.\n\n닫힌 문 앞에서도 삶은 계속되고 있었다.",
+      },
+      right: {
+        id: "wait-imf-soul",
+        label: "곁에 머문다",
+        resultText:
+          "푸른 불꽃은 서두르지 않았다.\n\n무너진 사람에게도 다시 숨을 고를 시간이 필요했다.",
       },
     },
   },

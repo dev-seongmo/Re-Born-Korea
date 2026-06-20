@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { preloadImage } from "../../assets/preload/imagePreloader";
 import { fallbackPortrait } from "../../game/content/eventPortraits";
 
 type Props = {
@@ -10,7 +11,18 @@ export function CardPortrait({ alt, src }: Props) {
   const [resolvedSrc, setResolvedSrc] = useState(src || fallbackPortrait.src);
 
   useEffect(() => {
-    setResolvedSrc(src || fallbackPortrait.src);
+    const nextSrc = src || fallbackPortrait.src;
+    let cancelled = false;
+
+    void preloadImage(nextSrc).then(() => {
+      if (!cancelled) {
+        setResolvedSrc(nextSrc);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [src]);
 
   return (

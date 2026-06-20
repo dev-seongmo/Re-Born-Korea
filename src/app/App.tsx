@@ -2,11 +2,14 @@
 import { useEffect, useReducer, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import idCardImage from "../assets/images/objects/id_card.png";
+import { preloadImagesWhenIdle } from "../assets/preload/imagePreloader";
 import { TrueEndingCreditsScreen } from "../components/ending/TrueEndingCreditsScreen";
 import { TrueEndingScreen } from "../components/ending/TrueEndingScreen";
 import { TrueEndingStoryScreen } from "../components/ending/TrueEndingStoryScreen";
 import { GameScreen } from "../components/game/GameScreen";
+import { DdayCalendar } from "../components/layout/DdayCalendar";
 import { SetupScreen } from "../components/setup/SetupScreen";
+import { getEventPortrait } from "../game/content/eventPortraits";
 import { prototypeEvents } from "../game/content/eventCards";
 import {
   countUnlockedDefinedMemoryShards,
@@ -58,6 +61,21 @@ const hudHighlightTutorialIds = [
   "second-life-too-high",
 ];
 
+function getTrueEndingImageSources() {
+  return [
+    ...trueEndingStoryCards.map((card) => card.imageSrc),
+    ...trueEndingCredits.items.flatMap((item) =>
+      item.type === "message" ? [] : [item.imageSrc],
+    ),
+  ];
+}
+
+function getPrototypeEventImageSources() {
+  return prototypeEvents.map(
+    (event) => event.imageSrc ?? getEventPortrait(event).src,
+  );
+}
+
 export function App() {
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -82,10 +100,10 @@ export function App() {
       : null;
 
   const footerName = state.run?.profile.name ?? "";
-  const footerDday =
+  const footerDaysLeft =
     state.run && Number.isFinite(state.run.maxTurns)
-      ? `D-${Math.max(state.run.maxTurns - state.run.turn - 1, 0)}`
-      : "";
+      ? Math.max(state.run.maxTurns - state.run.turn - 1, 0)
+      : null;
   const lifeCount =
     state.run || state.meta.runCount > 0
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
@@ -136,6 +154,32 @@ export function App() {
   useEffect(() => {
     persistGameState(state);
   }, [state]);
+
+  useEffect(() => {
+    if (
+      state.appScene !== "true-ending" &&
+      state.appScene !== "true-ending-story" &&
+      state.appScene !== "true-ending-credits"
+    ) {
+      return undefined;
+    }
+
+    return preloadImagesWhenIdle(getTrueEndingImageSources(), {
+      batchSize: 5,
+      timeout: 800,
+    });
+  }, [state.appScene]);
+
+  useEffect(() => {
+    if (!state.run) {
+      return undefined;
+    }
+
+    return preloadImagesWhenIdle(getPrototypeEventImageSources(), {
+      batchSize: 3,
+      timeout: 1500,
+    });
+  }, [Boolean(state.run)]);
 
   function handlePrimaryTitleAction() {
     if (state.run) {
@@ -501,61 +545,68 @@ export function App() {
       {shouldShowFooter ? (
         <footer className="footer-bar">
           <div className="footer-bar__content">
+            <div className="footer-bar__calendar-slot">
+              {footerDaysLeft !== null ? (
+                <DdayCalendar daysLeft={footerDaysLeft} />
+              ) : null}
+            </div>
+
             <div className="footer-bar__identity-block">
               <p className="footer-bar__life">{lifeCount}</p>
               <div className="footer-bar__identity">
                 <p>{footerName}</p>
-                <p className="footer-bar__dday">{footerDday}</p>
               </div>
             </div>
 
-            <button
-              aria-label="설정"
-              className="footer-bar__settings-button"
-              onClick={() => setIsSettingsModalOpen(true)}
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                className="footer-bar__settings-icon"
-                viewBox="0 0 24 24"
+            <div className="footer-bar__actions">
+              <button
+                aria-label="기억 조각 보기"
+                className="memory-shard-button"
+                onClick={() => setIsMemoryModalOpen(true)}
+                type="button"
               >
-                <path
-                  d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                />
-                <circle
-                  cx="12"
-                  cy="12"
-                  fill="none"
-                  r="3.2"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </button>
+                <svg
+                  aria-hidden="true"
+                  className="memory-shard-button__icon"
+                  viewBox="0 0 48 48"
+                >
+                  <path
+                    d="M25 2C21.704 2 19 4.704 19 8h-6.5C10.585 8 9 9.585 9 11.5V18c-3.296 0-6 2.704-6 6s2.704 6 6 6v6.5c0 1.915 1.585 3.5 3.5 3.5H19c0 3.296 2.704 6 6 6s6-2.704 6-6h6.5c1.915 0 3.5-1.585 3.5-3.5v-8a1.5 1.5 0 0 0-1.5-1.5H37c-1.674 0-3-1.326-3-3s1.326-3 3-3h2.5a1.5 1.5 0 0 0 1.5-1.5v-8C41 9.585 39.415 8 37.5 8H31c0-3.296-2.704-6-6-6Zm0 3c1.674 0 3 1.326 3 3v1.5a1.5 1.5 0 0 0 1.5 1.5h8c.295 0 .5.205.5.5V18h-1c-3.296 0-6 2.704-6 6s2.704 6 6 6h1v6.5c0 .295-.205.5-.5.5h-8a1.5 1.5 0 0 0-1.5 1.5V40c0 1.674-1.326 3-3 3s-3-1.326-3-3v-1.5a1.5 1.5 0 0 0-1.5-1.5h-8c-.295 0-.5-.205-.5-.5v-8a1.5 1.5 0 0 0-1.5-1.5H9c-1.674 0-3-1.326-3-3s1.326-3 3-3h1.5a1.5 1.5 0 0 0 1.5-1.5v-8c0-.295.205-.5.5-.5h8A1.5 1.5 0 0 0 22 9.5V8c0-1.674 1.326-3 3-3Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
 
-            <button
-              aria-label="기억 조각 보기"
-              className="memory-shard-button"
-              onClick={() => setIsMemoryModalOpen(true)}
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                className="memory-shard-button__icon"
-                viewBox="0 0 48 48"
+              <button
+                aria-label="설정"
+                className="footer-bar__settings-button"
+                onClick={() => setIsSettingsModalOpen(true)}
+                type="button"
               >
-                <path
-                  d="M25 2C21.704 2 19 4.704 19 8h-6.5C10.585 8 9 9.585 9 11.5V18c-3.296 0-6 2.704-6 6s2.704 6 6 6v6.5c0 1.915 1.585 3.5 3.5 3.5H19c0 3.296 2.704 6 6 6s6-2.704 6-6h6.5c1.915 0 3.5-1.585 3.5-3.5v-8a1.5 1.5 0 0 0-1.5-1.5H37c-1.674 0-3-1.326-3-3s1.326-3 3-3h2.5a1.5 1.5 0 0 0 1.5-1.5v-8C41 9.585 39.415 8 37.5 8H31c0-3.296-2.704-6-6-6Zm0 3c1.674 0 3 1.326 3 3v1.5a1.5 1.5 0 0 0 1.5 1.5h8c.295 0 .5.205.5.5V18h-1c-3.296 0-6 2.704-6 6s2.704 6 6 6h1v6.5c0 .295-.205.5-.5.5h-8a1.5 1.5 0 0 0-1.5 1.5V40c0 1.674-1.326 3-3 3s-3-1.326-3-3v-1.5a1.5 1.5 0 0 0-1.5-1.5h-8c-.295 0-.5-.205-.5-.5v-8a1.5 1.5 0 0 0-1.5-1.5H9c-1.674 0-3-1.326-3-3s1.326-3 3-3h1.5a1.5 1.5 0 0 0 1.5-1.5v-8c0-.295.205-.5.5-.5h8A1.5 1.5 0 0 0 22 9.5V8c0-1.674 1.326-3 3-3Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
+                <svg
+                  aria-hidden="true"
+                  className="footer-bar__settings-icon"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M10.6 2.9h2.8l.5 2.3c.6.2 1.1.4 1.6.7l2.1-1.1 2 2-1.1 2.1c.3.5.5 1 .7 1.6l2.3.5v2.8l-2.3.5c-.2.6-.4 1.1-.7 1.6l1.1 2.1-2 2-2.1-1.1c-.5.3-1 .5-1.6.7l-.5 2.3h-2.8l-.5-2.3c-.6-.2-1.1-.4-1.6-.7l-2.1 1.1-2-2 1.1-2.1c-.3-.5-.5-1-.7-1.6l-2.3-.5v-2.8l2.3-.5c.2-.6.4-1.1.7-1.6L4.5 6.8l2-2 2.1 1.1c.5-.3 1-.5 1.6-.7z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    fill="none"
+                    r="3.2"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </footer>
       ) : null}

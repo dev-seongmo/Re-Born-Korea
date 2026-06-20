@@ -99,7 +99,7 @@ export const moneyEvents: EventCard[] = [
     choices: [
       {
         id: "keep-one-good-meal",
-        label: "한 끼는 챙긴다",
+        label: "한 끼는 외식한다",
         immediate: { money: -1, mental: 2 },
         selfTrustDelta: 3,
         primaryStat: "mental",
