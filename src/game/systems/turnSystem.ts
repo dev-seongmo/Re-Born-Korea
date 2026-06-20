@@ -7,7 +7,6 @@ import type {
   TendencyScores,
   VisibleMetrics,
 } from "../core/gameTypes";
-import { isGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
 import {
   amplifyMetricDelta,
   amplifySelfTrustDelta,
@@ -127,11 +126,7 @@ export function resolveTurn(params: {
     memoryTags: nextMemoryTags,
     tendencyScores: nextTendencies,
     relationshipEffect: choice.relationshipEffect,
-    nextScene: gameOverReason
-      ? isGameOverFinalEventId(event.id)
-        ? "game-over"
-        : "game-over-final"
-      : getNextScene(session),
+    nextScene: gameOverReason ? "game-over" : getNextScene(session),
     gameOverReason,
   };
 }

@@ -26,16 +26,16 @@ export const defaultLoopTutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "청령차사가 없다.\n\n다음 영혼으로 가자.",
+    text: "......",
     choices: [
       makeDefaultTutorialChoice({
         id: "move-to-next-soul",
-        label: "다음으로 간다",
+        label: "다음 영혼으로...",
         resultText: "이번 삶도 다시 시작된다.",
       }),
       makeDefaultTutorialChoice({
         id: "start-without-hesitation",
-        label: "바로 시작한다",
+        label: "다음 영혼으로...",
         resultText: "이번 삶도 다시 시작된다.",
       }),
     ],

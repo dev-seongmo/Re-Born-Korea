@@ -54,6 +54,11 @@ const metricDisplayLabels: Record<VisibleMetricKey, string> = {
   mental: "Mental",
 };
 
+const gameOverBoundaryLabels = {
+  zero: "고갈",
+  max: "초과",
+} as const;
+
 const FOG_CLEARING_TUTORIAL_EVENT_ID = "tutorial-fog-clears";
 
 function getEventAtmosphere(eventId: string): AtmosphereEffect | undefined {
@@ -142,7 +147,7 @@ function buildResolveChoice(
           ? {
               ...resolvedTurn,
               consumesTurn: false,
-              nextScene: resolvedTurn.gameOverReason ? "game-over-final" : "event",
+              nextScene: resolvedTurn.gameOverReason ? "game-over" : "event",
             }
           : event.id === lastInterviewEventId
             ? {
@@ -247,12 +252,12 @@ export function buildGameScreenViewModel(
     return {
       statusItems,
       gameOverPanel: {
-        eyebrow: "Run Terminated",
-        title: gameOver.title,
-        summary: gameOver.summary,
+        eyebrow: "Game Over",
+        title: "Bad Ending",
+        summary: `${metricDisplayLabels[gameOver.metric]} ${
+          gameOverBoundaryLabels[gameOver.boundary]
+        }`,
         description: gameOver.description,
-        metricLabel: metricDisplayLabels[gameOver.metric],
-        metricValue: session.metrics[gameOver.metric],
         nextLabel: gameOver.restartLabel,
         onContinue: () =>
           dispatch({

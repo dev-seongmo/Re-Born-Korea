@@ -2,7 +2,6 @@ import type { EventCard } from "../../core/gameTypes";
 import { comparisonEvents } from "./comparison";
 import { familyEvents } from "./family";
 import { friendshipEvents } from "./friendship";
-import { gameOverFinalEvents } from "./gameOverFinalEvents";
 import {
   girlfriendEventSchedule,
   girlfriendEvents,
@@ -35,9 +34,7 @@ export const prototypeEvents: EventCard[] = [
 ];
 
 const eventRegistry = new Map(
-  [...prototypeEvents, ...gameOverFinalEvents].map(
-    (event) => [event.id, event] as const,
-  ),
+  prototypeEvents.map((event) => [event.id, event] as const),
 );
 
 export const tutorialEventIds = tutorialEvents.map((event) => event.id);

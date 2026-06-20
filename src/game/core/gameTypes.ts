@@ -3,7 +3,6 @@ export type RunScene =
   | "event"
   | "result"
   | "ending"
-  | "game-over-final"
   | "game-over";
 
 export type AppScene =

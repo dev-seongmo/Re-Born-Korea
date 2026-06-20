@@ -1757,13 +1757,21 @@ button {
     #120b10;
 }
 
-.message-result--game-over .message-result__bubble {
-  background: rgba(94, 42, 50, 0.32);
-  border-color: rgba(241, 132, 132, 0.2);
-}
-
 .message-result__bubble p {
   margin: 0;
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.message-result__description {
+  display: grid;
+  gap: 8px;
+}
+
+.message-result__description p {
+  margin: 0;
+  color: #d8d0c8;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-size: 0.95rem;
   line-height: 1.7;

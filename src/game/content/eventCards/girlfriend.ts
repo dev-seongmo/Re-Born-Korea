@@ -96,7 +96,7 @@ export const girlfriendEvents: EventCard[] = [
     choices: [
       {
         id: "confess-honestly",
-        label: "솔직히 말한다",
+        label: "호감을 표현한다",
         immediate: { mental: -1, reputation: 1 },
         selfTrustDelta: 5,
         primaryStat: "mental",

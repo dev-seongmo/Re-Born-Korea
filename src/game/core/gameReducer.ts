@@ -7,7 +7,6 @@ import {
   drawNextPrototypeEventId,
   isFirstClearTutorialEventId,
 } from "../content/eventCards";
-import { getGameOverFinalEventId } from "../content/eventCards/gameOverFinalEvents";
 import { runConfig } from "../config/runConfig";
 import { clampMetric } from "../systems/metricSystem";
 import {
@@ -38,8 +37,6 @@ function toAppScene(scene: RunScene): GameState["appScene"] {
       return "run-result";
     case "ending":
       return "run-ending";
-    case "game-over-final":
-      return "run-event";
     case "game-over":
       return "run-game-over";
     default:
@@ -218,11 +215,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...run,
           scene: action.payload.nextScene,
           turn: run.turn + (action.payload.consumesTurn === false ? 0 : 1),
-          currentEventId:
-            action.payload.nextScene === "game-over-final" &&
-            action.payload.gameOverReason
-              ? getGameOverFinalEventId(action.payload.gameOverReason)
-              : action.payload.eventId,
+          currentEventId: action.payload.eventId,
           eventHistory: [...run.eventHistory, action.payload.eventId],
           latestResult: action.payload.result,
           gameOverReason: action.payload.gameOverReason ?? null,

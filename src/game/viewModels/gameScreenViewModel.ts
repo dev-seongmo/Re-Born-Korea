@@ -23,8 +23,6 @@ export type GameOverPanelViewModel = {
   title: string;
   summary: string;
   description: string[];
-  metricLabel: string;
-  metricValue: number;
   nextLabel: string;
   onContinue: () => void;
 };
