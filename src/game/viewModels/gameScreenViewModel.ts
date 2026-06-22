@@ -1,7 +1,7 @@
-import type { EventCard, EventChoice } from "../core/gameTypes";
+import type { EventCard, EventChoice, VisibleMetricKey } from "../core/gameTypes";
 
 export type StatusItemViewModel = {
-  key: string;
+  key: VisibleMetricKey;
   label: string;
   value: number;
 };

@@ -20,6 +20,7 @@ type Props = {
   continueLabel?: string;
   disabled?: boolean;
   onContinue?: () => void;
+  onPreviewChoiceChange?: (choice: EventChoice | null) => void;
   onResolve: (choice: EventChoice) => void;
 };
 
@@ -51,6 +52,7 @@ export function SwipeChoiceCard({
   continueLabel,
   disabled = false,
   onContinue,
+  onPreviewChoiceChange,
   onResolve,
 }: Props) {
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -62,6 +64,7 @@ export function SwipeChoiceCard({
   const autoDemoStoppedRef = useRef(false);
   const hiddenDelayRef = useRef<number | null>(null);
   const pendingActionRef = useRef<(() => void) | null>(null);
+  const previewDirectionRef = useRef<SwipeDirection>(null);
   const [dragX, setDragX] = useState(0);
   const [demoDragX, setDemoDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -101,8 +104,38 @@ export function SwipeChoiceCard({
       if (hiddenDelayRef.current !== null) {
         window.clearTimeout(hiddenDelayRef.current);
       }
+      onPreviewChoiceChange?.(null);
     };
-  }, []);
+  }, [onPreviewChoiceChange]);
+
+  useEffect(() => {
+    const previewDirection = disabled || phase !== "idle" ? null : direction;
+
+    if (previewDirectionRef.current === previewDirection) {
+      return;
+    }
+
+    previewDirectionRef.current = previewDirection;
+
+    if (previewDirection === "right") {
+      onPreviewChoiceChange?.(rightChoice);
+      return;
+    }
+
+    if (previewDirection === "left") {
+      onPreviewChoiceChange?.(leftChoice);
+      return;
+    }
+
+    onPreviewChoiceChange?.(null);
+  }, [
+    direction,
+    disabled,
+    leftChoice,
+    onPreviewChoiceChange,
+    phase,
+    rightChoice,
+  ]);
 
   useEffect(() => {
     function handleWindowKeyDown(eventObject: KeyboardEvent) {
@@ -178,6 +211,8 @@ export function SwipeChoiceCard({
     resolveLockRef.current = true;
     pendingActionRef.current = afterExit;
     autoDemoStoppedRef.current = true;
+    previewDirectionRef.current = null;
+    onPreviewChoiceChange?.(null);
     setIsDragging(false);
     setDemoDragX(0);
     setPhase("exiting");

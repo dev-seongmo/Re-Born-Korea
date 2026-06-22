@@ -4,6 +4,7 @@ import type {
   RollOutcomeSet,
   VisibleMetricKey,
 } from "../core/gameTypes";
+import { LARGE_METRIC_PREVIEW_DELTA_THRESHOLD } from "../config/previewConfig";
 
 const METRIC_DELTA_MULTIPLIER = 3;
 const SELF_TRUST_MULTIPLIER = 2.5;
@@ -53,6 +54,17 @@ export type ChoiceImpactPreview = {
   selfTrustDelta: number;
 };
 
+export type MetricPreviewIntensity = "normal" | "large";
+
+export type MetricPreviewMap = Partial<Record<VisibleMetricKey, MetricPreviewIntensity>>;
+
+const visibleMetricKeys: VisibleMetricKey[] = [
+  "spec",
+  "money",
+  "reputation",
+  "mental",
+];
+
 function collectPossibleOutcomeDelta(results: RollOutcomeSet): MetricDelta {
   const aggregate: Record<VisibleMetricKey, number> = {
     spec: 0,
@@ -101,4 +113,33 @@ export function buildChoiceImpactPreview(choice: EventChoice): ChoiceImpactPrevi
     possible: toPreviewItems(collectPossibleOutcomeDelta(choice.results)),
     selfTrustDelta: amplifySelfTrustDelta(choice.selfTrustDelta),
   };
+}
+
+export function buildMetricPreviewMap(choice: EventChoice): MetricPreviewMap {
+  const immediate = amplifyMetricDelta(choice.immediate);
+  const outcomes = Object.values(choice.results);
+  const previewMap: MetricPreviewMap = {};
+
+  visibleMetricKeys.forEach((key) => {
+    const possibleTotals = outcomes.map((outcome) => {
+      const outcomeDelta = amplifyMetricDelta(outcome.delta ?? {});
+      return (immediate[key] ?? 0) + (outcomeDelta[key] ?? 0);
+    });
+    const hasImpact = possibleTotals.some((delta) => delta !== 0);
+
+    if (!hasImpact) {
+      return;
+    }
+
+    const maxAbsoluteDelta = Math.max(
+      ...possibleTotals.map((delta) => Math.abs(delta)),
+    );
+
+    previewMap[key] =
+      maxAbsoluteDelta >= LARGE_METRIC_PREVIEW_DELTA_THRESHOLD
+        ? "large"
+        : "normal";
+  });
+
+  return previewMap;
 }
