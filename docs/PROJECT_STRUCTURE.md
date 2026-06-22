@@ -10,8 +10,8 @@ Think of the project as four layers:
 content -> systems -> view models -> components
 ```
 
-- `content`: event data, tutorials, endings, fragments
-- `systems`: turn resolution, interview scoring, unlock logic
+- `content`: event data, tutorials, endings, memory shards, true-ending story content
+- `systems`: turn resolution, roll/balance logic, ending selection, unlock scaffolding
 - `view models`: convert game state into screen-ready props
 - `components`: render the actual UI
 
@@ -27,7 +27,7 @@ content -> systems -> view models -> components
 - encyclopedia scene
 - run scenes
 - memory hub
-- true ending placeholder
+- true ending intro/story/credits scenes
 - settings and modal UI
 - persistence lifecycle
 
@@ -47,6 +47,7 @@ GameState = {
   appScene,
   run,
   meta,
+  trueEndingProgress,
 }
 ```
 
@@ -67,6 +68,8 @@ Current life only:
 Persistent multi-life progress:
 - runCount
 - successCount
+- isFirstCleared
+- pendingFirstClearTutorial
 - unlockedMemoryShardIds
 - unlockedCardIds
 - seenEndingIds
@@ -80,6 +83,9 @@ This split is important because the project is no longer a one-run prototype onl
 ### Event Content
 - `src/game/content/eventCards/tutorial.ts`
 - `src/game/content/eventCards/tutorial_second.ts`
+- `src/game/content/eventCards/tutorial_first_clear.ts`
+- `src/game/content/eventCards/tutorial_default.ts`
+- `src/game/content/eventCards/girlfriend.ts`
 - `src/game/content/eventCards/interview.ts`
 - `src/game/content/eventCards/comparison.ts`
 - `src/game/content/eventCards/family.ts`
@@ -91,17 +97,24 @@ This split is important because the project is no longer a one-run prototype onl
 - `src/game/content/eventCards/index.ts`
 
 ### Other Content
-- `src/game/content/memoryShards.ts`
+- `src/game/content/memoryShards/index.ts`
 - `src/game/content/unlockCards.ts`
 - `src/game/content/eventPortraits.ts`
 - `src/game/content/endings.ts`
 - `src/game/content/archetypes.ts`
+- `src/game/content/trueEnding/intro.ts`
+- `src/game/content/trueEnding/storyCards.ts`
+- `src/game/content/trueEnding/credits.ts`
 
 ### Current Meaning
 - `tutorial.ts`: first-life intro flow
 - `tutorial_second.ts`: second-life intro flow
+- `tutorial_first_clear.ts`: short tutorial flow after the first employment clear
+- `tutorial_default.ts`: default one-card loop intro for later lives
+- `girlfriend.ts`: scheduled phase-2 relationship events after first clear
 - general event files: main replayable event pool
-- `interview.ts`: fixed final event
+- `interview.ts`: fixed final interview event chain
+- `trueEnding/*`: dedicated true-ending intro, story cards, and credits content
 
 ## 5. Event Flow Selection
 
@@ -112,12 +125,15 @@ This file currently decides:
 - which tutorial set is active
 - how events are registered
 - how the next event is drawn
+- whether a scheduled girlfriend event should appear after first clear
 - which event is the final interview
 
 ### Current Rule
 - completed runs `0`: first tutorial set
 - completed runs `1`: second tutorial set
-- completed runs `2+`: no tutorial
+- pending first-clear tutorial: first-clear tutorial set
+- completed runs `2+`: default loop tutorial set
+- phase 2 unlocked: scheduled girlfriend events can appear when their turn/status rule matches
 
 ### Planned Extension
 This same area is the right place to later inject:
@@ -131,17 +147,26 @@ This same area is the right place to later inject:
 - `src/game/systems/turnSystem.ts`
 - `src/game/systems/rollSystem.ts`
 - `src/game/systems/metricSystem.ts`
-- `src/game/systems/interviewSystem.ts`
+- `src/game/systems/gameOverSystem.ts`
 - `src/game/systems/endingSystem.ts`
+- `src/game/systems/balanceSystem.ts`
+- `src/game/systems/identitySystem.ts`
+- `src/game/systems/selfTrustSystem.ts`
 - `src/game/systems/unlockSystem.ts`
 
 ### What they do
 - `turnSystem.ts`: resolves a choice into stat changes and result text
 - `rollSystem.ts`: determines bad/mixed/good outcome bands
 - `metricSystem.ts`: clamps numeric values
-- `interviewSystem.ts`: evaluates final employment success
+- `gameOverSystem.ts`: detects metric boundary failures
 - `endingSystem.ts`: chooses ending text
+- `balanceSystem.ts`: amplifies deltas and builds impact previews
+- `identitySystem.ts`: derives identity stage from stats and tendencies
+- `selfTrustSystem.ts`: applies self-trust changes
 - `unlockSystem.ts`: placeholder for future choice-driven collectible card unlocks
+
+### Current Interview Reality
+There is no separate `interviewSystem.ts` yet. The final interview is modeled as a fixed chain of interview events, and reaching the end of the run currently produces an `employed` outcome in the game-screen view model.
 
 ### Planned Memory Fragment Logic
 When the turn-15 fragment chain is implemented, it should be handled through a dedicated system rather than hardcoded inside UI components.
@@ -170,6 +195,8 @@ Important examples:
 - current D-day label
 - whether the run is showing event, result, or ending
 - what current card portrait and name should be
+- final employment message presentation
+- dispatch handlers for resolving choices, continuing results, and completing runs
 
 ### Important Note
 The result card has already been collapsed into the same event-card flow, but run state still keeps a `result` scene internally.
@@ -213,6 +240,8 @@ This means all new meta features should be designed assuming they persist across
 The event encyclopedia is app-scene based and shows:
 - first-life tutorials
 - second-life tutorials
+- first-clear tutorials
+- default loop tutorials
 - normal events
 - final interview
 
@@ -251,7 +280,8 @@ nextFragmentIndex: 0 | 1 | 2 | 3
 - dedicated system, not the component layer
 
 #### True ending event chain
-- should be modeled as event content, not a one-off paragraph screen
+- current implementation uses dedicated true-ending intro/story/credits screens
+- planned event-style true-ending route would replace or refactor that dedicated flow
 
 ## 12. Recommended Next Structural Additions
 
@@ -262,15 +292,17 @@ To support the next planned flow cleanly, the next additions should be:
 - `meta.collectedStoryFragmentIds`
 - `src/game/content/eventCards/memoryFragments.ts`
 - `src/game/systems/memoryFragmentSystem.ts`
-- a true-ending event content file
+- a true-ending event content file if the current dedicated true-ending screens are converted to card/event flow
 
 ## 13. Current Reality vs Planned Direction
 
 ### Already Implemented
 - repeated lives
-- two tutorial variants
-- employment survival loop
+- first-life, second-life, first-clear, and default loop tutorial variants
+- employment survival loop to a fixed successful interview outcome
 - memory shard meta persistence
+- scheduled phase-2 girlfriend events after first clear
+- dedicated true-ending intro/story/credits screens
 - unlock-card scaffolding
 - encyclopedia page
 
@@ -279,5 +311,6 @@ To support the next planned flow cleanly, the next additions should be:
 - ordered fragment collection
 - girlfriend/friend/family fragment route
 - event-style true ending chain
+- separate interview success/failure scoring system
 
 Keep this distinction in mind when editing future docs and content.

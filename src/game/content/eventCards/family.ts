@@ -10,7 +10,7 @@ export const familyEvents: EventCard[] = [
       {
         id: "set-boundary-softly",
         label: "불편하다고 말한다",
-        immediate: { reputation: -1, mental: 2 },
+        immediate: { reputation: -1, mental: 1 },
         selfTrustDelta: 4,
         primaryStat: "mental",
         modifier: 0,
@@ -23,14 +23,14 @@ export const familyEvents: EventCard[] = [
           },
           good: {
             text: "작은 경계선 하나가 너를 꽤 많이 지켜줬다.",
-            delta: { mental: 1, reputation: 1 },
+            delta: { reputation: 1 },
           },
         },
       },
       {
         id: "laugh-it-off",
         label: "웃고 넘긴다",
-        immediate: { reputation: 2, mental: -2 },
+        immediate: { reputation: 2, mental: -1 },
         selfTrustDelta: -3,
         primaryStat: "reputation",
         modifier: 1,
@@ -38,7 +38,6 @@ export const familyEvents: EventCard[] = [
         results: {
           bad: {
             text: "집에 돌아와서야 그 웃음이 다 네 몫이었음을 알았다.",
-            delta: { mental: -2 },
           },
           mixed: { text: "분위기는 지켰지만 네 안쪽은 조금 작아졌다." },
           good: {
@@ -58,7 +57,7 @@ export const familyEvents: EventCard[] = [
       {
         id: "go-home-strategically",
         label: "잠깐 돌아간다",
-        immediate: { money: 4, reputation: -1, mental: 1 },
+        immediate: { money: 4, reputation: -1 },
         selfTrustDelta: 3,
         primaryStat: "money",
         modifier: 0,
@@ -73,14 +72,14 @@ export const familyEvents: EventCard[] = [
           },
           good: {
             text: "네가 살기 위한 결정이 네 기준을 더 분명하게 만들었다.",
-            delta: { money: 2, mental: 1 },
+            delta: { money: 2 },
           },
         },
       },
       {
         id: "hold-rented-room",
         label: "독립을 고집한다",
-        immediate: { money: -4, reputation: 1, mental: -1 },
+        immediate: { money: -4, reputation: 1 },
         selfTrustDelta: 0,
         primaryStat: "money",
         modifier: -1,
@@ -88,7 +87,7 @@ export const familyEvents: EventCard[] = [
         results: {
           bad: {
             text: "독립은 지켰지만 생활은 더 가팔라졌다.",
-            delta: { money: -2, mental: -1 },
+            delta: { money: -2 },
           },
           mixed: { text: "버티고는 있지만, 계산기는 더 자주 켜진다." },
           good: {

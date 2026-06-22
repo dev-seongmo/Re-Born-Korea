@@ -45,11 +45,11 @@ export const recoveryEvents: EventCard[] = [
     id: "old-hobby-folder",
     category: "recovery",
     phase: "mid20s",
-    text: "예전에 좋아했던 취미 폴더를 우연히 열었다. 한때는 이게 그렇게 좋았다.",
+    text: "방 한쪽에 오래 세워둔 기타가 눈에 들어온다. 줄은 조금 녹슬었지만, 한때는 이 소리가 그렇게 좋았다.",
     choices: [
       {
         id: "return-to-hobby",
-        label: "다시 해본다",
+        label: "기타를 다시 쳐본다",
         immediate: { mental: 3, spec: -1 },
         selfTrustDelta: 5,
         primaryStat: "mental",
@@ -58,18 +58,18 @@ export const recoveryEvents: EventCard[] = [
         tendencyTags: ["selfTrust", "mental"],
         results: {
           bad: {
-            text: "오래 하진 못했어도 네 안에 아직 남아 있는 무언가를 확인했다.",
+            text: "손끝은 어색했고 코드는 자꾸 끊겼지만, 네 안에 아직 남아 있는 소리를 확인했다.",
           },
-          mixed: { text: "쓸모와 상관없이 좋은 것이 있다는 사실이 조금 돌아왔다." },
+          mixed: { text: "완벽하진 않아도 방 안에 짧은 멜로디가 돌아왔다." },
           good: {
-            text: "좋아했던 감각이 다시 손끝에 닿자 너도 조금 돌아왔다.",
+            text: "오래 잊고 있던 리듬이 손끝에 닿자 너도 조금 돌아왔다.",
             delta: { mental: 2 },
           },
         },
       },
       {
         id: "close-folder",
-        label: "폴더를 닫는다",
+        label: "그냥 지나친다",
         immediate: { spec: 1, mental: -1 },
         selfTrustDelta: -3,
         primaryStat: "spec",
@@ -77,11 +77,11 @@ export const recoveryEvents: EventCard[] = [
         tendencyTags: ["spec", "comparison"],
         results: {
           bad: {
-            text: "쓸모없는 것은 먼저 버린다, 라는 규칙이 너를 더 좁게 만들었다.",
+            text: "쓸모없는 것은 나중에 한다는 규칙이 너를 조금 더 좁게 만들었다.",
             delta: { mental: -2 },
           },
-          mixed: { text: "현실적이었지만 조금 서늘했다." },
-          good: { text: "오늘은 넘겼지만 폴더를 닫는 손이 조금 오래 남았다." },
+          mixed: { text: "현실적이었지만 방 한쪽이 조금 더 조용해졌다." },
+          good: { text: "오늘은 넘겼지만 기타를 지나친 손이 조금 오래 남았다." },
         },
       },
     ],

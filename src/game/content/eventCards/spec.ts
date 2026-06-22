@@ -10,17 +10,16 @@ export const specEvents: EventCard[] = [
       {
         id: "wait-and-check",
         label: "먼저 따져본다",
-        immediate: { mental: 1 },
+        immediate: {},
         selfTrustDelta: 3,
-        primaryStat: "mental",
+        primaryStat: "spec",
         modifier: 0,
-        tendencyTags: ["selfTrust", "mental"],
+        tendencyTags: ["selfTrust"],
         results: {
           bad: { text: "당장 시작하진 않았지만 그 멈춤은 도망만은 아니었다." },
           mixed: { text: "필요한 것과 불안한 것을 구분하려는 시도가 생겼다." },
           good: {
             text: "모든 기회가 네 것이어야 하는 건 아니라는 걸 배웠다.",
-            delta: { mental: 1 },
           },
         },
       },
@@ -35,7 +34,6 @@ export const specEvents: EventCard[] = [
         results: {
           bad: {
             text: "강의는 시작했지만 네 체력은 이미 뒤처지고 있었다.",
-            delta: { mental: -2 },
           },
           mixed: { text: "뭔가 하고 있다는 안도는 있었지만 여유는 더 사라졌다." },
           good: {
@@ -55,7 +53,7 @@ export const specEvents: EventCard[] = [
       {
         id: "split-work-rest",
         label: "반나절만 한다",
-        immediate: { spec: 1, mental: 1 },
+        immediate: { spec: 1 },
         selfTrustDelta: 3,
         primaryStat: "spec",
         modifier: 0,
@@ -65,14 +63,14 @@ export const specEvents: EventCard[] = [
           mixed: { text: "속도는 느렸지만 균형은 조금 더 나아졌다." },
           good: {
             text: "덜 무너지는 방식이 결국 더 오래 가는 방식이 되었다.",
-            delta: { mental: 1, spec: 1 },
+            delta: { spec: 1 },
           },
         },
       },
       {
         id: "grind-weekend",
         label: "주말을 갈아넣는다",
-        immediate: { spec: 3, mental: -3 },
+        immediate: { spec: 3, mental: -1 },
         selfTrustDelta: -2,
         primaryStat: "spec",
         modifier: 1,
@@ -80,7 +78,6 @@ export const specEvents: EventCard[] = [
         results: {
           bad: {
             text: "분량은 늘었지만 너는 점점 작업물 밖에서 사라졌다.",
-            delta: { mental: -2 },
           },
           mixed: { text: "성과는 있었고, 회복은 미뤄졌다." },
           good: {
@@ -100,7 +97,7 @@ export const specEvents: EventCard[] = [
       {
         id: "rewrite-in-my-voice",
         label: "내 말로 고친다",
-        immediate: { spec: 1, mental: 1 },
+        immediate: { spec: 1 },
         selfTrustDelta: 4,
         primaryStat: "spec",
         modifier: 0,
@@ -114,14 +111,14 @@ export const specEvents: EventCard[] = [
           },
           good: {
             text: "네 언어로 쓴 문장이 오히려 더 오래 남을 무게를 얻었다.",
-            delta: { spec: 1, mental: 1 },
+            delta: { spec: 1 },
           },
         },
       },
       {
         id: "submit-fast",
         label: "그대로 낸다",
-        immediate: { spec: 2, mental: -1 },
+        immediate: { spec: 2 },
         selfTrustDelta: -2,
         primaryStat: "spec",
         modifier: 1,
@@ -129,7 +126,6 @@ export const specEvents: EventCard[] = [
         results: {
           bad: {
             text: "문장은 좋아졌지만 네 목소리는 더 멀어졌다.",
-            delta: { mental: -2 },
           },
           mixed: { text: "효율은 챙겼지만, 제출 버튼이 조금 낯설었다." },
           good: {
@@ -160,14 +156,14 @@ export const specEvents: EventCard[] = [
           mixed: { text: "부끄러움보다 이해가 남는 시간이 되었다." },
           good: {
             text: "질문할 수 있는 용기가 성장보다 먼저 너를 살렸다.",
-            delta: { spec: 2, mental: 1 },
+            delta: { spec: 2 },
           },
         },
       },
       {
         id: "fake-confidence",
         label: "아는 척한다",
-        immediate: { reputation: 1, mental: -2 },
+        immediate: { reputation: 1 },
         selfTrustDelta: -3,
         primaryStat: "reputation",
         modifier: 0,
@@ -175,7 +171,7 @@ export const specEvents: EventCard[] = [
         results: {
           bad: {
             text: "체면은 남았지만 이해는 더 뒤로 밀렸다.",
-            delta: { spec: -1, mental: -1 },
+            delta: { spec: -1 },
           },
           mixed: { text: "혼자 따라잡으려 했지만 마음은 점점 더 쫓겼다." },
           good: {

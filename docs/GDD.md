@@ -30,8 +30,8 @@ The current project is built around short repeated lives.
 - Ends at the fixed final interview.
 
 ### Run 3 and Later
-- No tutorial by default.
-- The player immediately enters the normal event loop.
+- Uses the default loop tutorial by default.
+- Then moves into the normal event loop.
 - Failure means repeating runs until employment is achieved.
 
 ## 3. Main Game Flow
@@ -39,9 +39,9 @@ The current project is built around short repeated lives.
 ### Phase 1. Employment Survival
 The first goal is simple:
 - survive to interview day
-- pass the final interview
+- reach and complete the final interview chain
 
-The player may fail multiple lives before succeeding.
+The player may fail multiple lives before succeeding. In the current implementation, reaching the final interview flow results in employment success; separate interview pass/fail scoring is planned but not implemented.
 
 ### Phase 2. Memory Fragment Collection
 After the player has succeeded at employment at least once, the long-term structure changes.
@@ -58,7 +58,8 @@ Planned flow:
 ### Phase 3. True Ending Route
 After all memory fragments are collected:
 - the true ending route unlocks
-- it is played as event-style story progression, not as a detached ending screen
+- the current implementation plays it through dedicated intro, story, and credits screens
+- the planned version should be event-style story progression, not a detached ending screen
 - the final route should feel like a deliberate authored life, not just another survival run
 
 ## 4. Design Pillars
@@ -123,23 +124,30 @@ Inside a run, the current implementation still uses:
 At the app level, the project now also includes:
 - `title`
 - `encyclopedia`
+- `first-clear-reward`
 - `memory-hub`
 - `true-ending`
+- `true-ending-story`
+- `true-ending-credits`
 
 Important note:
-- the true ending scene exists structurally
-- the full event-style true-ending route is still planned content, not completed content
+- the true ending exists as dedicated screens and content
+- the full event-style true-ending route is still planned content, not the current implementation
 
 ## 8. Current Content Status
 
 ### Implemented
 - first-life tutorial
 - second-life tutorial
+- first-clear tutorial
+- default loop tutorial
 - random event pool
 - fixed final interview
-- stat-based interview resolution
+- guaranteed employment success after reaching the final interview flow
 - memory shard meta system
+- scheduled phase-2 girlfriend events after first clear
 - event encyclopedia page
+- dedicated true-ending intro/story/credits screens
 - unlock-card scaffolding
 
 ### Planned Next Story Progression
@@ -147,6 +155,7 @@ Important note:
 - ordered fragment acquisition
 - girlfriend, friend, family fragment themes
 - event-style true ending route
+- explicit interview success/failure scoring, if desired
 
 ## 9. Memory Fragment Design Direction
 
@@ -170,7 +179,7 @@ They should reveal emotional truth through repeated lives.
 - the player fails the run before meaningful completion
 
 ### Employment Success
-- the player survives and passes the final interview
+- the player survives and completes the final interview flow
 - this advances the larger progression but does not finish the whole game
 
 ### True Ending
@@ -181,11 +190,12 @@ They should reveal emotional truth through repeated lives.
 
 ### In Scope Right Now
 - repeated lives
-- two tutorial variants
+- first-life, second-life, first-clear, and default loop tutorial variants
 - employment survival loop
 - event encyclopedia
 - meta persistence
 - memory and unlock scaffolding
+- dedicated true-ending screens
 
 ### Next In Scope
 - post-employment fragment progression

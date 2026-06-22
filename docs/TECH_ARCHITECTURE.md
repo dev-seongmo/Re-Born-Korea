@@ -22,7 +22,7 @@ It now has:
 - persistent meta progression
 - collectible systems
 - an encyclopedia scene
-- a true-ending route placeholder
+- dedicated true-ending intro, story, and credits scenes
 
 Because of that, architecture decisions should now assume:
 - multiple lives are normal
@@ -49,6 +49,7 @@ GameState = {
   appScene,
   run,
   meta,
+  trueEndingProgress,
 }
 ```
 
@@ -75,14 +76,19 @@ This separation is necessary because the target game flow is:
 - `run-event`
 - `run-result`
 - `run-ending`
+- `run-game-over`
+- `first-clear-reward`
 - `memory-hub`
 - `true-ending`
+- `true-ending-story`
+- `true-ending-credits`
 
 ### Run Scenes
 - `setup`
 - `event`
 - `result`
 - `ending`
+- `game-over`
 
 ### Important Note
 Even though the result card is visually merged into the event card flow, the internal `result` scene is still useful for clean transition logic.
@@ -101,11 +107,16 @@ That is the correct direction because it allows:
 ### Current Event Selection Logic
 `src/game/content/eventCards/index.ts` currently handles:
 - tutorial set selection by completed run count
+- first-clear and default loop tutorial selection
+- scheduled phase-2 girlfriend event selection
 - normal event draw
 - final interview insertion
 
 ### Why this matters
 The upcoming fragment-event phase should be added here or beside it, not inside React components.
+
+### Current Interview Reality
+There is no separate interview-scoring system yet. The final interview is a fixed event chain, and reaching the end of the current run flow produces an `employed` outcome.
 
 ## 7. Recommended Progression Architecture for the Next Phase
 
@@ -135,13 +146,12 @@ Responsible for:
 - tracking which fragment comes next
 - tracking which story fragments are already collected
 
-Suggested future shape:
+Current relevant fields already include `isFirstCleared`, `pendingFirstClearTutorial`, `unlockedMemoryShardIds`, `successCount`, and `trueEndingUnlocked`.
+
+Suggested future additions:
 
 ```ts
 meta: {
-  runCount: number;
-  successCount: number;
-  hasEmploymentClear: boolean;
   nextFragmentIndex: number;
   collectedStoryFragmentIds: string[];
 }
@@ -150,7 +160,7 @@ meta: {
 #### C. Event Content Layer
 Responsible for:
 - fragment event data
-- true-ending event data
+- true-ending event data if the current dedicated true-ending screens are converted to event/card flow
 
 Suggested files:
 - `eventCards/memoryFragments.ts`
@@ -182,9 +192,9 @@ It should be a gated injection rule.
 
 ## 9. True Ending Architecture Recommendation
 
-The true ending should no longer be just a static text scene.
+The current true ending is not only a placeholder: it has dedicated intro, story-card, and credits screens under `src/game/content/trueEnding` and `src/components/ending`.
 
-It should become a special event-style route.
+The planned next architecture is to make it a special event-style route.
 
 ### Recommended Modeling
 Treat the true ending as:
@@ -248,7 +258,8 @@ Those rules belong to systems and meta progression.
 2. Add a fragment-event content file.
 3. Add a system that injects the fragment event on turn 15.
 4. Add ordered fragment validation by choice.
-5. Convert true ending from placeholder scene to event-style sequence.
+5. Decide whether to keep the current dedicated true-ending screens or convert them to the event-card sequence.
+6. Add explicit interview success/failure scoring if employment should be more than reaching the final flow.
 
 ## 14. Summary
 
@@ -256,9 +267,10 @@ The current architecture is on the right track.
 
 It already supports:
 - repeated lives
-- different tutorial sets
+- first-life, second-life, first-clear, and default loop tutorial sets
 - persistent meta state
 - app-level scene expansion
+- dedicated true-ending screens
 
 The next challenge is not rendering.
 It is progression gating.
