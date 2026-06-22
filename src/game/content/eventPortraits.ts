@@ -12,14 +12,18 @@ import kakaoTalkImage from "../../assets/images/characters/npc/kakao_talk.png";
 import memoImage from "../../assets/images/characters/npc/memo.png";
 import mirrorImage from "../../assets/images/characters/npc/mirror.png";
 import momPortraitImage from "../../assets/images/characters/npc/mom.png";
+import oldGuitarImage from "../../assets/images/characters/npc/old_guitar.png";
 import paperPortraitImage from "../../assets/images/characters/npc/paper.png";
 import phonePortraitImage from "../../assets/images/characters/npc/phone.png";
 import portfolioWeekendImage from "../../assets/images/characters/npc/portfolio_weekend.png";
+import ramenMyFavoriteImage from "../../assets/images/characters/npc/ramen_my_favorite.png";
 import rentDayNoticeImage from "../../assets/images/characters/npc/rent_day_notice.png";
 import sajaPortraitImage from "../../assets/images/characters/npc/saja1.png";
 import smallRoomImage from "../../assets/images/characters/npc/small_room.png";
 import studyGroupImage from "../../assets/images/characters/npc/study_group.png";
 import suitGuyPortraitImage from "../../assets/images/characters/npc/suitguy.png";
+import trailInParkImage from "../../assets/images/characters/npc/trail_in_park.png";
+import travelWithFriendsImage from "../../assets/images/characters/npc/travel_with_friends.png";
 import unclePortraitImage from "../../assets/images/characters/npc/uncle.png";
 import weddingInvitationsImage from "../../assets/images/characters/npc/wedding_invitations.png";
 import youngUnclePortraitImage from "../../assets/images/characters/npc/young uncle.png";
@@ -308,7 +312,7 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     alt: "Friend portrait",
   },
   "trip-invitation": {
-    src: girlfriendPortraitImage,
+    src: travelWithFriendsImage,
     alt: "Travel invitation portrait",
   },
   "girlfriend-first-meet": {
@@ -366,12 +370,12 @@ const portraitByEventId: Record<string, PortraitAsset> = {
   "burnout-sign": { src: burnoutDeskImage, alt: "Burnout portrait" },
   "therapy-tab-open": { src: phonePortraitImage, alt: "Therapy search portrait" },
   "favorite-food-alone": {
-    src: paperPortraitImage,
+    src: ramenMyFavoriteImage,
     alt: "Comfort meal portrait",
   },
-  "old-hobby-folder": { src: phonePortraitImage, alt: "Hobby folder portrait" },
+  "old-hobby-folder": { src: oldGuitarImage, alt: "Hobby guitar portrait" },
   "walk-without-purpose": {
-    src: friendPortraitImage,
+    src: trailInParkImage,
     alt: "Walking portrait",
   },
 };

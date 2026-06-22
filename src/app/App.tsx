@@ -1,5 +1,5 @@
 ﻿import type { CSSProperties } from "react";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import idCardImage from "../assets/images/objects/id_card.png";
 import { preloadImagesWhenIdle } from "../assets/preload/imagePreloader";
@@ -14,6 +14,7 @@ import { prototypeEvents } from "../game/content/eventCards";
 import {
   countUnlockedDefinedMemoryShards,
   getMemoryShardById,
+  getUnlockedDefinedMemoryShardIds,
   memoryShards,
 } from "../game/content/memoryShards";
 import {
@@ -87,6 +88,9 @@ export function App() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const knownUnlockedMemoryShardIdsRef = useRef(
+    getUnlockedDefinedMemoryShardIds(state.meta.unlockedMemoryShardIds),
+  );
   const selectedMemoryShard = selectedMemoryShardId
     ? getMemoryShardById(selectedMemoryShardId)
     : null;
@@ -154,6 +158,24 @@ export function App() {
   useEffect(() => {
     persistGameState(state);
   }, [state]);
+
+  useEffect(() => {
+    const unlockedDefinedMemoryShardIds = getUnlockedDefinedMemoryShardIds(
+      state.meta.unlockedMemoryShardIds,
+    );
+    const newlyUnlockedMemoryShardId = unlockedDefinedMemoryShardIds.find(
+      (id) => !knownUnlockedMemoryShardIdsRef.current.includes(id),
+    );
+
+    knownUnlockedMemoryShardIdsRef.current = unlockedDefinedMemoryShardIds;
+
+    if (!newlyUnlockedMemoryShardId) {
+      return;
+    }
+
+    setIsMemoryModalOpen(false);
+    setSelectedMemoryShardId(newlyUnlockedMemoryShardId);
+  }, [state.meta.unlockedMemoryShardIds]);
 
   useEffect(() => {
     if (

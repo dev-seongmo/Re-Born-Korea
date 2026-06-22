@@ -1,5 +1,7 @@
 import {
   countUnlockedDefinedMemoryShards,
+  finalMemoryShardId,
+  hasUnlockedAllNonFinalMemoryShards,
   memoryShards,
 } from "../content/memoryShards";
 import { trueEndingStoryCards } from "../content/trueEnding";
@@ -211,6 +213,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         appScene: toAppScene(action.payload.nextScene),
+        meta: {
+          ...state.meta,
+          unlockedMemoryShardIds: mergeShardIds(
+            state.meta.unlockedMemoryShardIds,
+            action.payload.memoryTags,
+          ),
+        },
         run: updateRun(state.run, (run) => ({
           ...run,
           scene: action.payload.nextScene,
@@ -261,10 +270,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
 
     case "run/completed": {
-      const unlockedMemoryShardIds = mergeShardIds(
+      const baseUnlockedMemoryShardIds = mergeShardIds(
         state.meta.unlockedMemoryShardIds,
         action.payload.discoveredMemoryShardIds,
       );
+      const unlockedMemoryShardIds =
+        action.payload.outcome === "employed" &&
+        hasUnlockedAllNonFinalMemoryShards(baseUnlockedMemoryShardIds)
+          ? mergeShardIds(baseUnlockedMemoryShardIds, [finalMemoryShardId])
+          : baseUnlockedMemoryShardIds;
       const trueEndingUnlocked =
         countUnlockedDefinedMemoryShards(unlockedMemoryShardIds) >= memoryShards.length;
       const shouldShowTrueEnding =
