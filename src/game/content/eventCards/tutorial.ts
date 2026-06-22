@@ -117,13 +117,13 @@ export const tutorialEvents: EventCard[] = [
         id: "ask-about-state",
         label: "상태?",
         resultText:
-          "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
+          "스펙, 돈, 관계, 멘탈.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
       }),
       makeTutorialChoice({
         id: "say-understood",
         label: "알겠어",
         resultText:
-          "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
+          "스펙, 돈, 관계, 멘탈.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
       }),
     ],
   },
@@ -133,7 +133,7 @@ export const tutorialEvents: EventCard[] = [
     category: "tutorial",
     phase: "early20s",
     text:
-      "자신감, 체력, 관계, 준비도.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
+      "스펙, 돈, 관계, 멘탈.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
     choices: [
       makeTutorialChoice({
         id: "ask-endure",
@@ -180,12 +180,12 @@ export const tutorialEvents: EventCard[] = [
       makeTutorialChoice({
         id: "ask-beyond",
         label: `${runDeadlineText}?`,
-        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+        resultText: "나는 청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
       makeTutorialChoice({
         id: "say-cool",
         label: "조심할게",
-        resultText: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+        resultText: "나는 청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
     ],
   },
@@ -194,7 +194,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+    text: "나는 청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
     choices: [
       makeTutorialChoice({
         id: "already",
