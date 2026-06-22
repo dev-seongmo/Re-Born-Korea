@@ -84,9 +84,17 @@ export function SwipeChoiceCard({
     visualDragX > 18 ? "right" : visualDragX < -18 ? "left" : null;
 
   const intensity = Math.min(Math.abs(visualDragX) / COMMIT_DISTANCE, 1);
+  const rightChoiceOpacity = Math.min(
+    Math.max(visualDragX, 0) / COMMIT_DISTANCE * 1.35,
+    1,
+  );
+  const leftChoiceOpacity = Math.min(
+    Math.max(-visualDragX, 0) / COMMIT_DISTANCE * 1.35,
+    1,
+  );
   const rotation = visualDragX * 0.045;
-  const showLeftBadge = !disabled && direction === "right";
-  const showRightBadge = !disabled && direction === "left";
+  const rightSwipeChoiceOpacity = disabled ? 0 : rightChoiceOpacity;
+  const leftSwipeChoiceOpacity = disabled ? 0 : leftChoiceOpacity;
 
   useEffect(() => {
     return () => {
@@ -400,22 +408,22 @@ export function SwipeChoiceCard({
       >
         <CardAnswerBadge
           align="left"
-          isVisible={showLeftBadge}
+          opacity={rightSwipeChoiceOpacity}
           text={card.rightPreviewText}
         />
         <CardImpactPreview
           align="left"
-          isVisible={showLeftBadge}
+          opacity={rightSwipeChoiceOpacity}
           preview={card.rightImpactPreview}
         />
         <CardAnswerBadge
           align="right"
-          isVisible={showRightBadge}
+          opacity={leftSwipeChoiceOpacity}
           text={card.leftPreviewText}
         />
         <CardImpactPreview
           align="right"
-          isVisible={showRightBadge}
+          opacity={leftSwipeChoiceOpacity}
           preview={card.leftImpactPreview}
         />
         <CardBody card={card} />

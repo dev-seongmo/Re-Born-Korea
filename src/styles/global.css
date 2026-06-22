@@ -1980,24 +1980,22 @@ button {
 
 .swipe-card--entering {
   pointer-events: none;
+  transition: none;
   animation: swipe-card-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes swipe-card-enter {
   0% {
     opacity: 0;
-    filter: blur(8px);
     transform: translate3d(0, 16px, 0) scale(0.94);
   }
 
   62% {
     opacity: 1;
-    filter: blur(1px);
   }
 
   100% {
     opacity: 1;
-    filter: blur(0);
     transform: translate3d(0, 0, 0) scale(1);
   }
 }
@@ -2037,10 +2035,6 @@ button {
   background: linear-gradient(135deg, rgba(148, 104, 210, 0.96), rgba(90, 61, 150, 0.76));
 }
 
-.swipe-card__answer--visible {
-  opacity: calc(0.2 + (var(--choice-intensity, 0) * 0.8));
-}
-
 .swipe-card__impact {
   position: absolute;
   top: 78px;
@@ -2061,11 +2055,6 @@ button {
 .swipe-card__impact--right {
   right: 14px;
   justify-items: end;
-}
-
-.swipe-card__impact--visible {
-  opacity: calc(0.28 + (var(--choice-intensity, 0) * 0.72));
-  transform: translateY(0);
 }
 
 .swipe-card__impact-primary {

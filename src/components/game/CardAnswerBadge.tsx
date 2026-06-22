@@ -1,19 +1,18 @@
 type Props = {
   align: "left" | "right";
-  isVisible: boolean;
+  opacity: number;
   text: string;
 };
 
 export function CardAnswerBadge({
   align,
-  isVisible,
+  opacity,
   text,
 }: Props) {
   return (
     <div
-      className={`swipe-card__answer swipe-card__answer--${align} ${
-        isVisible ? "swipe-card__answer--visible" : ""
-      }`}
+      className={`swipe-card__answer swipe-card__answer--${align}`}
+      style={{ opacity }}
     >
       <span>{text}</span>
     </div>

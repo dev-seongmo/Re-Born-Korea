@@ -2,7 +2,7 @@ import type { ChoiceImpactPreview } from "../../game/systems/balanceSystem";
 
 type Props = {
   align: "left" | "right";
-  isVisible: boolean;
+  opacity: number;
   preview: ChoiceImpactPreview;
 };
 
@@ -25,12 +25,14 @@ function metricLabel(key: ChoiceImpactPreview["primary"][number]["key"]) {
   }
 }
 
-export function CardImpactPreview({ align, isVisible, preview }: Props) {
+export function CardImpactPreview({ align, opacity, preview }: Props) {
   return (
     <div
-      className={`swipe-card__impact swipe-card__impact--${align} ${
-        isVisible ? "swipe-card__impact--visible" : ""
-      }`}
+      className={`swipe-card__impact swipe-card__impact--${align}`}
+      style={{
+        opacity,
+        transform: opacity > 0 ? "translateY(0)" : undefined,
+      }}
     >
       <div className="swipe-card__impact-primary">
         {preview.primary.map((item) => (
