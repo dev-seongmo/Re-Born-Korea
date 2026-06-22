@@ -76,8 +76,8 @@ export function SwipeChoiceCard({
     !isDragging &&
     !autoDemoStoppedRef.current;
   const visualDragX = shouldAutoDemo ? demoDragX : dragX;
-  const leftChoice = event.choices[0];
-  const rightChoice = event.choices[1];
+  const rightChoice = event.choices[0];
+  const leftChoice = event.choices[1];
   const card = mapEventToCardViewModel(event);
 
   const direction: SwipeDirection =
@@ -401,22 +401,22 @@ export function SwipeChoiceCard({
         <CardAnswerBadge
           align="left"
           isVisible={showLeftBadge}
-          text={card.leftPreviewText}
+          text={card.rightPreviewText}
         />
         <CardImpactPreview
           align="left"
           isVisible={showLeftBadge}
-          preview={card.leftImpactPreview}
+          preview={card.rightImpactPreview}
         />
         <CardAnswerBadge
           align="right"
           isVisible={showRightBadge}
-          text={card.rightPreviewText}
+          text={card.leftPreviewText}
         />
         <CardImpactPreview
           align="right"
           isVisible={showRightBadge}
-          preview={card.rightImpactPreview}
+          preview={card.leftImpactPreview}
         />
         <CardBody card={card} />
       </div>
