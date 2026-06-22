@@ -1,3 +1,4 @@
+import { audioManager } from "../../audio/audioManager";
 import type { SetupScreenViewModel } from "../../game/viewModels/setupScreenViewModel";
 
 type Props = {
@@ -29,6 +30,7 @@ function requestGameFullscreen() {
 export function SetupScreen({ viewModel }: Props) {
   function handleStart() {
     requestGameFullscreen();
+    audioManager.play("music.afterlife", 0.34, { loop: true, restart: true });
     viewModel.onStart();
   }
 
@@ -49,6 +51,9 @@ export function SetupScreen({ viewModel }: Props) {
               value={field.value}
               onChange={(event) => field.onChange(event.target.value)}
             />
+            {field.helperText ? (
+              <span className="field__helper">{field.helperText}</span>
+            ) : null}
           </label>
         ))}
       </div>

@@ -152,8 +152,8 @@ export const trueEndingCredits: TrueEndingCreditsDefinition = {
       type: "message",
       id: "dedication",
       lines: [
-        "이 게임을 한국의 모든 청년에게 바칩니다.",
-        "함께했던 부트캠프 친구들에게 감사를 전하며",
+        "이 게임을 한국의 모든 청년들에게 바칩니다.",
+        "함께했던 LIG 부트캠프 친구들에게 감사를 전하며",
         "결과와 상관없이 행복했으면 좋겠습니다...",
       ],
     },

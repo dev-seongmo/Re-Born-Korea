@@ -161,19 +161,25 @@ function buildResolveChoice(
       (isTutorialEvent || isIntermediateInterviewEvent) &&
       !resolvedTurn.gameOverReason
     ) {
+      const nextEventId =
+        nextInterviewEventId ??
+        getNextEventId(
+          {
+            ...session,
+            eventHistory: [...session.eventHistory, event.id],
+          },
+          completedRunCount,
+          meta,
+        );
+
+      if (isTutorialEvent && !isTutorialEventId(nextEventId)) {
+        audioManager.stop("music.afterlife");
+      }
+
       dispatch({
         type: "run/continued",
         payload: {
-          nextEventId:
-            nextInterviewEventId ??
-            getNextEventId(
-              {
-                ...session,
-                eventHistory: [...session.eventHistory, event.id],
-              },
-              completedRunCount,
-              meta,
-            ),
+          nextEventId,
         },
       });
     }

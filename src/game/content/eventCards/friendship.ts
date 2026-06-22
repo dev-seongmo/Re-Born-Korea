@@ -5,7 +5,7 @@ export const friendshipEvents: EventCard[] = [
     id: "old-friend-call",
     category: "friendship",
     phase: "mid20s",
-    text: "오랜 친구가 밥 먹자고 연락했다. 오늘 저녁은 비어 있지 않다.",
+    text: "오랜 친구가 밥 먹자고 연락했다. 오늘 저녁은 공부하려 했다.",
     choices: [
       {
         id: "meet-tonight",

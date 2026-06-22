@@ -51,12 +51,12 @@ function buildStoryEvent(params: {
       ? [
           buildChoice({
             id: `${card.id}-continue-right`,
-            label: "다음으로",
+            label: "아...",
             resultText: text,
           }),
           buildChoice({
             id: `${card.id}-continue-left`,
-            label: "계속 본다",
+            label: "...",
             resultText: text,
           }),
         ]

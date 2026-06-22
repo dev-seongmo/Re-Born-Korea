@@ -6,10 +6,11 @@ export type MemoryShardDefinition = {
 };
 
 export const finalMemoryShardId = "final_truth";
+export const firstClearMemoryShardId = "interview_day";
 
 export const memoryShards: MemoryShardDefinition[] = [
   {
-    id: "interview_day",
+    id: firstClearMemoryShardId,
     title: "합격의 기억",
     description: "마침내 면접의 문턱을 넘어선 순간.",
     hint: "면접을 합격한다.",

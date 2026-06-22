@@ -5,6 +5,7 @@ export type SetupFieldViewModel = {
   label: string;
   placeholder: string;
   value: string;
+  helperText?: string;
   onChange: (value: string) => void;
 };
 

@@ -1,6 +1,7 @@
 import {
   countUnlockedDefinedMemoryShards,
   finalMemoryShardId,
+  firstClearMemoryShardId,
   hasUnlockedAllNonFinalMemoryShards,
   memoryShards,
 } from "../content/memoryShards";
@@ -52,6 +53,16 @@ function mergeEndingIds(existing: EndingId[], next: EndingId) {
 
 function mergeShardIds(existing: string[], discovered: string[]) {
   return Array.from(new Set([...existing, ...discovered]));
+}
+
+function canUnlockMemoryShards(state: GameState) {
+  return state.meta.isFirstCleared && !state.meta.pendingFirstClearTutorial;
+}
+
+function mergeShardIdsIfUnlocked(state: GameState, discovered: string[]) {
+  return canUnlockMemoryShards(state)
+    ? mergeShardIds(state.meta.unlockedMemoryShardIds, discovered)
+    : state.meta.unlockedMemoryShardIds;
 }
 
 function updateRun(run: RunState | null, updater: (current: RunState) => RunState) {
@@ -215,8 +226,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         appScene: toAppScene(action.payload.nextScene),
         meta: {
           ...state.meta,
-          unlockedMemoryShardIds: mergeShardIds(
-            state.meta.unlockedMemoryShardIds,
+          unlockedMemoryShardIds: mergeShardIdsIfUnlocked(
+            state,
             action.payload.memoryTags,
           ),
         },
@@ -270,8 +281,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
 
     case "run/completed": {
-      const baseUnlockedMemoryShardIds = mergeShardIds(
-        state.meta.unlockedMemoryShardIds,
+      const baseUnlockedMemoryShardIds = mergeShardIdsIfUnlocked(
+        state,
         action.payload.discoveredMemoryShardIds,
       );
       const unlockedMemoryShardIds =
@@ -320,8 +331,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case "run/gameOverAcknowledged": {
-      const unlockedMemoryShardIds = mergeShardIds(
-        state.meta.unlockedMemoryShardIds,
+      const unlockedMemoryShardIds = mergeShardIdsIfUnlocked(
+        state,
         action.payload.discoveredMemoryShardIds,
       );
       const trueEndingUnlocked =
@@ -366,11 +377,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case "hub/continueRequested":
+      return {
+        ...state,
+        appScene: "run-event",
+        trueEndingProgress: null,
+        run: createStartedRunForNextLife(state),
+      };
+
     case "reward/continueRequested":
       return {
         ...state,
         appScene: "run-event",
         trueEndingProgress: null,
+        meta: {
+          ...state.meta,
+          unlockedMemoryShardIds: mergeShardIds(
+            state.meta.unlockedMemoryShardIds,
+            [firstClearMemoryShardId],
+          ),
+        },
         run: createStartedRunForNextLife(state),
       };
 

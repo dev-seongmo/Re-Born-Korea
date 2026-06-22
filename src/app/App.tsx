@@ -13,6 +13,7 @@ import { getEventPortrait } from "../game/content/eventPortraits";
 import { prototypeEvents } from "../game/content/eventCards";
 import {
   countUnlockedDefinedMemoryShards,
+  firstClearMemoryShardId,
   getMemoryShardById,
   getUnlockedDefinedMemoryShardIds,
   memoryShards,
@@ -164,7 +165,9 @@ export function App() {
       state.meta.unlockedMemoryShardIds,
     );
     const newlyUnlockedMemoryShardId = unlockedDefinedMemoryShardIds.find(
-      (id) => !knownUnlockedMemoryShardIdsRef.current.includes(id),
+      (id) =>
+        id !== firstClearMemoryShardId &&
+        !knownUnlockedMemoryShardIdsRef.current.includes(id),
     );
 
     knownUnlockedMemoryShardIdsRef.current = unlockedDefinedMemoryShardIds;

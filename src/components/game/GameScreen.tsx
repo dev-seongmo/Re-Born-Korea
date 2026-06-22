@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AtmosphereLayer } from "./AtmosphereLayer";
+import { PhoneMessageResult } from "./PhoneMessageResult";
 import { SwipeChoiceCard } from "./SwipeChoiceCard";
 import type { EventChoice } from "../../game/core/gameTypes";
 import type { MetricPreviewIntensity } from "../../game/systems/balanceSystem";
@@ -79,41 +80,7 @@ export function GameScreen({ highlightHud = false, viewModel }: Props) {
             </button>
           </div>
         ) : viewModel.endingPanel ? (
-          <div
-            className={[
-              "ending-card",
-              "message-result",
-              `message-result--${viewModel.endingPanel.outcome}`,
-            ].join(" ")}
-          >
-            <div className="message-result__phone-bar">
-              <span>18:07</span>
-              <span>LTE</span>
-            </div>
-            <div className="message-result__header">
-              <p className="eyebrow">{viewModel.endingPanel.eyebrow}</p>
-              <h3>{viewModel.endingPanel.title}</h3>
-              <p>{viewModel.endingPanel.sender}</p>
-              <span>{viewModel.endingPanel.receivedAt}</span>
-            </div>
-            <div className="message-result__bubble">
-              {viewModel.endingPanel.messageLines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-            <div className="message-result__metrics" aria-label="final metrics">
-              {viewModel.endingPanel.metricLines.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </div>
-            <button
-              className="primary-button"
-              onClick={viewModel.endingPanel.onContinue}
-              type="button"
-            >
-              {viewModel.endingPanel.nextLabel}
-            </button>
-          </div>
+          <PhoneMessageResult panel={viewModel.endingPanel} />
         ) : viewModel.eventPanel ? (
           <div className="event-card">
             <SwipeChoiceCard
@@ -142,6 +109,12 @@ type StatusItemProps = {
 function StatusItem({ item, previewIntensity }: StatusItemProps) {
   const value = Math.max(0, Math.min(100, item.value));
   const isPreviewed = previewIntensity !== undefined;
+  const previousValueRef = useRef(item.value);
+  const flashTimeoutRef = useRef<number | null>(null);
+  const flashFrameRef = useRef<number | null>(null);
+  const [flashDirection, setFlashDirection] = useState<"up" | "down" | null>(
+    null,
+  );
   const valueClassName = [
     "status-item__value",
     !isPreviewed ? "status-item__value--hidden" : "",
@@ -150,13 +123,65 @@ function StatusItem({ item, previewIntensity }: StatusItemProps) {
   ]
     .filter(Boolean)
     .join(" ");
+  const meterClassName = [
+    "status-item__meter",
+    flashDirection === "up" ? "status-item__meter--flash-up" : "",
+    flashDirection === "down" ? "status-item__meter--flash-down" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  useEffect(() => {
+    const previousValue = previousValueRef.current;
+    previousValueRef.current = item.value;
+
+    if (previousValue === item.value) {
+      return undefined;
+    }
+
+    const nextDirection = item.value > previousValue ? "up" : "down";
+
+    if (flashTimeoutRef.current !== null) {
+      window.clearTimeout(flashTimeoutRef.current);
+    }
+
+    if (flashFrameRef.current !== null) {
+      window.cancelAnimationFrame(flashFrameRef.current);
+    }
+
+    setFlashDirection(null);
+    flashFrameRef.current = window.requestAnimationFrame(() => {
+      setFlashDirection(nextDirection);
+      flashFrameRef.current = null;
+    });
+
+    flashTimeoutRef.current = window.setTimeout(() => {
+      setFlashDirection(null);
+      flashTimeoutRef.current = null;
+    }, 720);
+
+    return undefined;
+  }, [item.value]);
+
+  useEffect(
+    () => () => {
+      if (flashTimeoutRef.current !== null) {
+        window.clearTimeout(flashTimeoutRef.current);
+      }
+
+      if (flashFrameRef.current !== null) {
+        window.cancelAnimationFrame(flashFrameRef.current);
+      }
+    },
+    [],
+  );
 
   return (
     <div
       className="status-item status-item--icon"
       aria-label={`${item.label}: ${item.value}`}
     >
-      <div className="status-item__meter">
+      <div className={meterClassName}>
         <div
           className="status-item__meter-fill"
           style={{ "--fill-level": `${value}%` } as CSSProperties}

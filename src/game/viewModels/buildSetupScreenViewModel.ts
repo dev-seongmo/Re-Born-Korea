@@ -6,6 +6,25 @@ import type { GameAction, MetaState, RunState } from "../core/gameTypes";
 import { sanitizeCompanyName, sanitizePlayerName } from "../utils/playerName";
 import type { SetupScreenViewModel } from "./setupScreenViewModel";
 
+function getCompanyEasterEggMessage(companyName: string) {
+  const normalized = companyName.toLocaleLowerCase();
+
+  if (normalized.includes("kai")) {
+    return "정말정말 좋은 회사네요!";
+  }
+
+  if (
+    normalized.includes("lig") ||
+    normalized.includes("posco") ||
+    normalized.includes("하이닉스") ||
+    normalized.includes("삼성")
+  ) {
+    return "좋은 회사네요!";
+  }
+
+  return undefined;
+}
+
 export function buildSetupScreenViewModel(
   session: RunState,
   completedRunCount: number,
@@ -37,6 +56,7 @@ export function buildSetupScreenViewModel(
         label: "목표 회사",
         placeholder: "예: Re:Born Korea",
         value: targetCompany,
+        helperText: getCompanyEasterEggMessage(targetCompany),
         onChange: (value) =>
           dispatch({
             type: "profile/updated",
