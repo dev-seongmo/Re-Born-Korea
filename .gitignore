@@ -6,9 +6,3 @@ Thumbs.db
 vite.config.js
 vite.config.d.ts
 
-# Keep the asset folder structure, but ignore real asset payloads by default.
-src/assets/**/*
-!src/assets/**/
-!src/assets/**/*.gitkeep
-!src/assets/**/*.md
-!src/assets/manifest/**/*.ts
