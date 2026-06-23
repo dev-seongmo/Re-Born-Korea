@@ -6,10 +6,13 @@ import girlfriendImage from "../../../assets/images/characters/npc/girlfriend.pn
 import momImage from "../../../assets/images/characters/npc/mom.png";
 import smallRoomImage from "../../../assets/images/characters/npc/small_room.png";
 import suitGuyImage from "../../../assets/images/characters/npc/suitguy.png";
+import cherryBlossomGasanImage from "../../../assets/images/illustrations/endings/cherry_blossom_gasan.png";
+import lastPersonInClassImage from "../../../assets/images/illustrations/endings/last_person_in_class.png";
 import newsDecreaseImage from "../../../assets/images/illustrations/endings/news_73_decrease.png";
 import newsCompetanceImage from "../../../assets/images/illustrations/endings/news_competance.png";
 import surveyPlanHiringImage from "../../../assets/images/illustrations/endings/survey_plan_hiring.png";
 import surveyLastWeekImage from "../../../assets/images/illustrations/endings/survey_what_did_you_do_last_week.webp";
+import viewFromClassImage from "../../../assets/images/illustrations/endings/view_from_class.png";
 
 export type TrueEndingCreditArticle = {
   type: "article";
@@ -49,7 +52,7 @@ export type TrueEndingCreditsDefinition = {
 
 export const trueEndingCredits: TrueEndingCreditsDefinition = {
   title: "thanks for playing",
-  speedHint: "길게 누르면 두배속",
+  speedHint: "길게 누르기",
   completeLabel: "엔딩 닫기",
   items: [
     {
@@ -147,6 +150,30 @@ export const trueEndingCredits: TrueEndingCreditsDefinition = {
       caption: "모든 기억이 돌아온 곳. 다시 시작하기로 한 곳.",
       imageSrc: smallRoomImage,
       imageAlt: "낯익은 방 이벤트 카드 이미지",
+    },
+    {
+      type: "event",
+      id: "credits-view-from-class",
+      title: "교실의 창",
+      caption: "모두가 떠난 뒤에도, 아직 남아 있던 빛.",
+      imageSrc: viewFromClassImage,
+      imageAlt: "교실 창밖을 바라보는 엔딩 이미지",
+    },
+    {
+      type: "event",
+      id: "credits-last-person-in-class",
+      title: "마지막 사람",
+      caption: "끝까지 남았던 시간도 결국 나를 여기까지 데려왔다.",
+      imageSrc: lastPersonInClassImage,
+      imageAlt: "교실에 마지막으로 남은 사람의 엔딩 이미지",
+    },
+    {
+      type: "event",
+      id: "credits-cherry-blossom-gasan",
+      title: "다시 피는 계절",
+      caption: "가산의 봄처럼, 늦게 도착한 마음도 다시 피어난다.",
+      imageSrc: cherryBlossomGasanImage,
+      imageAlt: "가산의 벚꽃 풍경 엔딩 이미지",
     },
     {
       type: "message",

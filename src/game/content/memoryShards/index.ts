@@ -13,7 +13,25 @@ export const memoryShards: MemoryShardDefinition[] = [
     id: firstClearMemoryShardId,
     title: "합격의 기억",
     description: "마침내 면접의 문턱을 넘어선 순간.",
-    hint: "면접을 합격한다.",
+    hint: "면접에 합격한다.",
+  },
+  {
+    id: "self_pace",
+    title: "내 속도의 기억",
+    description: "남의 속도에 끌려가지 않고, 내 걸음을 다시 확인한 순간.",
+    hint: "비교보다 자신의 페이스를 선택한다.",
+  },
+  {
+    id: "warm_meal",
+    title: "따뜻한 한 끼의 기억",
+    description: "쫓기던 하루 사이에도 사람과 밥 한 끼가 남아 있던 순간.",
+    hint: "친구나 작은 위로가 있는 선택을 한다.",
+  },
+  {
+    id: "survival",
+    title: "버티는 법의 기억",
+    description: "초라해 보이는 선택도 살아남기 위한 전략이 될 수 있음을 배운 순간.",
+    hint: "무너지지 않기 위한 현실적인 선택을 한다.",
   },
   {
     id: "girlfriend_first_meet",
@@ -30,8 +48,8 @@ export const memoryShards: MemoryShardDefinition[] = [
   {
     id: finalMemoryShardId,
     title: "마지막 기억",
-    description: "모든 조각이 이어지고, 마지막 문 앞에 닿은 순간.",
-    hint: "나머지 모든 기억조각을 모은 뒤 면접에 합격하기.",
+    description: "모든 조각이 이어지고, 마지막 문 앞에 선 순간.",
+    hint: "나머지 모든 기억조각을 모은 뒤 면접에 합격한다.",
   },
 ];
 

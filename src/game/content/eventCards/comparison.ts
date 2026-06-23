@@ -48,7 +48,7 @@ export const comparisonEvents: EventCard[] = [
           },
           good: {
             text: "단기적으로는 성과가 있었지만 불안의 언어가 짙어졌다.",
-            delta: { spec: 3 },
+            delta: { spec: 2 },
           },
         },
       },
@@ -135,7 +135,7 @@ export const comparisonEvents: EventCard[] = [
       {
         id: "panic-register",
         label: "나도 따라서 접수한다",
-        immediate: { spec: 3, money: -2 },
+        immediate: { spec: 2, money: -2 },
         selfTrustDelta: -3,
         primaryStat: "spec",
         modifier: 1,

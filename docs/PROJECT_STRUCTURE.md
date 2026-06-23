@@ -24,12 +24,12 @@ content -> systems -> view models -> components
 ### What `App.tsx` currently owns
 - reducer wiring
 - title scene
-- encyclopedia scene
 - run scenes
 - memory hub
 - true ending intro/story/credits scenes
 - settings and modal UI
 - persistence lifecycle
+- hidden debug button flags
 
 ## 3. Core State Structure
 
@@ -114,6 +114,7 @@ This split is important because the project is no longer a one-run prototype onl
 - `girlfriend.ts`: scheduled phase-2 relationship events after first clear
 - general event files: main replayable event pool
 - `interview.ts`: fixed final interview event chain
+- `memoryShards/index.ts`: defined shard ids, titles, descriptions, hints, and helper queries
 - `trueEnding/*`: dedicated true-ending intro, story cards, and credits content
 
 ## 5. Event Flow Selection
@@ -137,9 +138,8 @@ This file currently decides:
 
 ### Planned Extension
 This same area is the right place to later inject:
-- turn-15 fragment events
-- ordered fragment progression
 - event gating by meta progress
+- additional scheduled post-employment authored events
 
 ## 6. Game Logic Systems
 
@@ -168,17 +168,15 @@ This same area is the right place to later inject:
 ### Current Interview Reality
 There is no separate `interviewSystem.ts` yet. The final interview is modeled as a fixed chain of interview events, and reaching the end of the run currently produces an `employed` outcome in the game-screen view model.
 
-### Planned Memory Fragment Logic
-When the turn-15 fragment chain is implemented, it should be handled through a dedicated system rather than hardcoded inside UI components.
+### Current Memory Fragment Logic
+Memory shard unlocks are currently handled through meta progression in `gameReducer.ts`.
 
-Recommended location:
-- a new `memoryFragmentSystem.ts`
-
-Responsibilities:
-- detect whether fragment progression is active
-- inject the correct fragment event on turn 15
-- validate whether the player picked the correct fragment choice
-- update `meta` progression after run completion or immediately if desired
+Current responsibilities:
+- block memory shard unlocks before Phase 2
+- automatically grant `interview_day` when the player continues after first employment clear
+- merge eligible event `memoryTags` into `meta.unlockedMemoryShardIds`
+- ignore the first-clear shard for the normal auto-open detail modal
+- award `final_truth` after all non-final shards are collected and the player succeeds at employment
 
 ## 7. View Models
 
@@ -197,6 +195,7 @@ Important examples:
 - what current card portrait and name should be
 - final employment message presentation
 - dispatch handlers for resolving choices, continuing results, and completing runs
+- completed-run count passed into difficulty and preview calculations
 
 ### Important Note
 The result card has already been collapsed into the same event-card flow, but run state still keeps a `result` scene internally.
@@ -215,9 +214,14 @@ The result card has already been collapsed into the same event-card flow, but ru
 - fixed text slot above the card
 - fixed name slot below the card
 - footer with life count, name, D-day, memory button
+- memory button disabled before Phase 2
+- memory button flashes when the current event can unlock a new shard
 - settings modal
 - memory modal
-- encyclopedia page
+- phone-style employment result message
+- true-ending intro/story/credits screens
+- title debug buttons hidden by `SHOW_TITLE_DEBUG_BUTTONS`
+- card impact preview hidden by `SHOW_CARD_IMPACT_PREVIEW`
 
 ## 9. Persistence
 
@@ -231,21 +235,19 @@ The result card has already been collapsed into the same event-card flow, but ru
 
 This means all new meta features should be designed assuming they persist across runs.
 
-## 10. Encyclopedia
+## 10. Audio and Assets
 
-### Current File
-- `src/app/App.tsx`
+### Current Audio Hooks
+- `SetupScreen.tsx` starts the afterlife ambience when the game begins
+- `buildGameScreenViewModel.ts` stops afterlife ambience when the tutorial flow ends
+- `PhoneMessageResult.tsx` plays the message notification sound
+- `TrueEndingCreditsScreen.tsx` starts the credits music at 35 seconds and stops it on unmount
 
-### Current Behavior
-The event encyclopedia is app-scene based and shows:
-- first-life tutorials
-- second-life tutorials
-- first-clear tutorials
-- default loop tutorials
-- normal events
-- final interview
+### Asset Note
+The repository `.gitignore` ignores most files under `src/assets/**/*`.
+When adding generated audio or image files that must ship, add them intentionally with `git add -f`.
 
-This is useful both for design reference and for content review while writing new events.
+Previously generated but currently unused experiments may still exist on disk if not removed manually.
 
 ## 11. New Planned Progression and Where It Fits
 
@@ -254,30 +256,22 @@ The updated target progression is:
 1. First run with tutorial
 2. Second run with second tutorial
 3. Repeat runs until employment succeeds
-4. After employment success, a special fragment event appears on turn 15
-5. Fragment order is `1 -> 2 -> 3`
-6. Fragment themes are girlfriend, friend, family
-7. After all fragments are collected, the true ending proceeds as event-style content
+4. After employment success, Phase 2 starts
+5. The first employment shard is awarded automatically
+6. Additional shards are unlocked through meaningful event choices
+7. After all non-final shards are collected, another employment success unlocks `final_truth`
+8. The true ending proceeds through dedicated intro/story/credits screens
 
 ### Best Structural Mapping
 
 #### Run gating
 - event selection layer
-- probably `eventCards/index.ts` plus a new fragment system
+- `eventCards/index.ts`
 
-#### Fragment order
+#### Fragment unlocks
 - `meta`
-- probably a future field such as:
-
-```ts
-nextFragmentIndex: 0 | 1 | 2 | 3
-```
-
-#### Fragment event injection
-- event selection layer at turn 15
-
-#### Correct-choice validation
-- dedicated system, not the component layer
+- `gameReducer.ts`
+- event choice `memoryTags`
 
 #### True ending event chain
 - current implementation uses dedicated true-ending intro/story/credits screens
@@ -287,12 +281,9 @@ nextFragmentIndex: 0 | 1 | 2 | 3
 
 To support the next planned flow cleanly, the next additions should be:
 
-- `meta.hasEmploymentClear` or equivalent
-- `meta.nextFragmentIndex`
-- `meta.collectedStoryFragmentIds`
-- `src/game/content/eventCards/memoryFragments.ts`
-- `src/game/systems/memoryFragmentSystem.ts`
-- a true-ending event content file if the current dedicated true-ending screens are converted to card/event flow
+- tests for memory shard gating and final shard unlock
+- a small debug/devtools surface if hidden title buttons need to return
+- optional true-ending event content if the current dedicated screens are converted to a full card/event route
 
 ## 13. Current Reality vs Planned Direction
 
@@ -300,17 +291,19 @@ To support the next planned flow cleanly, the next additions should be:
 - repeated lives
 - first-life, second-life, first-clear, and default loop tutorial variants
 - employment survival loop to a fixed successful interview outcome
-- memory shard meta persistence
+- Phase 2 memory shard meta persistence
+- automatic first-clear shard reward
+- event `memoryTags` based shard unlocks
+- final shard based true-ending unlock
 - scheduled phase-2 girlfriend events after first clear
 - dedicated true-ending intro/story/credits screens
+- phone-style employment result UI
+- survey link in settings
 - unlock-card scaffolding
-- encyclopedia page
 
 ### Not Yet Implemented
-- turn-15 fragment event insertion
-- ordered fragment collection
-- girlfriend/friend/family fragment route
 - event-style true ending chain
 - separate interview success/failure scoring system
+- automated tests for memory gating and true-ending unlock
 
 Keep this distinction in mind when editing future docs and content.

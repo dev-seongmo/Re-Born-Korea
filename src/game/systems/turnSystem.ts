@@ -20,8 +20,9 @@ import { getGameOverReason } from "./gameOverSystem";
 function applyMetricDelta(
   metrics: VisibleMetrics,
   delta: MetricDelta,
+  completedRunCount: number,
 ): VisibleMetrics {
-  const amplified = amplifyMetricDelta(delta);
+  const amplified = amplifyMetricDelta(delta, completedRunCount);
 
   return {
     spec: clampMetric(metrics.spec + (amplified.spec ?? 0)),
@@ -69,26 +70,34 @@ export function resolveTurn(params: {
   session: GameSession;
   event: EventCard;
   choice: EventChoice;
+  completedRunCount: number;
 }) {
-  const { session, event, choice } = params;
+  const { session, event, choice, completedRunCount } = params;
   const shouldIgnoreNumericChanges = ignoresNumericChanges(event);
 
   const afterImmediate = shouldIgnoreNumericChanges
     ? session.metrics
-    : applyMetricDelta(session.metrics, choice.immediate);
+    : applyMetricDelta(session.metrics, choice.immediate, completedRunCount);
   const roll = resolveRoll(choice, afterImmediate);
   const rolledOutcome = choice.results[roll.band];
   const nextMetrics = shouldIgnoreNumericChanges
     ? session.metrics
-    : applyMetricDelta(afterImmediate, rolledOutcome.delta ?? {});
+    : applyMetricDelta(
+        afterImmediate,
+        rolledOutcome.delta ?? {},
+        completedRunCount,
+      );
   const nextSelfTrust = shouldIgnoreNumericChanges
     ? session.selfTrust
     : applySelfTrust(
         applySelfTrust(
           session.selfTrust,
-          amplifySelfTrustDelta(choice.selfTrustDelta),
+          amplifySelfTrustDelta(choice.selfTrustDelta, completedRunCount),
         ),
-        amplifySelfTrustDelta(rolledOutcome.selfTrustDelta ?? 0),
+        amplifySelfTrustDelta(
+          rolledOutcome.selfTrustDelta ?? 0,
+          completedRunCount,
+        ),
       );
   const nextTendencies = shouldIgnoreNumericChanges
     ? session.tendencyScores

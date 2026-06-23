@@ -36,11 +36,21 @@ body {
     radial-gradient(circle at top center, rgba(141, 164, 111, 0.08), transparent 18%),
     linear-gradient(180deg, #05070b 0%, #090d14 100%);
   touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 button,
 input {
   font: inherit;
+}
+
+input,
+textarea {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 button {
@@ -208,6 +218,43 @@ button {
   height: 22px;
   display: block;
   color: #d4c9ba;
+}
+
+.memory-shard-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.memory-shard-button--flash {
+  animation: memory-shard-flash 1200ms ease-out 1;
+}
+
+@keyframes memory-shard-flash {
+  0%,
+  100% {
+    border-color: rgba(245, 239, 229, 0.14);
+    box-shadow: none;
+    color: inherit;
+    transform: scale(1);
+  }
+
+  28% {
+    border-color: rgba(255, 226, 146, 0.88);
+    box-shadow:
+      0 0 0 6px rgba(255, 226, 146, 0.14),
+      0 0 22px rgba(255, 226, 146, 0.42);
+    color: #ffe292;
+    transform: scale(1.08);
+  }
+
+  56% {
+    border-color: rgba(150, 214, 255, 0.78);
+    box-shadow:
+      0 0 0 4px rgba(150, 214, 255, 0.1),
+      0 0 18px rgba(150, 214, 255, 0.34);
+    color: #ccecff;
+    transform: scale(1);
+  }
 }
 
 .dday-calendar {
@@ -705,6 +752,8 @@ button {
     linear-gradient(180deg, #06080e 0%, #0b101a 42%, #04060a 100%);
   touch-action: none;
   user-select: none;
+  -webkit-touch-callout: default;
+  -webkit-user-select: none;
 }
 
 .true-ending-credits-scene__viewport {
@@ -823,6 +872,15 @@ button {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   filter: saturate(0.82) contrast(1.04);
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.true-ending-credits-scene__final-portrait {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .true-ending-credits-scene__memory--article .true-ending-credits-scene__image {
@@ -1207,78 +1265,10 @@ button {
 }
 
 .settings-modal__action {
+  display: block;
+  text-align: center;
+  text-decoration: none;
   width: 100%;
-}
-
-.encyclopedia-list {
-  display: grid;
-  gap: 18px;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.encyclopedia-group {
-  display: grid;
-  gap: 12px;
-}
-
-.encyclopedia-group__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.encyclopedia-group__items {
-  display: grid;
-  gap: 10px;
-}
-
-.encyclopedia-card {
-  display: grid;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(245, 239, 229, 0.08);
-}
-
-.encyclopedia-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.encyclopedia-card__meta span {
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #d4c9ba;
-  font-size: 0.68rem;
-}
-
-.encyclopedia-card__text {
-  margin: 0;
-  color: #f5efe5;
-  line-height: 1.65;
-}
-
-.encyclopedia-card__choices {
-  display: grid;
-  gap: 8px;
-}
-
-.encyclopedia-choice {
-  display: grid;
-  gap: 4px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(10, 12, 18, 0.46);
-}
-
-.encyclopedia-choice p {
-  margin: 0;
-  color: #cfc8bb;
 }
 
 .layout__primary,
@@ -1382,18 +1372,20 @@ button {
 }
 
 .title-screen {
-  position: relative;
-  height: 100%;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   align-items: end;
   overflow: hidden;
-  padding: 42px 22px 34px;
-  border-radius: 28px;
+  padding: max(42px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(34px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+  border-radius: 0;
   background:
     linear-gradient(180deg, rgba(3, 7, 14, 0.05) 0%, rgba(3, 7, 14, 0.26) 44%, rgba(3, 7, 14, 0.84) 100%),
-    var(--title-bg) center / cover no-repeat,
+    var(--title-bg) center 56% / cover no-repeat,
     #06080d;
   box-shadow:
     inset 0 0 0 1px rgba(245, 239, 229, 0.1),

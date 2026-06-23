@@ -46,21 +46,20 @@ The player may fail multiple lives before succeeding. In the current implementat
 ### Phase 2. Memory Fragment Collection
 After the player has succeeded at employment at least once, the long-term structure changes.
 
-Planned flow:
-- a special memory-fragment event appears on turn 15
-- the player must choose correctly to obtain the fragment
-- fragments are collected in order: `1 -> 2 -> 3`
-- each fragment is tied to a relationship theme:
-  - girlfriend
-  - friend
-  - family
+Current flow:
+- memory fragments are only available after Phase 2 starts
+- the first employment fragment is awarded automatically when Phase 2 begins
+- later fragments are unlocked from existing event choices through `memoryTags`
+- the memory button is disabled in Phase 1
+- if the current event can unlock an uncollected fragment, the footer memory icon flashes once
+- collecting all non-final fragments and then achieving employment unlocks the final fragment and true ending
 
 ### Phase 3. True Ending Route
 After all memory fragments are collected:
 - the true ending route unlocks
 - the current implementation plays it through dedicated intro, story, and credits screens
-- the planned version should be event-style story progression, not a detached ending screen
-- the final route should feel like a deliberate authored life, not just another survival run
+- the story screen uses the same swipe-card interaction language as the main game
+- the credits screen autoscrolls and supports press-and-hold speed-up
 
 ## 4. Design Pillars
 
@@ -88,12 +87,8 @@ Once the player reaches the memory phase, the run structure gains a mid-run obje
 - total run length: `30 turns`
 - tutorial events are included inside the same run
 - final interview appears at the end as a guaranteed event
-
-### Planned Memory Event Rule
-After employment progression is unlocked:
-- a special fragment event should appear at turn 15
-- only one fragment should be available at a time
-- the next fragment should not appear until the previous one has been obtained
+- Phase 2 relationship events can be scheduled after first clear
+- memory fragments are discovered through event choice `memoryTags`
 
 ## 6. Stats
 
@@ -123,7 +118,6 @@ Inside a run, the current implementation still uses:
 
 At the app level, the project now also includes:
 - `title`
-- `encyclopedia`
 - `first-clear-reward`
 - `memory-hub`
 - `true-ending`
@@ -144,16 +138,18 @@ Important note:
 - random event pool
 - fixed final interview
 - guaranteed employment success after reaching the final interview flow
-- memory shard meta system
+- memory shard meta system with Phase 2 gating
+- automatic first-clear memory shard reward
+- memory hub and memory detail modal
+- memory footer button disabled before Phase 2
+- memory footer icon flash when a current event can unlock a new shard
 - scheduled phase-2 girlfriend events after first clear
-- event encyclopedia page
 - dedicated true-ending intro/story/credits screens
+- phone-style employment result message
+- settings modal with survey link, title return, and reset
 - unlock-card scaffolding
 
 ### Planned Next Story Progression
-- turn-15 fragment event chain
-- ordered fragment acquisition
-- girlfriend, friend, family fragment themes
 - event-style true ending route
 - explicit interview success/failure scoring, if desired
 
@@ -163,15 +159,21 @@ Important note:
 Memory fragments should not feel like random collectibles.
 They should reveal emotional truth through repeated lives.
 
-### Planned Order
-1. Girlfriend fragment
-2. Friend fragment
-3. Family fragment
+### Current Shards
+- `interview_day`: first employment clear, awarded automatically at Phase 2 start
+- `self_pace`: choices about rejecting comparison and keeping one's own pace
+- `warm_meal`: choices around friendship, food, and small comfort
+- `survival`: pragmatic choices about enduring a difficult life
+- `girlfriend_first_meet`: meeting the relationship character
+- `girlfriend_confession`: honestly expressing feelings
+- `final_truth`: awarded after all non-final shards are collected and employment succeeds
 
 ### Mechanical Rule
-- fragments are unlocked sequentially
-- the player must make the correct choice inside the fragment event
-- missing the correct choice means the fragment is not acquired that run
+- fragments can only be unlocked after Phase 2 starts
+- event choices accumulate `memoryTags`
+- run completion and game-over acknowledgement merge eligible tags into persistent memory shard ids
+- `interview_day` is an exception: it is awarded on Phase 2 start without opening the normal shard modal
+- `final_truth` is awarded only after all other defined fragments are unlocked and the player gets employed again
 
 ## 10. Ending Structure
 
@@ -192,15 +194,14 @@ They should reveal emotional truth through repeated lives.
 - repeated lives
 - first-life, second-life, first-clear, and default loop tutorial variants
 - employment survival loop
-- event encyclopedia
 - meta persistence
-- memory and unlock scaffolding
+- memory shard collection and hub
 - dedicated true-ending screens
+- settings modal and survey link
 
 ### Next In Scope
-- post-employment fragment progression
-- gated turn-15 memory events
 - true ending event route
+- additional post-employment event writing and memory shard tuning
 
 ### Out of Scope for Now
 - giant branching NPC relationship simulator
@@ -216,6 +217,6 @@ The current structure succeeds if players understand:
 - the game is building toward memory recovery and a true ending
 
 The next structure succeeds if players feel:
-- the turn-15 fragment events matter
-- the fragment order feels intentional
+- memory-related choices matter
+- the fragment collection path feels intentional
 - the true ending feels earned through repeated lives

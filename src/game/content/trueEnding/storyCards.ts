@@ -5,7 +5,6 @@ import chosunSunbeeImage from "../../../assets/images/characters/npc/chosun_sunb
 import failedTextOnPhoneImage from "../../../assets/images/characters/npc/failed_text_on_phone.png";
 import imfBoyImage from "../../../assets/images/characters/npc/imf_boy.png";
 import industrialBoyImage from "../../../assets/images/characters/npc/Industry_revolution_boy.png";
-import sajaImage from "../../../assets/images/characters/npc/saja1.png";
 import smallRoomImage from "../../../assets/images/characters/npc/small_room.png";
 
 export type TrueEndingStoryChoice = {
@@ -208,7 +207,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     characterName: "산업화 시대의 청년",
     imageSrc: industrialBoyImage,
     text:
-      "새벽 공장 앞 버스 정류장.\n작업복 차림의 청년이 도시락 가방을 들고 있다.\n\n돈을 벌면 동생을 학교에 보낼 수 있다.\n하지만 내가 뭘 좋아했는지 점점 잊어간다.",
+      "새벽 공장 앞 버스 정류장.\n\n돈을 벌면 동생을 학교에 보낼 수 있다.\n하지만 내가 뭘 좋아했는지 점점 잊어간다.",
     choices: {
       left: {
         id: "more-overtime",
@@ -236,7 +235,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
       },
       right: {
         id: "hold-name",
-        label: "잊고 싶지 않아",
+        label: "나도 잊고 싶지 않아",
         resultText: "그 마음이 있으면 아직 끝난 게 아니었다.",
       },
     },
@@ -295,7 +294,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
       },
       right: {
         id: "stop-hating",
-        label: "미워하지 않는다",
+        label: "미워하지 않을게",
         resultText: "그건 아주 오래 걸리는 선택이다.\n\n그래도 해볼 만하다.",
       },
     },
@@ -305,7 +304,7 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
     characterName: "청령차사",
     imageSrc: smallRoomImage,
     text:
-      "다시 자취방.\n창밖이 조금 밝아지고 있다.\n\n나는 취업에 실패했다.\n그래서 내가 실패한 사람인 줄 알았다.\n\n하지만 나는 실패한 사람이 아니라 선택지 앞에 선 사람이었다.",
+      "다시 자취방.\n창밖이 조금 밝아지고 있다.\n\n나는 취업에 실패했다.\n\n하지만 그럼에도 앞으로의 일을 다시 해치워나갈 수 있을 것만 같다.",
     choices: {
       left: {
         id: "write-again",
@@ -341,9 +340,9 @@ export const trueEndingStoryCards: TrueEndingStoryCard[] = [
   {
     id: "true-ending-final-choice",
     characterName: "청령차사",
-    imageSrc: sajaImage,
+    imageSrc: smallRoomImage,
     text:
-      "아침빛이 방 안으로 들어온다.\n끝났다고 생각했던 물건들이 다시 보인다.\n\n아직 모르겠어도 괜찮다.\n아직 모르는 채로 고르는 게 청춘이니까.",
+      "아침빛이 방 안으로 들어온다.\n끝났다고 생각했던 물건들이 다시 보인다.",
     choices: {
       left: {
         id: "rest-today",

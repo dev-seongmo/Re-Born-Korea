@@ -27,9 +27,9 @@ export function GameScreen({ highlightHud = false, viewModel }: Props) {
   const metricPreviewMap = useMemo(
     () =>
       shouldShowMetricPreview && previewedChoice
-        ? buildMetricPreviewMap(previewedChoice)
+        ? buildMetricPreviewMap(previewedChoice, viewModel.completedRunCount)
         : {},
-    [previewedChoice, shouldShowMetricPreview],
+    [previewedChoice, shouldShowMetricPreview, viewModel.completedRunCount],
   );
 
   useEffect(() => {
@@ -85,6 +85,7 @@ export function GameScreen({ highlightHud = false, viewModel }: Props) {
           <div className="event-card">
             <SwipeChoiceCard
               continueLabel={viewModel.eventPanel.continueLabel}
+              completedRunCount={viewModel.completedRunCount}
               disabled={viewModel.eventPanel.disabled}
               event={viewModel.eventPanel.event}
               narrativeText={viewModel.eventPanel.narrativeText}

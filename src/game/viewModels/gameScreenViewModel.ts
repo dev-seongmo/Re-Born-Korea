@@ -40,6 +40,7 @@ export type EventPanelViewModel = {
 
 export type GameScreenViewModel = {
   statusItems: StatusItemViewModel[];
+  completedRunCount: number;
   atmosphere?: AtmosphereEffect;
   endingPanel?: EndingPanelViewModel;
   gameOverPanel?: GameOverPanelViewModel;

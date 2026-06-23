@@ -10,15 +10,22 @@ const noImpactPreview: ChoiceImpactPreview = {
   selfTrustDelta: 0,
 };
 
-function buildVisibleImpactPreview(event: EventCard, choiceIndex: 0 | 1) {
+function buildVisibleImpactPreview(
+  event: EventCard,
+  choiceIndex: 0 | 1,
+  completedRunCount: number,
+) {
   if (event.category === "tutorial" || event.category === "interview") {
     return noImpactPreview;
   }
 
-  return buildChoiceImpactPreview(event.choices[choiceIndex]);
+  return buildChoiceImpactPreview(event.choices[choiceIndex], completedRunCount);
 }
 
-export function mapEventToCardViewModel(event: EventCard): CardViewModel {
+export function mapEventToCardViewModel(
+  event: EventCard,
+  completedRunCount = 1,
+): CardViewModel {
   const portrait = getEventPortrait(event);
   const portraitSrc = event.imageSrc ?? portrait.src;
   const portraitAlt = event.imageAlt ?? portrait.alt;
@@ -29,7 +36,7 @@ export function mapEventToCardViewModel(event: EventCard): CardViewModel {
     portraitSrc,
     leftPreviewText: event.choices[1].label,
     rightPreviewText: event.choices[0].label,
-    leftImpactPreview: buildVisibleImpactPreview(event, 1),
-    rightImpactPreview: buildVisibleImpactPreview(event, 0),
+    leftImpactPreview: buildVisibleImpactPreview(event, 1, completedRunCount),
+    rightImpactPreview: buildVisibleImpactPreview(event, 0, completedRunCount),
   };
 }

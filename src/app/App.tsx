@@ -9,8 +9,7 @@ import { TrueEndingStoryScreen } from "../components/ending/TrueEndingStoryScree
 import { GameScreen } from "../components/game/GameScreen";
 import { DdayCalendar } from "../components/layout/DdayCalendar";
 import { SetupScreen } from "../components/setup/SetupScreen";
-import { getEventPortrait } from "../game/content/eventPortraits";
-import { prototypeEvents } from "../game/content/eventCards";
+import { getPrototypeEventById } from "../game/content/eventCards";
 import {
   countUnlockedDefinedMemoryShards,
   firstClearMemoryShardId,
@@ -32,27 +31,7 @@ import { getPhase2DebugGameState } from "../game/debug/phase2DebugSave";
 import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenViewModel";
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
-const firstLifeTutorialIds = [
-  "tutorial-fog-awakening",
-  "tutorial-afterlife-question",
-  "tutorial-chasa-request",
-  "tutorial-employment-grudge",
-  "tutorial-choice-state",
-  "tutorial-stat-threshold",
-  "tutorial-thirty-days",
-  "tutorial-chasa-name",
-  "tutorial-first-soul-arrives",
-  "tutorial-fog-clears",
-];
-
-const secondLifeTutorialIds = [
-  "second-life-wakeup",
-  "second-life-failure-review",
-  "second-life-four-metrics",
-  "second-life-metric-meanings",
-  "second-life-too-high",
-  "second-life-oath",
-];
+const SHOW_TITLE_DEBUG_BUTTONS = false;
 
 const hudHighlightTutorialIds = [
   "tutorial-choice-state",
@@ -72,9 +51,25 @@ function getTrueEndingImageSources() {
   ];
 }
 
-function getPrototypeEventImageSources() {
-  return prototypeEvents.map(
-    (event) => event.imageSrc ?? getEventPortrait(event).src,
+function hasLockedMemoryShardTag(
+  eventId: string | null | undefined,
+  unlockedMemoryShardIds: string[],
+) {
+  if (!eventId) {
+    return false;
+  }
+
+  const event = getPrototypeEventById(eventId);
+  if (!event) {
+    return false;
+  }
+
+  return event.choices.some((choice) =>
+    choice.memoryTags?.some(
+      (tag) =>
+        getMemoryShardById(tag) !== null &&
+        !unlockedMemoryShardIds.includes(tag),
+    ),
   );
 }
 
@@ -114,8 +109,21 @@ export function App() {
       ? `${state.meta.runCount + (state.run ? 1 : 0)}번째 인생`
       : "";
   const hasStartedGame = Boolean(state.run || state.meta.runCount > 0);
-  const shouldShowPhase2DebugLoad = import.meta.env.DEV;
-  const shouldShowTrueEndingDebug = import.meta.env.DEV;
+  const canOpenSurvey = state.meta.trueEndingSeen;
+  const isMemoryShardButtonDisabled = !state.meta.isFirstCleared;
+  const shouldFlashMemoryShardButton =
+    !isMemoryShardButtonDisabled &&
+    state.run?.scene === "event" &&
+    hasLockedMemoryShardTag(
+      state.run.currentEventId,
+      state.meta.unlockedMemoryShardIds,
+    );
+  const shouldShowPhase2DebugLoad =
+    SHOW_TITLE_DEBUG_BUTTONS && import.meta.env.DEV;
+  const shouldShowTrueEndingDebug =
+    SHOW_TITLE_DEBUG_BUTTONS && import.meta.env.DEV;
+  const shouldShowTrueEndingReplay =
+    state.appScene === "title" && state.meta.trueEndingSeen;
   const shouldHighlightHud =
     state.run?.currentEventId !== null &&
     state.run?.currentEventId !== undefined &&
@@ -131,30 +139,6 @@ export function App() {
     state.appScene !== "title" &&
     state.appScene !== "run-setup" &&
     state.appScene !== "first-clear-reward";
-
-  const eventGroups = [
-    {
-      label: "첫 번째 인생 튜토리얼",
-      events: prototypeEvents.filter((event) => firstLifeTutorialIds.includes(event.id)),
-    },
-    {
-      label: "두 번째 인생 튜토리얼",
-      events: prototypeEvents.filter((event) => secondLifeTutorialIds.includes(event.id)),
-    },
-    {
-      label: "일반 이벤트",
-      events: prototypeEvents.filter(
-        (event) =>
-          !firstLifeTutorialIds.includes(event.id) &&
-          !secondLifeTutorialIds.includes(event.id) &&
-          event.id !== "final-interview",
-      ),
-    },
-    {
-      label: "최종 면접",
-      events: prototypeEvents.filter((event) => event.id === "final-interview"),
-    },
-  ];
 
   useEffect(() => {
     persistGameState(state);
@@ -195,17 +179,6 @@ export function App() {
     });
   }, [state.appScene]);
 
-  useEffect(() => {
-    if (!state.run) {
-      return undefined;
-    }
-
-    return preloadImagesWhenIdle(getPrototypeEventImageSources(), {
-      batchSize: 3,
-      timeout: 1500,
-    });
-  }, [Boolean(state.run)]);
-
   function handlePrimaryTitleAction() {
     if (state.run) {
       dispatch({ type: "app/continueRequested" });
@@ -240,14 +213,13 @@ export function App() {
     dispatch({ type: "debug/trueEndingRequested" });
   }
 
+  function handleReplayTrueEnding() {
+    dispatch({ type: "app/trueEndingReplayRequested" });
+  }
+
   function handleReturnToTitle() {
     setIsSettingsModalOpen(false);
     dispatch({ type: "app/returnedToTitle" });
-  }
-
-  function handleOpenEncyclopedia() {
-    setIsSettingsModalOpen(false);
-    dispatch({ type: "app/encyclopediaRequested" });
   }
 
   function handleOpenResetConfirm() {
@@ -260,6 +232,33 @@ export function App() {
     setIsResetConfirmOpen(false);
   }
 
+  async function copyShareUrl(url: string) {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      return;
+    }
+
+    const textArea = document.createElement("textarea");
+    textArea.value = url;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand("copy");
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+
+  function showShareStatus(status: "copied" | "failed") {
+    setShareStatus(status);
+    window.setTimeout(() => setShareStatus("idle"), 1800);
+  }
+
   async function handleShareGame() {
     const shareData = {
       title: "Re:Born Korea",
@@ -269,16 +268,20 @@ export function App() {
 
     try {
       if (navigator.share) {
-        await navigator.share(shareData);
-        return;
+        try {
+          await navigator.share(shareData);
+          return;
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") {
+            return;
+          }
+        }
       }
 
-      await navigator.clipboard.writeText(shareData.url);
-      setShareStatus("copied");
-      window.setTimeout(() => setShareStatus("idle"), 1800);
+      await copyShareUrl(shareData.url);
+      showShareStatus("copied");
     } catch {
-      setShareStatus("failed");
-      window.setTimeout(() => setShareStatus("idle"), 1800);
+      showShareStatus("failed");
     }
   }
 
@@ -350,7 +353,16 @@ export function App() {
                     onClick={handleOpenTrueEndingDebug}
                     type="button"
                   >
-                    최종엔딩 디버그
+                    최종엔딩
+                  </button>
+                ) : null}
+                {shouldShowTrueEndingReplay ? (
+                  <button
+                    className="title-screen__button"
+                    onClick={handleReplayTrueEnding}
+                    type="button"
+                  >
+                    최종엔딩 다시 보기
                   </button>
                 ) : null}
                 <button
@@ -379,58 +391,6 @@ export function App() {
                       : "공유하기"}
                 </button>
               </div>
-            </section>
-          ) : state.appScene === "encyclopedia" ? (
-            <section className="panel">
-              <div className="panel__header">
-                <p className="eyebrow">Encyclopedia</p>
-                <h2>이벤트 도감</h2>
-                <p className="muted">
-                  현재 등록된 모든 이벤트와 좌우 선택지를 한 번에 확인할 수 있습니다.
-                </p>
-              </div>
-
-              <div className="encyclopedia-list">
-                {eventGroups.map((group) => (
-                  <section className="encyclopedia-group" key={group.label}>
-                    <div className="encyclopedia-group__header">
-                      <strong>{group.label}</strong>
-                      <span className="muted">{group.events.length}개</span>
-                    </div>
-
-                    <div className="encyclopedia-group__items">
-                      {group.events.map((event) => (
-                        <article className="encyclopedia-card" key={event.id}>
-                          <div className="encyclopedia-card__meta">
-                            <span>{event.category}</span>
-                            <span>{event.phase}</span>
-                            <span>{event.id}</span>
-                          </div>
-                          <p className="encyclopedia-card__text">{event.text}</p>
-                          <div className="encyclopedia-card__choices">
-                            <div className="encyclopedia-choice">
-                              <strong>오른쪽 선택</strong>
-                              <p>{event.choices[0].label}</p>
-                            </div>
-                            <div className="encyclopedia-choice">
-                              <strong>왼쪽 선택</strong>
-                              <p>{event.choices[1].label}</p>
-                            </div>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  </section>
-                ))}
-              </div>
-
-              <button
-                className="secondary-button"
-                onClick={() => dispatch({ type: "app/returnedToTitle" })}
-                type="button"
-              >
-                메인화면으로 돌아가기
-              </button>
             </section>
           ) : state.appScene === "run-setup" && state.run ? (
             <SetupScreen
@@ -585,8 +545,22 @@ export function App() {
 
             <div className="footer-bar__actions">
               <button
-                aria-label="기억 조각 보기"
-                className="memory-shard-button"
+                key={
+                  shouldFlashMemoryShardButton
+                    ? `memory-shard-${state.run?.currentEventId}`
+                    : "memory-shard"
+                }
+                aria-label={
+                  isMemoryShardButtonDisabled
+                    ? "기억 조각은 2페이즈부터 확인할 수 있습니다"
+                    : "기억 조각 보기"
+                }
+                className={`memory-shard-button${
+                  shouldFlashMemoryShardButton
+                    ? " memory-shard-button--flash"
+                    : ""
+                }`}
+                disabled={isMemoryShardButtonDisabled}
                 onClick={() => setIsMemoryModalOpen(true)}
                 type="button"
               >
@@ -773,12 +747,35 @@ export function App() {
               </button>
             </div>
 
+            {canOpenSurvey ? (
+              <a
+                className="secondary-button settings-modal__action"
+                href="https://docs.google.com/forms/d/e/1FAIpQLScmz4FW2-r0DLMqy3-QNPsqfH9ihX-BSLFQvEOuRxu256l0-g/viewform?usp=publish-editor"
+                rel="noreferrer"
+                target="_blank"
+              >
+                설문 참여하기
+              </a>
+            ) : (
+              <button
+                className="secondary-button settings-modal__action"
+                disabled
+                type="button"
+              >
+                엔딩 후 설문 가능
+              </button>
+            )}
+
             <button
               className="secondary-button settings-modal__action"
-              onClick={handleOpenEncyclopedia}
+              onClick={handleShareGame}
               type="button"
             >
-              이벤트 도감
+              {shareStatus === "copied"
+                ? "링크 복사됨"
+                : shareStatus === "failed"
+                  ? "공유 실패"
+                  : "공유하기"}
             </button>
 
             <button

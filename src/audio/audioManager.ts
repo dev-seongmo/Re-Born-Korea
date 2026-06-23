@@ -3,6 +3,7 @@ import { soundMap, type SoundCue } from "./soundMap";
 
 export class AudioManager {
   private cache = new Map<SoundCue, Howl>();
+  private stopTimers = new Map<SoundCue, ReturnType<typeof setTimeout>>();
 
   play(
     cue: SoundCue,
@@ -10,6 +11,12 @@ export class AudioManager {
     options: { loop?: boolean; restart?: boolean; seek?: number } = {},
   ) {
     const sound = this.getOrCreate(cue);
+    const stopTimer = this.stopTimers.get(cue);
+
+    if (stopTimer) {
+      clearTimeout(stopTimer);
+      this.stopTimers.delete(cue);
+    }
 
     if (options.restart) {
       sound.stop();
@@ -24,10 +31,30 @@ export class AudioManager {
     }
   }
 
-  stop(cue: SoundCue) {
+  stop(cue: SoundCue, options: { fadeMs?: number } = {}) {
     const sound = this.cache.get(cue);
 
     if (!sound) {
+      return;
+    }
+
+    const stopTimer = this.stopTimers.get(cue);
+
+    if (stopTimer) {
+      clearTimeout(stopTimer);
+      this.stopTimers.delete(cue);
+    }
+
+    if (options.fadeMs && options.fadeMs > 0 && sound.playing()) {
+      sound.fade(sound.volume(), 0, options.fadeMs);
+
+      const nextStopTimer = setTimeout(() => {
+        sound.stop();
+        sound.seek(0);
+        this.stopTimers.delete(cue);
+      }, options.fadeMs);
+
+      this.stopTimers.set(cue, nextStopTimer);
       return;
     }
 

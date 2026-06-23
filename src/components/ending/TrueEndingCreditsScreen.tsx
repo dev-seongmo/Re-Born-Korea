@@ -30,7 +30,7 @@ export function TrueEndingCreditsScreen({
     audioManager.stop("music.afterlife");
     audioManager.play("ending.credits", 0.62, { restart: true, seek: 35 });
 
-    return () => audioManager.stop("ending.credits");
+    return () => audioManager.stop("ending.credits", { fadeMs: 900 });
   }, []);
 
   useEffect(() => {
@@ -74,6 +74,8 @@ export function TrueEndingCreditsScreen({
     if (!hasReachedEnd) {
       return undefined;
     }
+
+    audioManager.stop("ending.credits", { fadeMs: 3600 });
 
     completeTimerRef.current = window.setTimeout(() => {
       completeTimerRef.current = null;
@@ -141,6 +143,8 @@ export function TrueEndingCreditsScreen({
           <img
             alt="청령차사"
             className="true-ending-credits-scene__final-portrait"
+            draggable={false}
+            onContextMenu={(event) => event.preventDefault()}
             src={chasaImage}
           />
           <p>{credits.title}</p>
@@ -182,6 +186,8 @@ function CreditItem({
         <img
           alt={item.imageAlt}
           className="true-ending-credits-scene__image"
+          draggable={false}
+          onContextMenu={(event) => event.preventDefault()}
           src={item.imageSrc}
         />
       </div>

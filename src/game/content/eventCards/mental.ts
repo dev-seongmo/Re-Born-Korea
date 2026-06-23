@@ -10,7 +10,7 @@ export const mentalEvents: EventCard[] = [
       {
         id: "rest-one-morning",
         label: "조금 더 쉰다",
-        immediate: { mental: 3, reputation: -1 },
+        immediate: { mental: 2, reputation: -1 },
         selfTrustDelta: 4,
         primaryStat: "mental",
         modifier: 0,
@@ -97,7 +97,7 @@ export const mentalEvents: EventCard[] = [
       {
         id: "name-it-burnout",
         label: "번아웃을 인정한다",
-        immediate: { mental: 4, spec: -1 },
+        immediate: { mental: 3, spec: -1 },
         selfTrustDelta: 5,
         primaryStat: "mental",
         modifier: 0,

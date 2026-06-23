@@ -70,7 +70,7 @@ export const specEvents: EventCard[] = [
       {
         id: "grind-weekend",
         label: "주말을 갈아넣는다",
-        immediate: { spec: 3, mental: -1 },
+        immediate: { spec: 2, mental: -1 },
         selfTrustDelta: -2,
         primaryStat: "spec",
         modifier: 1,

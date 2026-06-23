@@ -7,7 +7,6 @@ export type RunScene =
 
 export type AppScene =
   | "title"
-  | "encyclopedia"
   | "run-setup"
   | "run-event"
   | "run-result"
@@ -229,10 +228,10 @@ export type GameAction =
       type: "app/continueRequested";
     }
   | {
-      type: "app/encyclopediaRequested";
+      type: "app/returnedToTitle";
     }
   | {
-      type: "app/returnedToTitle";
+      type: "app/trueEndingReplayRequested";
     }
   | {
       type: "debug/phase2SaveLoaded";

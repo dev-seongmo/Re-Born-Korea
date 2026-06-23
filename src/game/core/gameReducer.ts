@@ -135,18 +135,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           }
         : state;
 
-    case "app/encyclopediaRequested":
-      return {
-        ...state,
-        appScene: "encyclopedia",
-      };
-
     case "app/returnedToTitle":
       return {
         ...state,
         appScene: "title",
         trueEndingProgress: null,
       };
+
+    case "app/trueEndingReplayRequested":
+      return state.meta.trueEndingSeen
+        ? {
+            ...state,
+            appScene: "true-ending",
+            run: null,
+            trueEndingProgress: { storyIndex: 0 },
+          }
+        : state;
 
     case "debug/phase2SaveLoaded":
       return action.payload.state;

@@ -24,3 +24,14 @@ This folder is for source-managed game assets used by the web build.
 - `fx_crack_shard_01.png`
 - `sfx_choice_confirm_01.wav`
 - `bgm_title_theme_01.ogg`
+
+## Current Runtime Audio
+
+- `audio/music/gameplay/music_afterlife_ambient_01.wav`: afterlife ambience, started from the setup screen and stopped after tutorial flow.
+- `audio/sfx/ui/sfx_message_notification_01.wav`: played when the phone-style employment result message appears.
+- `audio/music/endings/CD1-01-Handel-Rinaldo-Scotto1984-Lascia_chio_pianga.mp3`: true-ending credits music, started from 35 seconds.
+
+## Git Note
+
+The root `.gitignore` ignores most files under `src/assets/**/*`.
+When an added image or audio file must ship with the game, add it intentionally with `git add -f`.

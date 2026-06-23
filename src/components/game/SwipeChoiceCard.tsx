@@ -18,6 +18,7 @@ type Props = {
   event: EventCard;
   narrativeText: string;
   continueLabel?: string;
+  completedRunCount?: number;
   disabled?: boolean;
   onContinue?: () => void;
   onPreviewChoiceChange?: (choice: EventChoice | null) => void;
@@ -32,6 +33,7 @@ const AUTO_DEMO_INITIAL_DELAY = 620;
 const AUTO_DEMO_STEP_DELAY = 760;
 const CARD_HIDDEN_DELAY = 300;
 const KEY_PREVIEW_DISTANCE = 58;
+const SHOW_CARD_IMPACT_PREVIEW = false;
 
 function applyElasticDrag(value: number) {
   const direction = value < 0 ? -1 : 1;
@@ -50,6 +52,7 @@ export function SwipeChoiceCard({
   event,
   narrativeText,
   continueLabel,
+  completedRunCount = 1,
   disabled = false,
   onContinue,
   onPreviewChoiceChange,
@@ -81,7 +84,7 @@ export function SwipeChoiceCard({
   const visualDragX = shouldAutoDemo ? demoDragX : dragX;
   const rightChoice = event.choices[0];
   const leftChoice = event.choices[1];
-  const card = mapEventToCardViewModel(event);
+  const card = mapEventToCardViewModel(event, completedRunCount);
 
   const direction: SwipeDirection =
     visualDragX > 18 ? "right" : visualDragX < -18 ? "left" : null;
@@ -446,21 +449,25 @@ export function SwipeChoiceCard({
           opacity={rightSwipeChoiceOpacity}
           text={card.rightPreviewText}
         />
-        <CardImpactPreview
-          align="left"
-          opacity={rightSwipeChoiceOpacity}
-          preview={card.rightImpactPreview}
-        />
+        {SHOW_CARD_IMPACT_PREVIEW ? (
+          <CardImpactPreview
+            align="left"
+            opacity={rightSwipeChoiceOpacity}
+            preview={card.rightImpactPreview}
+          />
+        ) : null}
         <CardAnswerBadge
           align="right"
           opacity={leftSwipeChoiceOpacity}
           text={card.leftPreviewText}
         />
-        <CardImpactPreview
-          align="right"
-          opacity={leftSwipeChoiceOpacity}
-          preview={card.leftImpactPreview}
-        />
+        {SHOW_CARD_IMPACT_PREVIEW ? (
+          <CardImpactPreview
+            align="right"
+            opacity={leftSwipeChoiceOpacity}
+            preview={card.leftImpactPreview}
+          />
+        ) : null}
         <CardBody card={card} />
       </div>
 

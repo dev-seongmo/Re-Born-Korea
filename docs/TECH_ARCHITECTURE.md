@@ -21,8 +21,8 @@ It now has:
 - run-specific tutorials
 - persistent meta progression
 - collectible systems
-- an encyclopedia scene
 - dedicated true-ending intro, story, and credits scenes
+- a settings modal with survey, title-return, and reset actions
 
 Because of that, architecture decisions should now assume:
 - multiple lives are normal
@@ -71,7 +71,6 @@ This separation is necessary because the target game flow is:
 
 ### App Scenes
 - `title`
-- `encyclopedia`
 - `run-setup`
 - `run-event`
 - `run-result`
@@ -102,7 +101,7 @@ That is the correct direction because it allows:
 - easier writing iteration
 - easier balancing
 - easier future event injection
-- easier encyclopedia rendering
+- easier future debug/content-review tooling
 
 ### Current Event Selection Logic
 `src/game/content/eventCards/index.ts` currently handles:
@@ -118,83 +117,78 @@ The upcoming fragment-event phase should be added here or beside it, not inside 
 ### Current Interview Reality
 There is no separate interview-scoring system yet. The final interview is a fixed event chain, and reaching the end of the current run flow produces an `employed` outcome.
 
-## 7. Recommended Progression Architecture for the Next Phase
+## 7. Current Memory Progression Architecture
 
-The next planned game flow is:
+Current implemented memory flow:
 
 1. Run 1 tutorial
 2. Run 2 tutorial
 3. Repeat until employment success
-4. After success, inject a fragment event on turn 15
-5. Collect fragments in order `1 -> 2 -> 3`
-6. After all fragments are collected, unlock true-ending event chain
+4. First employment clear opens Phase 2
+5. `interview_day` is awarded automatically when Phase 2 starts
+6. Later fragments are discovered from choice `memoryTags`
+7. After all non-final fragments are collected and employment succeeds again, `final_truth` is awarded and the true ending unlocks
 
-### Recommended Split
+### Current Split
 
 #### A. Run Selection Layer
 Responsible for:
 - deciding which event comes next
-- deciding whether turn 15 should become a fragment event
+- deciding tutorial set and scheduled Phase 2 relationship events
 
-Suggested implementation:
-- extend `eventCards/index.ts`
-- add `memoryFragmentSystem.ts`
+Implemented in:
+- `src/game/content/eventCards/index.ts`
 
 #### B. Meta Progress Layer
 Responsible for:
 - knowing whether employment has been cleared before
-- tracking which fragment comes next
-- tracking which story fragments are already collected
+- tracking unlocked memory shards
+- tracking whether first-clear tutorial is pending
+- tracking whether true ending is unlocked
 
 Current relevant fields already include `isFirstCleared`, `pendingFirstClearTutorial`, `unlockedMemoryShardIds`, `successCount`, and `trueEndingUnlocked`.
 
-Suggested future additions:
-
-```ts
-meta: {
-  nextFragmentIndex: number;
-  collectedStoryFragmentIds: string[];
-}
-```
-
 #### C. Event Content Layer
 Responsible for:
-- fragment event data
-- true-ending event data if the current dedicated true-ending screens are converted to event/card flow
+- normal event data and `memoryTags`
+- dedicated true-ending intro/story/credits content
 
-Suggested files:
-- `eventCards/memoryFragments.ts`
-- `eventCards/trueEnding.ts`
+Implemented in:
+- `src/game/content/eventCards/*`
+- `src/game/content/memoryShards/index.ts`
+- `src/game/content/trueEnding/*`
 
 #### D. Resolution Layer
 Responsible for:
-- checking whether the fragment choice was correct
-- awarding the fragment
+- merging eligible memory tags into persistent memory shards
 - deciding whether true ending becomes available
 
-## 8. Memory Fragment System Recommendation
+Implemented in:
+- `src/game/core/gameReducer.ts`
 
-The turn-15 fragment event should not be modeled as a generic random event.
+## 8. Memory Fragment System
 
-It should be a gated injection rule.
+The current system does not use special turn-15 fragment events.
 
-### Recommended Rule Set
-- only becomes active after employment success is achieved
-- only appears on turn 15
-- only offers the next required fragment in sequence
-- only awards the fragment when the correct choice is selected
+### Current Rule Set
+- memory shard unlocking is disabled before Phase 2
+- the first employment shard is awarded automatically when the player continues after first clear
+- normal choices can carry `memoryTags`
+- eligible tags are merged into `meta.unlockedMemoryShardIds`
+- the first-clear shard does not open the normal newly-unlocked modal
+- the final shard is awarded after all other defined shards are collected and the player succeeds at employment
 
 ### Why this is better
-- easier to reason about
-- easier to test
-- avoids accidental duplicate fragment events
-- keeps narrative order stable
+- reuses existing event content
+- keeps fragment discovery tied to meaningful life choices
+- avoids a single predictable collection turn
+- keeps progression logic out of React components
 
 ## 9. True Ending Architecture Recommendation
 
 The current true ending is not only a placeholder: it has dedicated intro, story-card, and credits screens under `src/game/content/trueEnding` and `src/components/ending`.
 
-The planned next architecture is to make it a special event-style route.
+The story section already reuses the swipe-card interaction style through `TrueEndingStoryScreen`, while still using dedicated content definitions.
 
 ### Recommended Modeling
 Treat the true ending as:
@@ -207,19 +201,16 @@ Benefits:
 - less one-off UI code
 - easier story iteration
 
-## 10. Encyclopedia Architecture
+## 10. Settings and Debug Visibility
 
-The event encyclopedia being app-scene based is a good decision.
+The settings modal currently exposes:
+- survey link
+- return to title
+- game reset
 
-Why:
-- it reuses current event content directly
-- it does not require separate content duplication
-- it helps debugging and writing
+Title-screen debug buttons remain implemented but are hidden by the `SHOW_TITLE_DEBUG_BUTTONS` flag in `App.tsx`.
 
-This same pattern can later support:
-- fragment encyclopedia
-- unlock card encyclopedia
-- ending archive
+Card impact previews remain implemented but are hidden by the `SHOW_CARD_IMPACT_PREVIEW` flag in `SwipeChoiceCard.tsx`.
 
 ## 11. Persistence Architecture
 
@@ -254,12 +245,11 @@ Those rules belong to systems and meta progression.
 
 ## 13. Recommended Next Technical Steps
 
-1. Add a dedicated meta field for post-employment progression.
-2. Add a fragment-event content file.
-3. Add a system that injects the fragment event on turn 15.
-4. Add ordered fragment validation by choice.
-5. Decide whether to keep the current dedicated true-ending screens or convert them to the event-card sequence.
-6. Add explicit interview success/failure scoring if employment should be more than reaching the final flow.
+1. Decide whether true-ending story should remain dedicated screens or become full event-card content.
+2. Add explicit interview success/failure scoring if employment should be more than reaching the final flow.
+3. Add tests around Phase 2 memory gating and final shard unlock.
+4. Continue balancing run difficulty and stat delta amplification.
+5. Add a cleaner debug tooling surface if hidden title buttons are needed again.
 
 ## 14. Summary
 
@@ -271,10 +261,11 @@ It already supports:
 - persistent meta state
 - app-level scene expansion
 - dedicated true-ending screens
+- Phase 2 memory shard progression
 
-The next challenge is not rendering.
-It is progression gating.
+The next challenge is not basic rendering.
+It is tuning progression clarity, balancing, and authored ending polish.
 
 So the main architectural priority from here is:
 
-`build a clean post-employment progression layer without mixing that logic into UI components`
+`keep progression rules testable while tuning memory collection, balance, and authored ending content`

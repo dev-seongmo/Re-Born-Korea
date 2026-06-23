@@ -161,7 +161,7 @@ export const moneyEvents: EventCard[] = [
       },
       {
         id: "buy-comfort",
-        label: "작은 위로를 산다",
+        label: "나를 위한 선물을 산다",
         immediate: { money: -2, mental: 1 },
         selfTrustDelta: 2,
         primaryStat: "mental",

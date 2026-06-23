@@ -10,7 +10,7 @@ export const recoveryEvents: EventCard[] = [
       {
         id: "eat-favorite-food",
         label: "좋아하는 걸 먹는다",
-        immediate: { money: -1, mental: 3 },
+        immediate: { money: -1, mental: 2 },
         selfTrustDelta: 4,
         primaryStat: "mental",
         modifier: 0,
@@ -50,7 +50,7 @@ export const recoveryEvents: EventCard[] = [
       {
         id: "return-to-hobby",
         label: "기타를 다시 쳐본다",
-        immediate: { mental: 3, spec: -1 },
+        immediate: { mental: 2, spec: -1 },
         selfTrustDelta: 5,
         primaryStat: "mental",
         modifier: 0,

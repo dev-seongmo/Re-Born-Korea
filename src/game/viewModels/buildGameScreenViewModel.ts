@@ -136,6 +136,7 @@ function buildResolveChoice(
       session,
       event,
       choice,
+      completedRunCount,
     });
 
     audioManager.play("choice.confirm", session.settings.sfxVolume);
@@ -257,6 +258,7 @@ export function buildGameScreenViewModel(
 
     return {
       statusItems,
+      completedRunCount,
       gameOverPanel: {
         eyebrow: "Game Over",
         title: "Bad Ending",
@@ -283,6 +285,7 @@ export function buildGameScreenViewModel(
 
     return {
       statusItems,
+      completedRunCount,
       endingPanel: {
         eyebrow: "New Message",
         title: `[${targetCompany}] 최종 합격 안내`,
@@ -318,6 +321,7 @@ export function buildGameScreenViewModel(
 
   return {
     statusItems,
+    completedRunCount,
     atmosphere: getEventAtmosphere(eventPanel.event.id),
     eventPanel,
   };
