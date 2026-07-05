@@ -31,7 +31,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "드디어 내일 면접이다.\n\n달력에 표시해 둔 날짜가 오늘 밤 바로 앞까지 다가왔다.\n\n오늘은 괜히 더 욕심내지 말고, 준비한 것만 정리하고 일찍 자자.",
+      "드디어 내일 면접이다.\n\n달력에 표시해 둔 날짜가 오늘 밤 바로 앞까지 다가왔다.",
     choices: [
       interviewChoice({
         id: "review-key-points",
