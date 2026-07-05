@@ -57,7 +57,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "면접 시간보다 30분 일찍 도착했다.\n\n건물 로비의 시계 초침이 유난히 크게 들린다.\n\n너무 떨린다. 손바닥에 땀이 찬다.",
+      "면접 시간보다 30분 일찍 도착했다.\n\n너무 떨린다. 손바닥에 땀이 찬다.",
     choices: [
       interviewChoice({
         id: "breathe-in-lobby",
@@ -81,7 +81,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "면접장에 들어서자 공기가 달라졌다.\n\n문이 닫히고, 바깥의 소음이 한 번에 멀어졌다.\n\n세 명의 면접관이 서류에서 눈을 들었다.",
+      "면접장에 들어서자 공기가 달라졌다.\n\n세 명의 면접관이 서류에서 눈을 들었다.",
     choices: [
       interviewChoice({
         id: "calm-greeting",
@@ -105,7 +105,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "\"회사에서 어떻게 기여할 수 있을지 알려주세요.\"\n\n가장 준비했던 질문인데도, 막상 들으니 머릿속이 잠깐 하얘졌다.",
+      "\"회사에서 어떻게 기여할 수 있을지 알려주세요.\"\n\n머릿속이 잠깐 하얘졌다.",
     choices: [
       interviewChoice({
         id: "answer-with-experience",
@@ -131,7 +131,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "\"본인의 단점에 대해 알려주세요.\"\n\n피하고 싶었던 질문이다.\n\n잘못 말하면 변명처럼 들릴 것 같고, 너무 솔직하면 부족해 보일 것 같다.",
+      "\"본인의 단점에 대해 알려주세요.\"\n\n잘못 말하면 변명처럼 들릴 것 같고, 너무 솔직하면 부족해 보일 것 같다.",
     choices: [
       interviewChoice({
         id: "weakness-with-fix",
@@ -155,7 +155,7 @@ export const interviewEvents: EventCard[] = [
     category: "interview",
     phase: "late20s",
     text:
-      "정신없이 면접이 끝났다.\n\n무슨 말을 했는지 전부 기억나지는 않는다.\n\n다만 문밖으로 나오는 순간, 끝까지 도망치지 않았다는 사실만은 또렷했다.",
+      "정신없이 면접이 끝났다.\n\n무슨 말을 했는지 조차 않는다.",
     choices: [
       interviewChoice({
         id: "accept-the-day",
