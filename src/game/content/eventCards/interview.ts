@@ -135,14 +135,14 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "weakness-with-fix",
-        label: "보완책을 말한다",
+        label: "솔직히 말한다",
         resultText:
           "부족한 점을 숨기지 않았다.\n\n다만 그 부족함을 어떻게 기록하고, 어떻게 줄여 왔는지도 함께 말했다.",
         tendencyTags: ["mental", "spec"],
       }),
       interviewChoice({
         id: "weakness-with-example",
-        label: "사례로 말한다",
+        label: "거짓말한다",
         resultText:
           "한 번의 실수를 이야기했다.\n\n그때의 부끄러움보다, 이후에 바꾼 행동을 더 길게 설명했다.",
         tendencyTags: ["reputation", "selfTrust"],
@@ -159,7 +159,7 @@ export const interviewEvents: EventCard[] = [
     choices: [
       interviewChoice({
         id: "accept-the-day",
-        label: "오늘을 인정한다",
+        label: "휴...",
         resultText:
           "완벽하지는 않았다.\n\n그래도 이 하루를 통과한 사람은 다른 누구도 아닌 나였다.",
         memoryTags: ["interview_day", "steady_answer"],
@@ -167,7 +167,7 @@ export const interviewEvents: EventCard[] = [
       }),
       interviewChoice({
         id: "wait-for-result",
-        label: "기다리기로 한다",
+        label: "휴...",
         resultText:
           "핸드폰을 손에 쥐고 건물을 나섰다.\n\n이제 남은 것은 기다리는 일뿐이다.",
         memoryTags: ["interview_day"],
