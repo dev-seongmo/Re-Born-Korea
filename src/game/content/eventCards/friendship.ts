@@ -109,7 +109,7 @@ export const friendshipEvents: EventCard[] = [
     choices: [
       {
         id: "send-long-message",
-        label: "진심을 보낸다",
+        label: "늦었지만 선물을 보낸다",
         immediate: { reputation: 1 },
         selfTrustDelta: 3,
         primaryStat: "reputation",

@@ -75,13 +75,13 @@ export const firstClearTutorialEvents: EventCard[] = [
     choices: [
       makeFirstClearTutorialChoice({
         id: "ask-why-collect-them",
-        label: "왜 모아야 해?",
+        label: "알겠어",
         resultText:
           "조각을 이어 붙이면 네 삶의 모양이 보인다.\n\n그리고 마지막 문도 열린다.",
       }),
       makeFirstClearTutorialChoice({
         id: "ask-whose-memories",
-        label: "내 기억이야?",
+        label: "...",
         resultText:
           "그래.\n\n다만 네 삶에 얽힌 사람들의 흔적도 함께 남아 있다.",
       }),
