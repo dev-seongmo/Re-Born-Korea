@@ -1,18 +1,8 @@
 import type { Dispatch } from "react";
 import { audioManager } from "../../audio/audioManager";
-import { finalInterviewEventId } from "../content/eventCards";
 import {
-  drawNextPrototypeEventId,
-  getPrototypeEventById,
-  hasRemainingTutorialEvents,
-  isTutorialEventId,
   tutorialEventIds,
 } from "../content/eventCards";
-import {
-  getNextInterviewEventId,
-  isInterviewEventId,
-  lastInterviewEventId,
-} from "../content/eventCards/interview";
 import { getGameOverContent } from "../content/gameOverResults";
 import type {
   GameAction,
@@ -20,8 +10,13 @@ import type {
   RunState,
   VisibleMetricKey,
 } from "../core/gameTypes";
+import {
+  getCurrentRunEvent,
+  getNextRunEventId,
+  hasRunResultTutorialJustEnded,
+  resolveChoiceForRun,
+} from "../core/runFlow";
 import { getEndingResult } from "../selectors/getEndingResult";
-import { resolveTurn } from "../systems/turnSystem";
 import { formatCompanyName } from "../utils/playerName";
 import type {
   AtmosphereEffect,
@@ -79,46 +74,6 @@ function buildStatusItems(session: RunState): StatusItemViewModel[] {
   }));
 }
 
-function getCurrentEvent(
-  session: RunState,
-  completedRunCount: number,
-  meta: MetaState,
-) {
-  const eventId =
-    session.currentEventId ??
-    drawNextPrototypeEventId(
-      session.eventHistory,
-      completedRunCount,
-      meta.pendingFirstClearTutorial,
-      {
-        nextTurn: session.turn + 1,
-        girlfriendStatus: session.relationship.girlfriendStatus,
-        phase2Unlocked: meta.isFirstCleared,
-      },
-    );
-
-  return getPrototypeEventById(eventId);
-}
-
-function getNextEventId(
-  session: RunState,
-  completedRunCount: number,
-  meta: MetaState,
-) {
-  return session.turn + 1 >= session.maxTurns
-    ? finalInterviewEventId
-    : drawNextPrototypeEventId(
-        session.eventHistory,
-        completedRunCount,
-        meta.pendingFirstClearTutorial,
-        {
-          nextTurn: session.turn + 1,
-          girlfriendStatus: session.relationship.girlfriendStatus,
-          phase2Unlocked: meta.isFirstCleared,
-        },
-      );
-}
-
 function buildResolveChoice(
   session: RunState,
   completedRunCount: number,
@@ -128,62 +83,35 @@ function buildResolveChoice(
 ) {
   return (choice: Parameters<EventPanelViewModel["onResolveChoice"]>[0]) => {
     const event = eventPanel.event;
-    const isTutorialEvent = isTutorialEventId(event.id);
-    const nextInterviewEventId = getNextInterviewEventId(event.id);
-    const isIntermediateInterviewEvent =
-      isInterviewEventId(event.id) && nextInterviewEventId !== null;
-    const resolvedTurn = resolveTurn({
+    const resolvedChoice = resolveChoiceForRun({
       session,
       event,
       choice,
       completedRunCount,
+      meta,
     });
 
     audioManager.play("choice.confirm", session.settings.sfxVolume);
 
     dispatch({
       type: "turn/resolved",
-      payload:
-        isTutorialEvent || isIntermediateInterviewEvent
-          ? {
-              ...resolvedTurn,
-              consumesTurn: false,
-              nextScene: resolvedTurn.gameOverReason ? "game-over" : "event",
-            }
-          : event.id === lastInterviewEventId
-            ? {
-                ...resolvedTurn,
-                nextScene: "ending",
-              }
-            : resolvedTurn,
+      payload: resolvedChoice.turnPayload,
     });
 
-    if (
-      (isTutorialEvent || isIntermediateInterviewEvent) &&
-      !resolvedTurn.gameOverReason
-    ) {
-      const nextEventId =
-        nextInterviewEventId ??
-        getNextEventId(
-          {
-            ...session,
-            eventHistory: [...session.eventHistory, event.id],
-          },
-          completedRunCount,
-          meta,
-        );
-
-      if (isTutorialEvent && !isTutorialEventId(nextEventId)) {
-        audioManager.stop("music.afterlife");
-      }
-
-      dispatch({
-        type: "run/continued",
-        payload: {
-          nextEventId,
-        },
-      });
+    if (!resolvedChoice.autoContinueEventId) {
+      return;
     }
+
+    if (resolvedChoice.exitsTutorialFlow) {
+      audioManager.stop("music.afterlife");
+    }
+
+    dispatch({
+      type: "run/continued",
+      payload: {
+        nextEventId: resolvedChoice.autoContinueEventId,
+      },
+    });
   };
 }
 
@@ -193,7 +121,7 @@ function buildEventPanel(
   meta: MetaState,
   dispatch: Dispatch<GameAction>,
 ): EventPanelViewModel {
-  const event = getCurrentEvent(session, completedRunCount, meta);
+  const event = getCurrentRunEvent(session, completedRunCount, meta);
 
   if (!event) {
     throw new Error("No event available for current game state.");
@@ -214,13 +142,11 @@ function buildEventPanel(
   );
 
   if (session.scene === "result" && session.latestResult) {
-    const tutorialJustEnded =
-      isTutorialEventId(session.latestResult.eventId) &&
-      !hasRemainingTutorialEvents(
-        session.eventHistory,
-        completedRunCount,
-        meta.pendingFirstClearTutorial,
-      );
+    const tutorialJustEnded = hasRunResultTutorialJustEnded(
+      session,
+      completedRunCount,
+      meta,
+    );
 
     return {
       ...basePanel,
@@ -236,7 +162,7 @@ function buildEventPanel(
         dispatch({
           type: "run/continued",
           payload: {
-            nextEventId: getNextEventId(session, completedRunCount, meta),
+            nextEventId: getNextRunEventId(session, completedRunCount, meta),
           },
         }),
     };

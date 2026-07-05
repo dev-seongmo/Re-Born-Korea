@@ -1,8 +1,8 @@
 import type { Dispatch } from "react";
 import { runConfig } from "../config/runConfig";
-import { drawNextPrototypeEventId } from "../content/eventCards";
 import { pickPrototypeArchetype } from "../core/gameState";
 import type { GameAction, MetaState, RunState } from "../core/gameTypes";
+import { getNextRunEventId } from "../core/runFlow";
 import { sanitizeCompanyName, sanitizePlayerName } from "../utils/playerName";
 import type { SetupScreenViewModel } from "./setupScreenViewModel";
 
@@ -69,16 +69,7 @@ export function buildSetupScreenViewModel(
         type: "run/started",
         payload: {
           archetype: pickPrototypeArchetype(),
-          initialEventId: drawNextPrototypeEventId(
-            session.eventHistory,
-            completedRunCount,
-            meta.pendingFirstClearTutorial,
-            {
-              nextTurn: 1,
-              girlfriendStatus: session.relationship.girlfriendStatus,
-              phase2Unlocked: meta.isFirstCleared,
-            },
-          ),
+          initialEventId: getNextRunEventId(session, completedRunCount, meta),
           maxTurns: runConfig.maxTurns,
         },
       }),

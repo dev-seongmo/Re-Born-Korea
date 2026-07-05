@@ -22,30 +22,13 @@ import {
   createInitialRunState,
   pickPrototypeArchetype,
 } from "./gameState";
+import { toAppScene } from "./runFlow";
 import type {
   EndingId,
   GameAction,
   GameState,
-  RunScene,
   RunState,
 } from "./gameTypes";
-
-function toAppScene(scene: RunScene): GameState["appScene"] {
-  switch (scene) {
-    case "setup":
-      return "run-setup";
-    case "event":
-      return "run-event";
-    case "result":
-      return "run-result";
-    case "ending":
-      return "run-ending";
-    case "game-over":
-      return "run-game-over";
-    default:
-      return "run-event";
-  }
-}
 
 function mergeEndingIds(existing: EndingId[], next: EndingId) {
   return existing.includes(next) ? existing : [...existing, next];

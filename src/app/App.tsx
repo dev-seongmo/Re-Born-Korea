@@ -1,5 +1,5 @@
 ﻿import type { CSSProperties } from "react";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import titleBackgroundImage from "../assets/images/backgrounds/title/background_title_mobile.png";
 import idCardImage from "../assets/images/objects/id_card.png";
 import { preloadImagesWhenIdle } from "../assets/preload/imagePreloader";
@@ -27,11 +27,38 @@ import {
   persistGameState,
 } from "../game/core/gamePersistence";
 import { gameReducer } from "../game/core/gameReducer";
+import type { AppScene } from "../game/core/gameTypes";
 import { getPhase2DebugGameState } from "../game/debug/phase2DebugSave";
 import { buildGameScreenViewModel } from "../game/viewModels/buildGameScreenViewModel";
 import { buildSetupScreenViewModel } from "../game/viewModels/buildSetupScreenViewModel";
 
 const SHOW_TITLE_DEBUG_BUTTONS = false;
+
+const runGameScenes: AppScene[] = [
+  "run-event",
+  "run-result",
+  "run-ending",
+  "run-game-over",
+];
+
+const topbarHiddenScenes: AppScene[] = [
+  "title",
+  "run-event",
+  "run-result",
+  "run-ending",
+  "run-game-over",
+  "first-clear-reward",
+];
+
+const footerHiddenScenes: AppScene[] = [
+  "title",
+  "run-setup",
+  "first-clear-reward",
+];
+
+function isSceneIn(scene: AppScene, scenes: AppScene[]) {
+  return scenes.includes(scene);
+}
 
 const hudHighlightTutorialIds = [
   "tutorial-choice-state",
@@ -128,17 +155,32 @@ export function App() {
     state.run?.currentEventId !== null &&
     state.run?.currentEventId !== undefined &&
     hudHighlightTutorialIds.includes(state.run.currentEventId);
-  const shouldShowTopbar =
-    state.appScene !== "title" &&
-    state.appScene !== "run-event" &&
-    state.appScene !== "run-result" &&
-    state.appScene !== "run-ending" &&
-    state.appScene !== "run-game-over" &&
-    state.appScene !== "first-clear-reward";
-  const shouldShowFooter =
-    state.appScene !== "title" &&
-    state.appScene !== "run-setup" &&
-    state.appScene !== "first-clear-reward";
+  const shouldShowTopbar = !isSceneIn(state.appScene, topbarHiddenScenes);
+  const shouldShowFooter = !isSceneIn(state.appScene, footerHiddenScenes);
+  const setupViewModel = useMemo(
+    () =>
+      state.appScene === "run-setup" && state.run
+        ? buildSetupScreenViewModel(
+            state.run,
+            state.meta.runCount,
+            state.meta,
+            dispatch,
+          )
+        : null,
+    [state.appScene, state.meta, state.run],
+  );
+  const gameViewModel = useMemo(
+    () =>
+      isSceneIn(state.appScene, runGameScenes) && state.run
+        ? buildGameScreenViewModel(
+            state.run,
+            state.meta.runCount,
+            state.meta,
+            dispatch,
+          )
+        : null,
+    [state.appScene, state.meta, state.run],
+  );
 
   useEffect(() => {
     persistGameState(state);
@@ -392,28 +434,15 @@ export function App() {
                 </button>
               </div>
             </section>
-          ) : state.appScene === "run-setup" && state.run ? (
+          ) : setupViewModel ? (
             <SetupScreen
-              viewModel={buildSetupScreenViewModel(
-                state.run,
-                state.meta.runCount,
-                state.meta,
-                dispatch,
-              )}
+              viewModel={setupViewModel}
             />
-          ) : state.appScene === "run-event" ||
-            state.appScene === "run-result" ||
-            state.appScene === "run-ending" ||
-            state.appScene === "run-game-over" ? (
-            state.run ? (
+          ) : isSceneIn(state.appScene, runGameScenes) ? (
+            gameViewModel ? (
               <GameScreen
                 highlightHud={shouldHighlightHud}
-                viewModel={buildGameScreenViewModel(
-                  state.run,
-                  state.meta.runCount,
-                  state.meta,
-                  dispatch,
-                )}
+                viewModel={gameViewModel}
               />
             ) : null
           ) : state.appScene === "memory-hub" ? (
