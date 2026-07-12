@@ -79,6 +79,10 @@ const portraitByEventId: Record<string, PortraitAsset> = {
     src: suitGuyPortraitImage,
     alt: "First soul portrait",
   },
+  "tutorial-final-message": {
+    src: suitGuyPortraitImage,
+    alt: "First soul portrait",
+  },
   "true-ending-chasa-truth": {
     src: sajaPortraitImage,
     alt: "Cheongryeong chasa portrait",

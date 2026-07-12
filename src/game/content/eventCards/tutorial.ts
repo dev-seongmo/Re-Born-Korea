@@ -29,7 +29,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "???",
     category: "tutorial",
     phase: "early20s",
-    text: "눈앞에 안개가 자욱하다.\n\n흐린 시야 너머로 저승사자가 서 있다.\n아무 기억도 나지 않는다.",
+    text: "눈앞에 안개가 자욱하다...\n아무 기억도 나지 않는다.",
     choices: [
       makeTutorialChoice({
         id: "open-eyes",
@@ -53,12 +53,12 @@ export const tutorialEvents: EventCard[] = [
       makeTutorialChoice({
         id: "ask-what",
         label: "뭐라고?",
-        resultText: "농담이다. 아직 네 차례는 아니다.\n\n대신, 나를 좀 도와야겠다.",
+        resultText: "농담이다. 아직 네 차례는 아니다.\n대신, 나를 좀 도와야겠다.",
       }),
       makeTutorialChoice({
         id: "say-no",
         label: "아니?",
-        resultText: "농담이다. 아직 네 차례는 아니다.\n\n대신, 나를 좀 도와야겠다.",
+        resultText: "농담이다. 아직 네 차례는 아니다.\n대신, 나를 좀 도와야겠다.",
       }),
     ],
   },
@@ -67,7 +67,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "농담이다. 아직 네 차례는 아니다.\n\n대신, 나를 좀 도와야겠다.",
+    text: "농담이다. 아직 네 차례는 아니다.\n대신, 나를 좀 도와야겠다.",
     choices: [
       makeTutorialChoice({
         id: "ask-what-help",
@@ -89,7 +89,7 @@ export const tutorialEvents: EventCard[] = [
     category: "tutorial",
     phase: "early20s",
     text:
-      "어린 영혼들의 한을 풀어주는 일이다.\n\n그들이 지원한 회사에 합격하도록 이끌어라.",
+      "어린 영혼들의 한을 풀어주는 일이다.\n그들이 지원한 회사에 합격하도록 이끌어라.",
     choices: [
       makeTutorialChoice({
         id: "question-employment-grudge",
@@ -111,7 +111,7 @@ export const tutorialEvents: EventCard[] = [
     category: "tutorial",
     phase: "early20s",
     text:
-      "현실에서 맺힌 한은 쉽게 사라지지 않는다.\n\n선택은 영혼의 상태를 바꾼다.",
+      "너의 선택은 영혼의 상태를 바꾼다.",
     choices: [
       makeTutorialChoice({
         id: "ask-about-state",
@@ -133,7 +133,7 @@ export const tutorialEvents: EventCard[] = [
     category: "tutorial",
     phase: "early20s",
     text:
-      "스펙, 돈, 관계, 멘탈.\n\n취업을 준비하는 영혼에게 가장 중요한 네 가지다.",
+      "스펙, 돈, 관계, 멘탈",
     choices: [
       makeTutorialChoice({
         id: "ask-endure",
@@ -154,7 +154,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "낮으면 무너지고, 지나치면 다른 것을 태운다.\n\n네 일은 한쪽으로 기울지 않게 붙드는 것이다.",
+    text: "수치가 낮으면 무너지고, \n지나치게 높아도 안된다.",
     choices: [
       makeTutorialChoice({
         id: "ask-who-are-you",
@@ -164,7 +164,7 @@ export const tutorialEvents: EventCard[] = [
       }),
       makeTutorialChoice({
         id: "leave-it-to-me",
-        label: "균형을 잡아?",
+        label: "그럼 균형...?",
         resultText:
           `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
       }),
@@ -175,7 +175,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: `기한은 ${runDeadlineText}.\n\n무사히 면접장까지 데려가되, 영혼을 망가뜨리지는 마라.`,
+    text: `기한은 ${runDeadlineText}.\n무사히 면접장까지 데려가라.`,
     choices: [
       makeTutorialChoice({
         id: "ask-beyond",
@@ -185,7 +185,7 @@ export const tutorialEvents: EventCard[] = [
       makeTutorialChoice({
         id: "say-cool",
         label: "조심할게",
-        resultText: "나는 청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+        resultText: "나는 청령차사.\n한을 품은 영혼을 건너편으로 보내는 자다.",
       }),
     ],
   },
@@ -194,7 +194,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "청령차사",
     category: "tutorial",
     phase: "early20s",
-    text: "나는 청령차사.\n\n한을 품은 영혼을 건너편으로 보내는 자다.",
+    text: "나는 청령차사.\n한을 품은 영혼을 건너편으로 보내는 자다.",
     choices: [
       makeTutorialChoice({
         id: "already",
@@ -215,7 +215,7 @@ export const tutorialEvents: EventCard[] = [
     characterName: "첫 번째 영혼",
     category: "tutorial",
     phase: "early20s",
-    text: "설명은 끝났다.\n\n푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
+    text: "설명은 끝났다.\n푸른 안개가 걷히자, 불안한 얼굴의 영혼 하나가 눈앞에 섰다.",
     choices: [
       makeTutorialChoice({
         id: "approach-first-soul",
@@ -226,6 +226,25 @@ export const tutorialEvents: EventCard[] = [
         id: "steady-first-soul",
         label: "시작하자",
         resultText: "첫 번째 선택이 시작된다.",
+      }),
+    ],
+  },
+  {
+    id: "tutorial-final-message",
+    characterName: "첫 번째 영혼",
+    category: "tutorial",
+    phase: "early20s",
+    text: "나의 목표는 {targetCompany}!\n면접 날까지 취준정병에서 잘 버텨보자!",
+    choices: [
+      makeTutorialChoice({
+        id: "tutorial-final-choice-left",
+        label: "좋아, 해보자!",
+        resultText: "목표를 향한 첫 번째 선택이 시작된다.",
+      }),
+      makeTutorialChoice({
+        id: "tutorial-final-choice-right",
+        label: "잘 할 수 있을까...",
+        resultText: "목표를 향한 첫 번째 선택이 시작된다.",
       }),
     ],
   },
