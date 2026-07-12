@@ -2578,6 +2578,7 @@ button {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.15rem;
   line-height: 1.6;
+  white-space: pre-line;
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
@@ -2636,7 +2637,7 @@ button {
   .app-shell {
     width: min(calc(100vw - 16px), calc(var(--game-card-size) + 48px), 520px);
     padding-top: 10px;
-    padding-bottom: 14px;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom));
   }
 
   .panel {

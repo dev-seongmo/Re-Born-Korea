@@ -60,9 +60,13 @@ const gameOverBoundaryLabels = {
 } as const;
 
 const FOG_CLEARING_TUTORIAL_EVENT_ID = "tutorial-fog-clears";
+const FOG_FREE_TUTORIAL_EVENT_ID = "tutorial-final-message";
 
 function getEventAtmosphere(eventId: string): AtmosphereEffect | undefined {
-  if (!tutorialEventIds.includes(eventId)) {
+  if (
+    !tutorialEventIds.includes(eventId) ||
+    eventId === FOG_FREE_TUTORIAL_EVENT_ID
+  ) {
     return undefined;
   }
 
@@ -77,6 +81,13 @@ function buildStatusItems(session: RunState): StatusItemViewModel[] {
     label: item.label,
     value: session.metrics[item.key],
   }));
+}
+
+function formatEventText(text: string, session: RunState) {
+  return text.replaceAll(
+    "{targetCompany}",
+    formatCompanyName(session.profile.targetCompany),
+  );
 }
 
 function getCurrentEvent(
@@ -200,7 +211,7 @@ function buildEventPanel(
   }
 
   const basePanel: EventPanelViewModel = {
-    narrativeText: event.text,
+    narrativeText: formatEventText(event.text, session),
     event,
     onResolveChoice: () => undefined,
   };
