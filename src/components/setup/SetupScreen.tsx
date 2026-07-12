@@ -5,31 +5,8 @@ type Props = {
   viewModel: SetupScreenViewModel;
 };
 
-type FullscreenRoot = HTMLElement & {
-  webkitRequestFullscreen?: () => Promise<void> | void;
-};
-
-function requestGameFullscreen() {
-  if (typeof document === "undefined" || document.fullscreenElement) {
-    return;
-  }
-
-  const root = document.documentElement as FullscreenRoot;
-  const requestFullscreen =
-    root.requestFullscreen?.bind(root) ?? root.webkitRequestFullscreen?.bind(root);
-
-  if (!requestFullscreen) {
-    return;
-  }
-
-  void Promise.resolve(requestFullscreen()).catch(() => {
-    // Some mobile browsers only allow fullscreen in installed/PWA mode.
-  });
-}
-
 export function SetupScreen({ viewModel }: Props) {
   function handleStart() {
-    requestGameFullscreen();
     audioManager.play("music.afterlife", 0.34, { loop: true, restart: true });
     viewModel.onStart();
   }
